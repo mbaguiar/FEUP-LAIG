@@ -20,6 +20,7 @@ class MySceneGraph {
         this.nodes = [];
 
         this.idRoot = null;                    // The id of the root element.
+        this.axisLength = 1;                   // Axis length
 
         this.axisCoords = [];
         this.axisCoords['x'] = [1, 0, 0];
@@ -96,11 +97,36 @@ class MySceneGraph {
     }
 
     parseScene(sceneNode){
-        return null;
+        if ((this.idRoot = this.reader.getString(sceneNode, "root", false)) == null){
+            return "root attribute missing";
+        }
+
+        if ((this.axisLength = this.reader.getFloat(sceneNode, "axis_length", false)) == null){
+            this.axisLength = 1;
+            this.onXMLMinorError("axis_length attribute missing. assuming 'value=1'");
+        }
     }
 
     parseViews(viewsNode){
-        return null;
+
+        if (this.reader.getString(viewsNode, "default", false) == null){
+            //TODO: what to do here?
+            this.onXMLMinorError("default attribute missing");
+        }
+
+        let viewsChildren = viewsNode.children;
+        
+        let viewChildrenNames = [];
+
+        for (let i = 0; i < viewsChildren.length; i++){
+            viewChildrenNames.push(viewsChildren[i].nodeName);
+        }
+
+        if (viewChildrenNames.indexOf("perspective") == -1 && 
+            viewChildrenNames.indexOf("ortho") == -1){
+                return "missing required view (perspective or ortho)"
+            }
+
     }
 
     parseAmbient(ambientNode){
