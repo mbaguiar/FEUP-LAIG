@@ -3,6 +3,11 @@
 const tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
              'transformations', 'primitives', 'components'];
 
+const typeFunc = {
+    int: 'getInteger',
+    float: 'getFloat',
+    string: 'getString',
+};
 
 function jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,8 +21,6 @@ class MySceneGraph {
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
         scene.graph = this;
-
-        this.nodes = [];
 
         this.idRoot = null;                    // The id of the root element.
         this.axisLength = 1;                   // Axis length
@@ -47,12 +50,20 @@ class MySceneGraph {
         let rootElement = this.reader.xmlDoc.documentElement;
 
         // Here should go the calls for different functions to parse the letious blocks
-        let error = this.parseXMLFile(rootElement);
+
+        try {
+            this.parseXMLFile(rootElement);
+        } catch (error) {
+            this.onXMLError(error);
+            return;
+        }   
+
+        /* let error = this.parseXMLFile(rootElement);
 
         if (error != null) {
             this.onXMLError(error);
             return;
-        }
+        } */
 
         this.loadedOk = true;
 
@@ -96,26 +107,33 @@ class MySceneGraph {
 
     }
 
-    parseScene(sceneNode){
-        if ((this.idRoot = this.reader.getString(sceneNode, "root", false)) == null){
+    parseScene(node){
+        /* if ((this.idRoot = this.reader.getString(sceneNode, "root", false)) == null){
             return "root attribute missing";
         }
 
         if ((this.axisLength = this.reader.getFloat(sceneNode, "axis_length", false)) == null){
             this.axisLength = 1;
             this.onXMLMinorError("axis_length attribute missing. assuming 'value=1'");
-        }
+        } */
+
+        let sceneAttributes = [
+            this.newAttribute("root", "string", true),
+            this.newAttribute("axis_length", "float", false, 1)
+        ];
+
+        let res = this.parseAttributes(node, sceneAttributes);
+        this.idRoot = res.root;
+        this.axisLength = res.axis_length;
     }
 
-    parseViews(viewsNode){
+    parseViews(node){
 
-        if (this.reader.getString(viewsNode, "default", false) == null){
+        /* if (this.reader.getString(viewsNode, "default", false) == null){
             //TODO: what to do here?
             this.onXMLMinorError("default attribute missing");
-        }
+        } 
 
-        let viewsChildren = viewsNode.children;
-        
         let viewChildrenNames = [];
 
         for (let i = 0; i < viewsChildren.length; i++){
@@ -124,8 +142,72 @@ class MySceneGraph {
 
         if (viewChildrenNames.indexOf("perspective") == -1 && 
             viewChildrenNames.indexOf("ortho") == -1){
-                return "missing required view (perspective or ortho)"
+                return "missing required view (perspective or ortho)";
+        } */
+
+        let res = this.parseAttributes(node, [this.newAttribute("default", "string", true)]);
+
+        let viewsChildren = node.children;
+
+        let childrenRes = [];
+
+        for (let i = 0; i < viewsChildren.length; i++){
+            if (viewsChildren[i].nodeName == "perspective"){
+                childrenRes.push(this.parsePerspective(viewsChildren[i]));
+            } else if (viewsChildren[i].nodeName == "ortho"){
+                childrenRes.push(this.parseOrtho(viewsChildren[i]));
             }
+        }
+
+    }
+
+    parsePerspective(node){
+
+        const perspectiveAttributes = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("near", "float", false, 0.1),
+            this.newAttribute("far", "float", false, 500),
+            this.newAttribute("angle", "float", false, 0)
+        ];
+
+        const xyzAttrs = [
+            this.newAttribute("x", "float", "false", 1),
+            this.newAttribute("y", "float", "false", 1),
+            this.newAttribute("z", "float", "false", 1),
+        ];
+
+        let res = this.parseAttributes(node, perspectiveAttributes);
+
+        let perspectiveChildren = node.children;
+        let perspectiveChildrenRes = {};
+
+        for(let i = 0; i < perspectiveChildren.length; i++){
+            if (perspectiveChildren[i].nodeName == "from"){
+                perspectiveChildrenRes["from"] = this.parseAttributes(perspectiveChildren[i], xyzAttrs);
+            } else if (perspectiveChildren[i].nodeName == "to"){
+                perspectiveChildrenRes["to"] = this.parseAttributes(perspectiveChildren[i], xyzAttrs);
+            }
+        }
+
+        console.log(perspectiveChildrenRes);
+
+    }
+
+    parseOrtho(node){
+        
+        const orthoAttributes = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("near", "float", false, 0.1),
+            this.newAttribute("far", "float", false, 500),
+            this.newAttribute("left", "float", false, -1),
+            this.newAttribute("right", "float", false, 1),
+            this.newAttribute("top", "float", false, -1),
+            this.newAttribute("bottom", "float", false, 1),
+        ];
+
+        let res = this.parseAttributes(node, orthoAttributes);
+
+        console.log(res);
 
     }
 
@@ -182,5 +264,38 @@ class MySceneGraph {
      */
     log(message) {
         console.log("   " + message);
+    }
+
+    parseAttributes(node, attributes){
+        let res = {};
+        for (let i = 0; i < attributes.length; i++){
+            let attr = attributes[i];
+            res[attr.name] = this.reader[typeFunc[attr.type]](node, attr.name, false);
+
+            if (res[attr.name] == null){
+                if (attr.required) throw "Attribute '" + attr.name + "' missing.";
+                else {
+                    
+                    this.onXMLMinorError(attr.name + " attribute missing. Assuming value=" + attr.default);
+                }
+            } else if (isNaN(res[attr.name])){
+                if (attr.type == "float" || attr.type == "int"){
+                    res[attr.name] = attr.default;
+                    this.onXMLMinorError(attr.name + " attribute corrupted. Assuming value=" + attr.default);
+                }
+            }
+        }
+        return res;
+    }
+
+    newAttribute(name, type, required, def){
+        let newAttr = {
+            name: name, 
+            type: type,
+            required: required,
+            default: def 
+        };
+
+        return newAttr;
     }
 }
