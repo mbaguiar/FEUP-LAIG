@@ -17,9 +17,9 @@
     <views default="persp">
         <!-- tem de existir, pelo menos, uma vista de -->
         <!-- entre as seguintes (perspective ou ortho) -->
-        <perspective id="persp" near="0.1" far="0.5" angle="90.0">
-            <from x="1" y="2" z="3" />
-            <to x="4" y="5" z="6" />
+        <perspective id="persp" near="0.1" far="500" angle="0.4">
+            <from x="0" y="0" z="0" />
+            <to x="30" y="30" z="30" />
         </perspective>
     </views>
     <ambient>
@@ -101,6 +101,10 @@
         <transformation id="frame">
             <translate x="0" y="2" z="7">
             <scale x="7" y="2" z="16">
+        </transformation>
+        <transformation id="bedfoot">
+            <scale x="0.5" y="2" z="0.5">
+        </transformation>
     </transformations>
     <primitives>
         <!-- Uma "primitive" e' uma primitiva e pode ser usada em nos folha -->
@@ -135,7 +139,7 @@
             <!-- o material muda para o proximo material da lista; do -->
             <!-- ultimo material da lista volta ao primeiro -->
             <materials>
-                <material id="wood" />
+                <material id="inherit" />
             </materials>
             <!-- declaracao obrigatoria de texture -->
             <!-- id="inherit" mantem (herda) a textura do objecto "pai" -->
@@ -152,7 +156,7 @@
             <!-- do tipo escalamento violem esta regra. -->
             <!-- Nao e' necessario aplicar fatores de escala em -->
             <!-- quadricas (esfera, cilindro...) -->
-            <texture id="wood" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="0" length_t="1" />
             <!-- bloco "children" obrigatorio num "component" -->
             <children>
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
@@ -165,86 +169,127 @@
             <transformation>
                 <transformationref id="face2" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <primitiveref id="quad">
+                <primitiveref id="quad" />
             </children>
         </component>
         <component id="face3">
             <transformation>
                 <transformationref id="face3" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <primitiveref id="quad">
+                <primitiveref id="quad" />
             </children>
         </component>
         <component id="face4">
             <transformation>
                 <transformationref id="face4" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <primitiveref id="quad">
+                <primitiveref id="quad"/>
             </children>
         </component>
         <component id="face5">
             <transformation>
                 <transformationref id="face5" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <primitiveref id="quad">
+                <primitiveref id="quad"/>
             </children>
         </component>
         <component id="face6">
             <transformation>
                 <transformationref id="face6" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <primitiveref id="quad">
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="cube">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="0" />
+            <children>
+                <componentref id="face1">
+                <componentref id="face2">
+                <componentref id="face3">
+                <componentref id="face4">
+                <componentref id="face5">
+                <componentref id="face6">
             </children>
         </component>
         <component id="headboard">
             <transformation>
                 <transformationref id="headboard" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <componentref id="cube">
+                <componentref id="cube"/>
             </children>
         </component>
-         <component id="frame">
+        <component id="frame">
             <transformation>
                 <transformationref id="frame" />
             </transformation>
-            <materiais>
-                <material id="wood" />
-            </materiais>
-            <texture id="wood" length_s="0" length_t="1" />
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
             <children>
-                <componentref id="cube">
+                <componentref id="cube"/>
             </children>
         </component>
+        <component id="bedfoot">
+            <transformation>
+                <transformationref id="bedfoot" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="0" length_t="1" />
+            <children>
+                <componentref id="cube"/>
+            </children>
+        </component>
+        <component id="bed">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="0" length_t="1" />
+            <children>
+                <componentref id="frame"/>
+                <componentref id="headboard"/>
+                <componentref id="bedfoot"/>
+            </children>
+        <component />
     </components>
 </yas>
 
