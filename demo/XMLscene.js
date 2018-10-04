@@ -99,8 +99,8 @@ class XMLscene extends CGFscene {
         
         let defaultCamera = this.graph.views.children[0].attr;
         let defaultCameraPos = defaultCamera.attr;
-        let position = vec3.fromValues(...Object.values(defaultCameraPos.from));
-        let target = vec3.fromValues(...Object.values(defaultCameraPos.to));
+        let position = Object.values(defaultCameraPos.from);
+        let target = Object.values(defaultCameraPos.to);
 
         this.camera.setPosition(position);
         this.camera.setTarget(target);
