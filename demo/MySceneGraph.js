@@ -43,7 +43,7 @@ class MySceneGraph {
             this.newAttribute("id", "string", true),
             this.newAttribute("near", "float", false, 0.1),
             this.newAttribute("far", "float", false, 500),
-            this.newAttribute("angle", "float", false, 0)
+            this.newAttribute("angle", "float", false, 0.4)
         ];
 
         this.xyzAttr = [
@@ -363,8 +363,6 @@ class MySceneGraph {
                 this.textures[res.id] = new CGFtexture(this.scene, res.file);
             } else throw "Invalid texture tag '" + children[i].nodeName + "'.";
         }
-        
-        console.log(this.textures);
 
     }
 
@@ -372,7 +370,7 @@ class MySceneGraph {
 
         let children = node.children;
 
-        let res = [];
+        this.materials = {};
 
         const materialAttr = [
             this.newAttribute("id", "string", true),
@@ -381,9 +379,11 @@ class MySceneGraph {
 
         for (let i = 0; i < children.length; i++){
             if (children[i].nodeName == "material"){
-                res.push(this.parseAttributes(children[i], materialAttr));
-                this.parseMaterial(children[i].children);
-            }
+                let res = this.parseAttributes(children[i], materialAttr);
+                if (this.materials.hasOwnProperty(res.id)) throw "Material with id='" + res.id + "' already exists.";
+                let childrenRes = this.parseMaterial(children[i].children);
+                this.materials[res.id] = Object.assign({shininess: res.shininess}, childrenRes);
+            } else throw "Invalid material tag '" + children[i].nodeName + "'.";
         }
 
     }
@@ -394,16 +394,18 @@ class MySceneGraph {
             "emission", "ambient", "diffuse", "specular"
         ];
 
-        let res = [];
+        let res = {};
 
         for (let i = 0; i < node.length; i++){
             for (let j = 0; j < materialTags.length; j++){
                 let child = node[i];
                 if (child.nodeName == materialTags[j]){
-                    res.push({name: child.nodeName, attributes: this.parseAttributes(child, this.rgbaAttr)});
+                    res[child.nodeName] = this.parseAttributes(child, this.rgbaAttr);
                 }
             }
         }
+
+        return res;
     }
 
     parseTransformations(node){

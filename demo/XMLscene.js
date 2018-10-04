@@ -73,8 +73,7 @@ class XMLscene extends CGFscene {
                     this.lights[i].setSpotCutOff(light.angle);
 
                 }
-
-                    
+  
                 this.lightValues[key] = light.enabled;
 
                 this.lights[i].setVisible(true);
@@ -100,16 +99,17 @@ class XMLscene extends CGFscene {
         
         let defaultCamera = this.graph.views.children[0].attr;
         let defaultCameraPos = defaultCamera.attr;
-        let position = vec3.fromValues(defaultCameraPos.from.x, defaultCameraPos.from.y, defaultCameraPos.from.z);
-        let target = vec3.fromValues(defaultCameraPos.to.x, defaultCameraPos.to.y, defaultCameraPos.to.z);
+        let position = vec3.fromValues(...Object.values(defaultCameraPos.from));
+        let target = vec3.fromValues(...Object.values(defaultCameraPos.to));
 
         this.camera.setPosition(position);
         this.camera.setTarget(target);
         this.camera.direction = this.camera.calculateDirection();
         
-        /* this.camera.near = defaultCamera;
+        this.camera.near = defaultCamera.near;
         this.camera.far = defaultCamera.far;
-        this.camera.fov = defaultCamera.angle; */
+        this.camera.fov = defaultCamera.angle;
+        console.log(defaultCamera);
 
         this.axis = new CGFaxis(this, this.graph.axisLength);
 
