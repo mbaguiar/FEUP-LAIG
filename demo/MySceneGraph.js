@@ -1,13 +1,6 @@
 
 // Order of the groups in the XML document.
-const tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
-             'transformations', 'primitives', 'components'];
 
-const typeFunc = {
-    int: 'getInteger',
-    float: 'getFloat',
-    string: 'getString',
-};
 
 function jsUcfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -29,6 +22,114 @@ class MySceneGraph {
         this.axisCoords['x'] = [1, 0, 0];
         this.axisCoords['y'] = [0, 1, 0];
         this.axisCoords['z'] = [0, 0, 1];
+
+        //Constants
+        this.tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
+             'transformations', 'primitives', 'components'];
+
+        this.typeFunc = {
+            int: 'getInteger',
+            float: 'getFloat',
+            string: 'getString',
+            bool: 'getBoolean'
+        };
+
+        this.sceneAttr = [
+            this.newAttribute("root", "string", true),
+            this.newAttribute("axis_length", "float", false, 1)
+        ];
+
+        this.perspectiveAttr = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("near", "float", false, 0.1),
+            this.newAttribute("far", "float", false, 500),
+            this.newAttribute("angle", "float", false, 0)
+        ];
+
+        this.xyzAttr = [
+            this.newAttribute("x", "float", "false", 1),
+            this.newAttribute("y", "float", "false", 1),
+            this.newAttribute("z", "float", "false", 1),
+        ];
+
+        this.orthoAttr = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("near", "float", false, 0.1),
+            this.newAttribute("far", "float", false, 500),
+            this.newAttribute("left", "float", false, -1),
+            this.newAttribute("right", "float", false, 1),
+            this.newAttribute("top", "float", false, -1),
+            this.newAttribute("bottom", "float", false, 1),
+        ];
+
+        this.xyzwAttr = [
+            ...this.xyzAttr,
+            this.newAttribute("w", "float", "false", 1)
+        ];
+
+        this.rgbaAttr = [
+            this.newAttribute("r", "float", true),
+            this.newAttribute("g", "float", true),
+            this.newAttribute("b", "float", true),
+            this.newAttribute("a", "float", false, 1),
+        ];
+
+        this.omniAttr = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("enabled", "bool", false, true),
+        ];
+
+        this.spotAttr = [
+            ...this.omniAttr,
+            this.newAttribute("angle", "float", false, 0),
+            this.newAttribute("exponent", "float", false, 1)
+        ];
+
+        this.rectangleAttr = [
+            this.newAttribute("x1", "float", true),
+            this.newAttribute("y1", "float", true),
+            this.newAttribute("x2", "float", true),
+            this.newAttribute("y2", "float", true),
+        ];
+        
+        this.triangleAttr = [
+            this.newAttribute("x1", "float", true),
+            this.newAttribute("y1", "float", true),
+            this.newAttribute("z1", "float", true),
+            this.newAttribute("x2", "float", true),
+            this.newAttribute("y2", "float", true),
+            this.newAttribute("z2", "float", true),
+            this.newAttribute("x3", "float", true),
+            this.newAttribute("y3", "float", true),
+            this.newAttribute("z3", "float", true),
+        ];
+
+        this.cylinderAttr = [
+            this.newAttribute("base", "float", true),
+            this.newAttribute("top", "float", true),
+            this.newAttribute("height", "float", true),
+            this.newAttribute("slices", "int", true),
+            this.newAttribute("stacks", "int", true),
+        ];
+
+        this.sphereAttr = [
+            this.newAttribute("radius", "float", true),
+            this.newAttribute("slices", "int", true),
+            this.newAttribute("stacks", "int", true),
+
+        ];
+
+        this.torusAttr = [
+            this.newAttribute("inner", "float", true),
+            this.newAttribute("outer", "float", true),
+            this.newAttribute("slices", "int", true),
+            this.newAttribute("loops", "int", true),
+        ];
+
+        this.rotateAttr = [
+            this.newAttribute("axis", "string", true),
+            this.newAttribute("angle", "float", true)
+        ];
 
         // File reading 
         this.reader = new CGFXMLreader();
@@ -58,22 +159,16 @@ class MySceneGraph {
             return;
         }   
 
-        /* let error = this.parseXMLFile(rootElement);
-
-        if (error != null) {
-            this.onXMLError(error);
-            return;
-        } */
-
         this.loadedOk = true;
 
         // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
         
         //TODO after parsing
-        //this.scene.onGraphLoaded();
+        this.scene.onGraphLoaded();
     }
 
     parseXMLFile(rootElement) {
+        
         if (rootElement.nodeName != "yas")
             return "root tag <yas> missing";
 
@@ -90,62 +185,33 @@ class MySceneGraph {
 
         // Processes each node, verifying errors.
 
-        for (let i = 0; i < tags.length; i++){
+        for (let i = 0; i < this.tags.length; i++){
             let index;
-            if ((index = nodeNames.indexOf(tags[i])) == -1)
-                return "tag <" + tags[i] + "> missing";
+            if ((index = nodeNames.indexOf(this.tags[i])) == -1)
+                return "tag <" + this.tags[i] + "> missing";
             else {
                 if (index != i)
-                    this.onXMLMinorError("tag <" + tags[i] + "> out of order");
+                    this.onXMLMinorError("tag <" + this.tags[i] + "> out of order");
             }
 
-            let funcName = 'parse'+ jsUcfirst(tags[i]);
+            let funcName = 'parse'+ jsUcfirst(this.tags[i]);
 
-            if ((error = this[funcName](nodes[index])) != null)
-                return error;
+             if ((error = this[funcName](nodes[index])) != null)
+                return error; 
         }
 
     }
 
     parseScene(node){
-        /* if ((this.idRoot = this.reader.getString(sceneNode, "root", false)) == null){
-            return "root attribute missing";
-        }
-
-        if ((this.axisLength = this.reader.getFloat(sceneNode, "axis_length", false)) == null){
-            this.axisLength = 1;
-            this.onXMLMinorError("axis_length attribute missing. assuming 'value=1'");
-        } */
-
-        let sceneAttributes = [
-            this.newAttribute("root", "string", true),
-            this.newAttribute("axis_length", "float", false, 1)
-        ];
-
-        let res = this.parseAttributes(node, sceneAttributes);
+        let res = this.parseAttributes(node, this.sceneAttr);
         this.idRoot = res.root;
         this.axisLength = res.axis_length;
     }
 
     parseViews(node){
+        this.views = {};
 
-        /* if (this.reader.getString(viewsNode, "default", false) == null){
-            //TODO: what to do here?
-            this.onXMLMinorError("default attribute missing");
-        } 
-
-        let viewChildrenNames = [];
-
-        for (let i = 0; i < viewsChildren.length; i++){
-            viewChildrenNames.push(viewsChildren[i].nodeName);
-        }
-
-        if (viewChildrenNames.indexOf("perspective") == -1 && 
-            viewChildrenNames.indexOf("ortho") == -1){
-                return "missing required view (perspective or ortho)";
-        } */
-
-        let res = this.parseAttributes(node, [this.newAttribute("default", "string", true)]);
+        this.views = this.parseAttributes(node, [this.newAttribute("default", "string", true)]);
 
         let viewsChildren = node.children;
 
@@ -153,90 +219,374 @@ class MySceneGraph {
 
         for (let i = 0; i < viewsChildren.length; i++){
             if (viewsChildren[i].nodeName == "perspective"){
-                childrenRes.push(this.parsePerspective(viewsChildren[i]));
+                childrenRes.push({
+                    type: "perspective",
+                    attr: this.parsePerspective(viewsChildren[i])
+                });
             } else if (viewsChildren[i].nodeName == "ortho"){
-                childrenRes.push(this.parseOrtho(viewsChildren[i]));
+                childrenRes.push({
+                    type: "ortho",
+                    attr: this.parseOrtho(viewsChildren[i])
+                });
             }
         }
 
+        this.views.children = childrenRes;
     }
 
     parsePerspective(node){
 
-        const perspectiveAttributes = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("near", "float", false, 0.1),
-            this.newAttribute("far", "float", false, 500),
-            this.newAttribute("angle", "float", false, 0)
-        ];
-
-        const xyzAttrs = [
-            this.newAttribute("x", "float", "false", 1),
-            this.newAttribute("y", "float", "false", 1),
-            this.newAttribute("z", "float", "false", 1),
-        ];
-
-        let res = this.parseAttributes(node, perspectiveAttributes);
+        let res = this.parseAttributes(node, this.perspectiveAttr);
 
         let perspectiveChildren = node.children;
         let perspectiveChildrenRes = {};
 
         for(let i = 0; i < perspectiveChildren.length; i++){
             if (perspectiveChildren[i].nodeName == "from"){
-                perspectiveChildrenRes["from"] = this.parseAttributes(perspectiveChildren[i], xyzAttrs);
+                perspectiveChildrenRes["from"] = this.parseAttributes(perspectiveChildren[i], this.xyzAttr);
             } else if (perspectiveChildren[i].nodeName == "to"){
-                perspectiveChildrenRes["to"] = this.parseAttributes(perspectiveChildren[i], xyzAttrs);
+                perspectiveChildrenRes["to"] = this.parseAttributes(perspectiveChildren[i], this.xyzAttr);
             }
         }
 
-        console.log(perspectiveChildrenRes);
+        res.attr = perspectiveChildrenRes;
+        
+        return res;
 
     }
 
     parseOrtho(node){
+
+        let res = this.parseAttributes(node, this.orthoAttr);
+
+        return res;
+
+    }
+
+    parseAmbient(node){
         
-        const orthoAttributes = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("near", "float", false, 0.1),
-            this.newAttribute("far", "float", false, 500),
-            this.newAttribute("left", "float", false, -1),
-            this.newAttribute("right", "float", false, 1),
-            this.newAttribute("top", "float", false, -1),
-            this.newAttribute("bottom", "float", false, 1),
+        let ambientChildren = node.children;
+
+        let res = {};
+
+        for (let i = 0; i < ambientChildren.length; i++){
+            if (ambientChildren[i].nodeName == "ambient"){
+                res["ambient"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
+            } else if (ambientChildren[i].nodeName == "background"){
+                res["background"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
+            }
+        }
+
+        this.ambient = res;
+
+    }
+
+    parseLights(node){
+        let lightsChildren = node.children;
+
+        let res = {};
+
+        for (let i = 0; i < lightsChildren.length; i++){
+
+            let light = lightsChildren[i];
+
+            if (light.nodeName != "omni" && light.nodeName != "spot") throw "Invalid light type.";
+
+            let attr = this[light.nodeName + "Attr"];
+
+            let lightRes = this.parseAttributes(light, attr);
+
+            if (res.hasOwnProperty(lightRes.id)) throw "Light with id='" + lightRes.id + "' already exists.";
+
+            res[lightRes.id] = {
+                enabled: lightRes.enabled,
+                type: light.nodeName,
+                properties: this.parseLightsChildren(light),
+            }  
+
+             if (light.nodeName == "spot"){
+                res[lightRes.id].angle = lightRes.angle;
+                res[lightRes.id].exponent = lightRes.exponent;
+            } 
+
+        }
+
+        this.lights = res;
+
+    }
+
+    parseLightsChildren(node){
+
+        let children = node.children;
+
+        let lightsTags = [
+            {name: "location", attr: this.xyzwAttr}, 
+            {name: "ambient", attr: this.rgbaAttr}, 
+            {name: "diffuse", attr: this.rgbaAttr}, 
+            {name: "specular", attr: this.rgbaAttr} 
         ];
 
-        let res = this.parseAttributes(node, orthoAttributes);
+        let res = {};
 
-        console.log(res);
+        if (node.nodeName == "spot"){
+            lightsTags.push({name: "target", attr: this.xyzAttr});
+        }
+
+        for (let i = 0; i < children.length; i++){
+            for (let j = 0; j < lightsTags.length; j++){
+                let child = children[i];
+                if (child.nodeName == lightsTags[j].name){
+                    res[child.nodeName] = this.parseAttributes(child, lightsTags[j].attr);
+                }
+            }
+        }
+
+        return res;
 
     }
 
-    parseAmbient(ambientNode){
-        return null;
+    parseTextures(node){
+
+        let children = node.children;
+
+        const textureAttr = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("file", "string", true)
+        ];
+
+        this.textures = {};
+
+        for (let i = 0; i < children.length; i++){
+            if (children[i].nodeName == "texture"){
+                let res = this.parseAttributes(children[i], textureAttr);
+                if (this.textures.hasOwnProperty(res.id)) throw "Texture with id='" + res.id + "' already exists.";
+                this.textures[res.id] = new CGFtexture(this.scene, res.file);
+            } else throw "Invalid texture tag '" + children[i].nodeName + "'.";
+        }
+        
+        console.log(this.textures);
+
     }
 
-    parseLights(lightsNode){
-        return null;
+    parseMaterials(node){
+
+        let children = node.children;
+
+        let res = [];
+
+        const materialAttr = [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("shininess", "float", false, 1)
+        ];
+
+        for (let i = 0; i < children.length; i++){
+            if (children[i].nodeName == "material"){
+                res.push(this.parseAttributes(children[i], materialAttr));
+                this.parseMaterial(children[i].children);
+            }
+        }
+
     }
 
-    parseTextures(texturesNode){
-        return null;
+    parseMaterial(node){
+
+        const materialTags = [
+            "emission", "ambient", "diffuse", "specular"
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < materialTags.length; j++){
+                let child = node[i];
+                if (child.nodeName == materialTags[j]){
+                    res.push({name: child.nodeName, attributes: this.parseAttributes(child, this.rgbaAttr)});
+                }
+            }
+        }
     }
 
-    parseMaterials(materialsNode){
-        return null;
+    parseTransformations(node){
+
+        let children = node.children;
+
+        const transformationAttr = [
+            this.newAttribute("id", "string", true),
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < children.length; i++){
+            if (children[i].nodeName == "transformation"){
+                res.push(this.parseAttributes(children[i], transformationAttr));
+                this.parseTransformation(children[i].children);
+            }
+        }
     }
 
-    parseTransformations(transformationsNode){
-        return null;
+    parseTransformation(node){
+
+        const transformationTags = [
+            {name: "translate", attr: this.xyzAttr},
+            {name: "rotate", attr: this.rotateAttr},
+            {name: "scale", attr: this.xyzAttr}
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < transformationTags.length; j++){
+                let child = node[i];
+                if (child.nodeName == transformationTags[j].name){
+                    res.push({name: child.nodeName, attributes: this.parseAttributes(child, transformationTags[j].attr)});
+                }
+            }
+        }
     }
 
-    parsePrimitives(primitivesNode){
-        return null;
+    parsePrimitives(node){
+        let children = node.children;
+
+        const primitiveAttr = [
+            this.newAttribute("id", "string", true),
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < children.length; i++){
+            if (children[i].nodeName == "primitive"){
+                res.push(this.parseAttributes(children[i], primitiveAttr));
+                this.parsePrimitive(children[i].children);
+            }
+        }
     }
 
-    parseComponents(componentsNode){
-        return null;
+    parsePrimitive(node){
+        const primitiveTags = [
+            {name: "rectangle", attr: this.rectangleAttr},
+            {name: "triangle", attr: this.triangleAttr},
+            {name: "cylinder", attr: this.cylinderAttr},
+            {name: "sphere", attr: this.sphereAttr},
+            {name: "torus", attr: this.torusAttr},
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < primitiveTags.length; j++){
+                let child = node[i];
+                if (child.nodeName == primitiveTags[j].name){
+                    res.push({name: child.nodeName, attributes: this.parseAttributes(child, primitiveTags[j].attr)});
+                }
+            }
+        }
+
+    }   
+
+    parseComponents(node){
+        let children = node.children;
+
+        const componentAttr = [
+            this.newAttribute("id", "string", true),
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < children.length; i++){
+            if (children[i].nodeName == "component"){
+                res.push(this.parseAttributes(children[i], componentAttr));
+                this.parseComponent(children[i].children);
+            }
+        }
+    }
+
+    parseComponent(node){
+        
+        const componentTags = [
+            "transformation", "materials", "texture", "children"
+        ];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < componentTags.length; j++){
+                if (node[i].nodeName == componentTags[j]){
+                    this["parseComponent" + jsUcfirst(componentTags[j])](node[i]);
+                }
+            }
+        }
+    }
+
+    parseComponentTransformation(node){
+
+        node = node.children;
+
+        const transformationTags = [
+            {name: "transformationref", attr: [this.newAttribute("id", "string", true)]},
+            {name: "translate", attr: this.xyzAttr},
+            {name: "rotate", attr: this.rotateAttr},
+            {name: "scale", attr: this.xyzAttr}
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < transformationTags.length; j++){
+                if (node[i].nodeName == transformationTags[j].name)
+                res.push({
+                        name: node[i].nodeName,
+                        attr: this.parseAttributes(node[i], transformationTags[j].attr)
+                    });
+                
+            }
+        }
+
+    }
+
+    parseComponentMaterials(node){
+
+        node = node.children;
+
+        let res = [];
+        
+        for (let i = 0; i < node.length; i++){
+            if (node[i].nodeName == "material"){
+                res.push(this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]));
+            }
+        }
+
+    }
+
+    parseComponentTexture(node){
+
+        let res = this.parseAttributes(node, [
+            this.newAttribute("id", "string", true),
+            this.newAttribute("length_s", "float", true),
+            this.newAttribute("length_t", "float", true)
+        ]);
+
+    }
+
+    parseComponentChildren(node){
+
+        node = node.children;
+
+        const childrenTags = [
+            "componentref", "primitiveref"
+        ];
+
+        let res = [];
+
+        for (let i = 0; i < node.length; i++){
+            for (let j = 0; j < childrenTags.length; j++){
+                if (node[i].nodeName == childrenTags[j]){
+                    res.push(
+                        {
+                            type: node[i].nodeName.slice(0, -3),
+                            attr: this.parseAttributes(node[i], [this.newAttribute("id", "string", true)])
+                        }
+                    );
+                }
+            }   
+        }
     }
     
 
@@ -270,12 +620,11 @@ class MySceneGraph {
         let res = {};
         for (let i = 0; i < attributes.length; i++){
             let attr = attributes[i];
-            res[attr.name] = this.reader[typeFunc[attr.type]](node, attr.name, false);
+            res[attr.name] = this.reader[this.typeFunc[attr.type]](node, attr.name, false);
 
             if (res[attr.name] == null){
                 if (attr.required) throw "Attribute '" + attr.name + "' missing.";
                 else {
-                    
                     this.onXMLMinorError(attr.name + " attribute missing. Assuming value=" + attr.default);
                 }
             } else if (isNaN(res[attr.name])){
@@ -285,8 +634,10 @@ class MySceneGraph {
                 }
             }
         }
+
         return res;
     }
+
 
     newAttribute(name, type, required, def){
         let newAttr = {
