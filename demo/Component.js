@@ -1,0 +1,14 @@
+
+
+class Component {
+
+    constructor(){
+
+    }
+
+    display(){
+        
+    }
+
+
+}

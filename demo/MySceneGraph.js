@@ -524,14 +524,17 @@ class MySceneGraph {
             this.newAttribute("id", "string", true),
         ];
 
-        let res = [];
+        this.componentValues = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "component") {
-                res.push(this.parseAttributes(children[i], componentAttr));
-                this.parseComponent(children[i].children);
-            }
+                let res = this.parseAttributes(children[i], componentAttr);
+                if (this.componentValues.hasOwnProperty(res.id)) throw "Component with id='" + res.id + "' already exists.";
+                this.componentValues[res.id] = this.parseComponent(children[i].children);
+            } else throw "Invalid component tag '" + children[i].nodeName + "'.";
         }
+
+        console.log(this.componentValues);
     }
 
     parseComponent(node) {
@@ -540,38 +543,42 @@ class MySceneGraph {
             "transformation", "materials", "texture", "children"
         ];
 
+        let res = {};
+
         for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < componentTags.length; j++) {
-                if (node[i].nodeName == componentTags[j]) {
-                    this["parseComponent" + jsUcfirst(componentTags[j])](node[i]);
-                }
+            if (componentTags.indexOf(node[i].nodeName) != -1){
+                res[node[i].nodeName] = this["parseComponent" + jsUcfirst(node[i].nodeName)](node[i]);
             }
         }
+
+        return res;
     }
 
     parseComponentTransformation(node) {
 
         node = node.children;
 
-        const transformationTags = [
-            { name: "transformationref", attr: [this.newAttribute("id", "string", true)] },
-            { name: "translate", attr: this.xyzAttr },
-            { name: "rotate", attr: this.rotateAttr },
-            { name: "scale", attr: this.xyzAttr }
-        ];
+        const transformationTags = {
+            transformationref: [this.newAttribute("id", "string", true)],
+            translate: this.xyzAttr,
+            rotate: this.rotateAttr,
+            scale: this.xyzAttr
+        };
 
         let res = [];
 
         for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < transformationTags.length; j++) {
-                if (node[i].nodeName == transformationTags[j].name)
-                    res.push({
-                        name: node[i].nodeName,
-                        attr: this.parseAttributes(node[i], transformationTags[j].attr)
-                    });
-
-            }
+            if (transformationTags.hasOwnProperty(node[i].nodeName)){
+                let transf = this.parseAttributes(node[i], transformationTags[node[i].nodeName]);
+                if (node[i].nodeName == "transformationref") {
+                    if (!this.transformations.hasOwnProperty(transf.id)) throw "Transformation with id='" + transf.id + "' doesn't exist.";
+                    res.push({type: "ref", id: transf.id});
+                } else {
+                    res.push({type: node[i].nodeName, transf});
+                }
+            } else throw "Invalid tag '" + node[i].nodeName + "'.";
         }
+        return res;
 
     }
 
@@ -583,10 +590,13 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (node[i].nodeName == "material") {
-                res.push(this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]));
-            }
+                let mat = this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]);
+                if (!this.materials.hasOwnProperty(mat.id) && mat.id != "inherit") throw "Material with id='" + mat.id + "' doesn't exist.";
+                res.push(mat.id);
+            } else throw "Invalid tag '" + node[i].nodeName + "'.";
         }
-
+        
+        return res;
     }
 
     parseComponentTexture(node) {
@@ -596,6 +606,10 @@ class MySceneGraph {
             this.newAttribute("length_s", "float", true),
             this.newAttribute("length_t", "float", true)
         ]);
+
+        if (!this.textures.hasOwnProperty(res.id) && res.id != "inherit" && res.id != "none") throw "Invalid texture id.";
+
+        return res;
 
     }
 
@@ -607,26 +621,25 @@ class MySceneGraph {
             "componentref", "primitiveref"
         ];
 
-        let res = [];
+        let res = {};
+        res.components = [];
+        res.primitives = [];
 
         for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < childrenTags.length; j++) {
-                if (node[i].nodeName == childrenTags[j]) {
-                    res.push(
-                        {
-                            type: node[i].nodeName.slice(0, -3),
-                            attr: this.parseAttributes(node[i], [this.newAttribute("id", "string", true)])
-                        }
-                    );
+            if (childrenTags.indexOf(node[i].nodeName) != -1){
+                let child = this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]);
+                if (node[i].nodeName == "primitiveref"){
+                    if (!this.primitives.hasOwnProperty(child.id)) throw "Invalid primitive id.";
                 }
-            }
+                res[node[i].nodeName.slice(0, -3) + "s"].push(res.id);
+            } else throw "Invlaid tag '" + node[i].nodeName + "'.";
         }
+
+        return res;
     }
 
     displayScene(){
-        for (let key in this.primitives){
-            this.primitives[key].display();
-        }
+        
     }
 
 

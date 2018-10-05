@@ -6,7 +6,7 @@ class Rectangle extends CGFobject
 {
 	constructor(scene, x0, y0, x1, y1) {
 		super(scene);
-		console.log(x0, x1, y0, y1);
+		
 		this.x = [x0, x1];
 		this.y = [y0, y1];
 		/* this.minS = minS || 0;

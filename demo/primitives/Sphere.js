@@ -1,8 +1,8 @@
 /**
- * MyLamp
+ * Sphere
  * @constructor
  */
-class MyLamp extends CGFobject
+class Sphere extends CGFobject
 {
 	constructor(scene, slices, stacks) 
 	{
@@ -20,7 +20,7 @@ class MyLamp extends CGFobject
 		this.normals = [];
 
 		let theta = Math.PI * 2 / this.slices;
-		let phi = (Math.PI / 2.0) / this.stacks;
+		let phi = Math.PI / this.stacks;
 
 		for(let i = 0; i <= this.stacks; i++) {
 			for(let j = 0; j < this.slices; j++) {

@@ -13,17 +13,17 @@
 <yas>
     <!-- deve definir-se um objeto para raiz da arvore, assim -->
     <!-- como o comprimento dos tres eixos (cilindros) -->
-    <scene root="cubo" axis_length="1" />
+    <scene root="cubo" axis_length="5" />
     <views default="persp">
         <!-- tem de existir, pelo menos, uma vista de -->
         <!-- entre as seguintes (perspective ou ortho) -->
         <perspective id="persp" near="0.1" far="500" angle="0.4">
-            <from x="0" y="0" z="0" />
-            <to x="30" y="30" z="30" />
+            <from x="15" y="15" z="15" />
+            <to x="0" y="0" z="0" />
         </perspective>
     </views>
     <ambient>
-        <ambient r="1" g="1" b="1" a="1" />
+        <ambient r="0" g="0" b="0" a="1" />
         <background r="1" g="1" b="1" a="1" />
     </ambient>
     <lights>
@@ -47,8 +47,8 @@
     <textures>
         <!-- Deve existir um ou mais blocos "texture" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <texture id="wood" file="trunk-image.jpg" />
-        <texture id="white" file="bank.jpg">
+        <texture id="wood" file="/scenes/images/trunk-image.jpg" />
+        <texture id="white" file="/scenes/images/bank.jpg" />
     </textures>
     <materials>
         <!-- Deve existir um ou mais blocos "material" -->
@@ -64,46 +64,39 @@
         <!-- Deve existir um ou mais blocos "transformation" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
         <!-- Os angulos sao expressos em graus -->
-        <transformation id="ss">
-            <!-- instrucoes a usar sem limite nem ordem -->
-            <!-- deve existir pelo menos uma transformacao -->
-            <translate x="ff" y="ff" z="ff" />
-            <rotate axis="cc" angle="ff" />
-            <scale x="ff" y="ff" z="ff" />
-        </transformation>
         <transformation id="face1">
-            <translate x="0.5" y="0" z="0">
-            <rotate axis="y" angle="90">
+            <translate x="0.5" y="0" z="0" />
+            <rotate axis="y" angle="90" />
         </transformation>
         <transformation id="face2">
-            <translate x="0" y="0" z="0.5">
+            <translate x="0" y="0" z="0.5" />
         </transformation>
         <transformation id="face3">
-            <translate x="0" y="0" z="-0.5">
-            <rotate axis="y" angle="180">
+            <translate x="0" y="0" z="-0.5" />
+            <rotate axis="y" angle="180" />
         </transformation>
         <transformation id="face4">
-            <translate x="-0.5" y="0" z="0">
-            <rotate axis="y" angle="-90">
+            <translate x="-0.5" y="0" z="0" />
+            <rotate axis="y" angle="-90" />
         </transformation>
         <transformation id="face5">
-            <translate x="0" y="0.5" z="0">
-            <rotate axis="x" angle="90">
+            <translate x="0" y="0.5" z="0" />
+            <rotate axis="x" angle="90" />
         </transformation>
         <transformation id="face6">
-            <translate x="0" y="-0.5" z="0">
-            <rotate axis="y" angle="-90">
+            <translate x="0" y="-0.5" z="0" />
+            <rotate axis="y" angle="-90" />
         </transformation>
         <transformation id="headboard">
-            <translate x="0" y="5" z="0">
-            <scale x="7" y="5" z="2">
+            <translate x="0" y="5" z="0" />
+            <scale x="7" y="5" z="2" />
         </transformation>
         <transformation id="frame">
-            <translate x="0" y="2" z="7">
-            <scale x="7" y="2" z="16">
+            <translate x="0" y="2" z="7" />
+            <scale x="7" y="2" z="16" />
         </transformation>
         <transformation id="bedfoot">
-            <scale x="0.5" y="2" z="0.5">
+            <scale x="0.5" y="2" z="0.5" />
         </transformation>
     </transformations>
     <primitives>
@@ -116,8 +109,8 @@
             <!-- os parametros devem ser interpretados, genericamente, -->
             <!-- como em WebGL; o cilindro deve adicionalmente ter tampas -->
             <rectangle x1="0.5" y1="-0.5" x2="-0.5" y2="0.5" />
-        </primitive >
-    </primitives >
+        </primitive>
+    </primitives>
     <components>
         <component id="face1">
             <!-- Uma "component" e' um objeto composto e pode ser -->
@@ -233,12 +226,12 @@
             </materials>
             <texture id="inherit" length_s="0" length_t="0" />
             <children>
-                <componentref id="face1">
-                <componentref id="face2">
-                <componentref id="face3">
-                <componentref id="face4">
-                <componentref id="face5">
-                <componentref id="face6">
+                <componentref id="face1" />
+                <componentref id="face2" />
+                <componentref id="face3" />
+                <componentref id="face4" />
+                <componentref id="face5" />
+                <componentref id="face6" />
             </children>
         </component>
         <component id="headboard">
@@ -289,7 +282,7 @@
                 <componentref id="headboard"/>
                 <componentref id="bedfoot"/>
             </children>
-        <component />
+        </component>
     </components>
 </yas>
 

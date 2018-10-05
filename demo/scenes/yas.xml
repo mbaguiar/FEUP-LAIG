@@ -80,11 +80,11 @@
             <!-- apenas pode existir UMA das seguintes tags: -->
             <!-- rectangle, triangle, cylinder, sphere, torus -->
             <!-- os parametros devem ser interpretados, genericamente, -->
-            <!-- como em WebGL; o cilindro deve adicionalmente ter tampas 
-            <rectangle x1="ff" y1="ff" x2="ff" y2="ff" /> -->
-            <triangle x1="0" y1="0" z1="0" x2="2" y2="1" z2="2" x3="1.5" y3="0" z3="-0.5"/>
+            <!-- como em WebGL; o cilindro deve adicionalmente ter tampas --> 
+            <rectangle x1="0" y1="0" x2="1" y2="1" /> 
+            <!-- <triangle x1="0" y1="0" z1="0" x2="2" y2="1" z2="2" x3="1.5" y3="0" z3="-0.5"/>
             <cylinder base="ff" top="ff" height="ff" slices="ii" stacks="ii" />
-            <!-- <sphere radius="ff" slices="ii" stacks="ii" />
+            <sphere radius="ff" slices="ii" stacks="ii" />
             <torus inner="ff" outer="ff" slices="ii" loops="ii" /> -->
         </primitive >
     </primitives >

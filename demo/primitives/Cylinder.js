@@ -1,8 +1,8 @@
 /**
- * MyQuad
+ * Cylinder
  * @constructor
  */
-class MyCylinder extends CGFobject
+class Cylinder extends CGFobject
 {
 	constructor(scene, slices, stacks) 
 	{
