@@ -430,8 +430,6 @@ class MySceneGraph {
                 this.transformations[res.id] = childrenRes;
             } else throw "Invalid transformation tag '" + children[i].nodeName + "'.";
         }
-
-        console.log(this.transformations);
     }
 
     parseTransformation(node) {
@@ -480,34 +478,41 @@ class MySceneGraph {
             this.newAttribute("id", "string", true),
         ];
 
-        let res = [];
+        this.primitives = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "primitive") {
-                res.push(this.parseAttributes(children[i], primitiveAttr));
-                this.parsePrimitive(children[i].children);
-            }
+                let res = this.parseAttributes(children[i], primitiveAttr);
+                if (this.primitives.hasOwnProperty(res.id)) throw "Primitive with id='" + res.id + "' already exists.";
+                let childrenRes = this.parsePrimitive(children[i].children);
+                this.primitives[res.id] = childrenRes; 
+            } else throw "Invalid primitive tag '" + children[i].nodeName + "'.";
         }
     }
 
     parsePrimitive(node) {
-        const primitiveTags = [
-            { name: "rectangle", attr: this.rectangleAttr },
-            { name: "triangle", attr: this.triangleAttr },
-            { name: "cylinder", attr: this.cylinderAttr },
-            { name: "sphere", attr: this.sphereAttr },
-            { name: "torus", attr: this.torusAttr },
-        ];
+        const primitiveTags = {
+            rectangle: this.rectangleAttr,
+            triangle: this.triangleAttr,
+            cylinder: this.cylinderAttr,
+            sphere: this.sphereAttr,
+            torus: this.torusAttr,
+        };
+        
+        
+        
+        if (node.length != 1) throw "Primitive should have one and only one tag.";
+        
+        let child = node[0];
 
-        let res = [];
-
-        for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < primitiveTags.length; j++) {
-                let child = node[i];
-                if (child.nodeName == primitiveTags[j].name) {
-                    res.push({ name: child.nodeName, attributes: this.parseAttributes(child, primitiveTags[j].attr) });
-                }
-            }
+        if (!primitiveTags.hasOwnProperty(child.nodeName)) throw "Invalid primitive tag '" + child.nodeName + "'.";
+        
+        let res = this.parseAttributes(child, primitiveTags[child.nodeName]);
+        switch(child.nodeName){
+            case "rectangle":
+                return new Rectangle(this.scene, res.x1, res.y1, res.x2, res.y2);
+            case "triangle":
+                return new Triangle(this.scene, res.x1, res.y1, res.z1, res.x2, res.y2, res.z2, res.x3, res.y3, res.z3);
         }
 
     }
@@ -615,6 +620,12 @@ class MySceneGraph {
                     );
                 }
             }
+        }
+    }
+
+    displayScene(){
+        for (let key in this.primitives){
+            this.primitives[key].display();
         }
     }
 
