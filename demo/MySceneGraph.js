@@ -550,7 +550,7 @@ class MySceneGraph {
                 let id = currComponent.children.components[i];
                 if (!this.componentValues.hasOwnProperty(id)) throw "Invalid componentref='" + id + "'.";
             }
-            this.components[key] = new Component(this, this.scene, currComponent);
+            this.components[key] = new Component(this, this.scene, key, currComponent);
         }
 
         for (let key in this.components){
@@ -661,8 +661,9 @@ class MySceneGraph {
         return res;
     }
 
-    displayScene(){
-        this.components[this.idRoot].display();
+    displayScene(root){
+        if (root == null) this.components[this.idRoot].display();
+        else this.components[root].display(); 
     }
 
 

@@ -2,9 +2,10 @@
 
 class Component {
 
-    constructor(graph, scene, component){
+    constructor(graph, scene, id, component){
         this.graph = graph;
         this.scene = scene;
+        this.id = id;
         this.componentObject = component;
         this.initTransformations();
         this.initMaterials();
@@ -42,7 +43,6 @@ class Component {
         for (let i = 0; i < this.componentObject.children.components.length; i++){
             this.children.push(this.graph.components[this.componentObject.children.components[i]]);
         }
-        console.log(this);
     }
 
     display(material, texture){
