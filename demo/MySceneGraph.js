@@ -440,6 +440,22 @@ class MySceneGraph {
             scale: this.xyzAttr
         };
 
+        let res = mat4.create();
+        mat4.identity(res);
+
+        for (let i = 0; i < node.length; i++) {
+            if (transformationTags.hasOwnProperty(node[i].nodeName)) {
+                let child = node[i];
+                let param = this.parseAttributes(child, transformationTags[child.nodeName]);
+                mat4.mul(res, res, this.getTransformationMatrix(child.nodeName, param));
+            } else throw "Invalid transformation type '" + node[i].nodeName + "'.";
+
+        }
+        return res;
+    }
+
+    getTransformationMatrix(type, param){
+
         const axis = {
             x: vec3.fromValues(1, 0, 0),
             y: vec3.fromValues(0, 1, 0),
@@ -448,26 +464,18 @@ class MySceneGraph {
 
         let res = mat4.create();
 
-
-
-        for (let i = 0; i < node.length; i++) {
-            if (transformationTags.hasOwnProperty(node[i].nodeName)) {
-                let child = node[i];
-                let param = this.parseAttributes(child, transformationTags[child.nodeName]);
-                switch (child.nodeName) {
-                    case "rotate":
-                        mat4.rotate(res, res, toRadian(param.angle), axis[param.axis]);
-                        break;
-                    case "translate":
-                        mat4.translate(res, res, Object.values(param));
-                        break;
-                    case "scale":
-                        mat4.scale(res, res, Object.values(param));
-                        break;
-                }
-            } else throw "Invalid transformation type '" + node[i].nodeName + "'.";
-
+        switch (type) {
+            case "rotate":
+                mat4.rotate(res, res, toRadian(param.angle), axis[param.axis]);
+                break;
+            case "translate":
+                mat4.translate(res, res, Object.values(param));
+                break;
+            case "scale":
+                mat4.scale(res, res, Object.values(param));
+                break;
         }
+
         return res;
     }
 
@@ -534,7 +542,22 @@ class MySceneGraph {
             } else throw "Invalid component tag '" + children[i].nodeName + "'.";
         }
 
-        console.log(this.componentValues);
+        this.components = {};
+
+        for (let key in this.componentValues){
+            let currComponent = this.componentValues[key];
+            for (let i = 0; i < currComponent.children.components.length; i++){
+                let id = currComponent.children.components[i];
+                if (!this.componentValues.hasOwnProperty(id)) throw "Invalid componentref='" + id + "'.";
+            }
+            this.components[key] = new Component(this, this.scene, currComponent);
+        }
+
+        for (let key in this.components){
+            this.components[key].setupChildrenComponents();
+        }
+
+
     }
 
     parseComponent(node) {
@@ -574,7 +597,7 @@ class MySceneGraph {
                     if (!this.transformations.hasOwnProperty(transf.id)) throw "Transformation with id='" + transf.id + "' doesn't exist.";
                     res.push({type: "ref", id: transf.id});
                 } else {
-                    res.push({type: node[i].nodeName, transf});
+                    res.push({type: node[i].nodeName, param: transf});
                 }
             } else throw "Invalid tag '" + node[i].nodeName + "'.";
         }
@@ -631,7 +654,7 @@ class MySceneGraph {
                 if (node[i].nodeName == "primitiveref"){
                     if (!this.primitives.hasOwnProperty(child.id)) throw "Invalid primitive id.";
                 }
-                res[node[i].nodeName.slice(0, -3) + "s"].push(res.id);
+                res[node[i].nodeName.slice(0, -3) + "s"].push(child.id);
             } else throw "Invlaid tag '" + node[i].nodeName + "'.";
         }
 
@@ -639,7 +662,7 @@ class MySceneGraph {
     }
 
     displayScene(){
-        
+        this.components[this.idRoot].display();
     }
 
 

@@ -109,7 +109,6 @@ class XMLscene extends CGFscene {
         this.camera.near = defaultCamera.near;
         this.camera.far = defaultCamera.far;
         this.camera.fov = defaultCamera.angle;
-        console.log(defaultCamera);
 
         this.axis = new CGFaxis(this, this.graph.axisLength);
 
