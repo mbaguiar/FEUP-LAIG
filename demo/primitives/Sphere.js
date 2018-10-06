@@ -4,7 +4,7 @@
  */
 class Sphere extends CGFobject
 {
-	constructor(scene, slices, stacks) 
+	constructor(scene, radius, slices, stacks) 
 	{
 		super(scene);
 		this.slices = slices;

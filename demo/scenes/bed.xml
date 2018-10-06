@@ -124,6 +124,9 @@
             <!-- como em WebGL; o cilindro deve adicionalmente ter tampas -->
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
         </primitive>
+        <primitive id="sphere1">
+            <sphere radius="5" slices="20" stacks="5" />
+        </primitive>
     </primitives>
     <components>
         <component id="face1">
@@ -295,6 +298,7 @@
                 <componentref id="frame"/>
                 <componentref id="headboard"/>
                 <componentref id="bedfoot"/>
+                <primitiveref id="sphere1" />
             </children>
         </component>
     </components>
