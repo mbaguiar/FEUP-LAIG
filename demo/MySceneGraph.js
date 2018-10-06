@@ -1,4 +1,3 @@
-
 // Order of the groups in the XML document.
 
 
@@ -19,8 +18,8 @@ class MySceneGraph {
         this.scene = scene;
         scene.graph = this;
 
-        this.idRoot = null;                    // The id of the root element.
-        this.axisLength = 1;                   // Axis length
+        this.idRoot = null; // The id of the root element.
+        this.axisLength = 1; // Axis length
 
         this.axisCoords = [];
         this.axisCoords['x'] = [1, 0, 0];
@@ -29,7 +28,8 @@ class MySceneGraph {
 
         //Constants
         this.tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
-            'transformations', 'primitives', 'components'];
+            'transformations', 'primitives', 'components'
+        ];
 
         this.typeFunc = {
             int: 'getInteger',
@@ -323,17 +323,31 @@ class MySceneGraph {
 
         let children = node.children;
 
-        let lightsTags = [
-            { name: "location", attr: this.xyzwAttr },
-            { name: "ambient", attr: this.rgbaAttr },
-            { name: "diffuse", attr: this.rgbaAttr },
-            { name: "specular", attr: this.rgbaAttr }
+        let lightsTags = [{
+                name: "location",
+                attr: this.xyzwAttr
+            },
+            {
+                name: "ambient",
+                attr: this.rgbaAttr
+            },
+            {
+                name: "diffuse",
+                attr: this.rgbaAttr
+            },
+            {
+                name: "specular",
+                attr: this.rgbaAttr
+            }
         ];
 
         let res = {};
 
         if (node.nodeName == "spot") {
-            lightsTags.push({ name: "target", attr: this.xyzAttr });
+            lightsTags.push({
+                name: "target",
+                attr: this.xyzAttr
+            });
         }
 
         for (let i = 0; i < children.length; i++) {
@@ -386,7 +400,9 @@ class MySceneGraph {
                 let res = this.parseAttributes(children[i], materialAttr);
                 if (this.materials.hasOwnProperty(res.id)) throw "Material with id='" + res.id + "' already exists.";
                 let childrenRes = this.parseMaterial(children[i].children);
-                this.materials[res.id] = Object.assign({ shininess: res.shininess }, childrenRes);
+                this.materials[res.id] = Object.assign({
+                    shininess: res.shininess
+                }, childrenRes);
             } else throw "Invalid material tag '" + children[i].nodeName + "'.";
         }
 
@@ -454,7 +470,7 @@ class MySceneGraph {
         return res;
     }
 
-    getTransformationMatrix(type, param){
+    getTransformationMatrix(type, param) {
 
         const axis = {
             x: vec3.fromValues(1, 0, 0),
@@ -493,7 +509,7 @@ class MySceneGraph {
                 let res = this.parseAttributes(children[i], primitiveAttr);
                 if (this.primitives.hasOwnProperty(res.id)) throw "Primitive with id='" + res.id + "' already exists.";
                 let childrenRes = this.parsePrimitive(children[i].children);
-                this.primitives[res.id] = childrenRes; 
+                this.primitives[res.id] = childrenRes;
             } else throw "Invalid primitive tag '" + children[i].nodeName + "'.";
         }
     }
@@ -506,17 +522,17 @@ class MySceneGraph {
             sphere: this.sphereAttr,
             torus: this.torusAttr,
         };
-        
-        
-        
+
+
+
         if (node.length != 1) throw "Primitive should have one and only one tag.";
-        
+
         let child = node[0];
 
         if (!primitiveTags.hasOwnProperty(child.nodeName)) throw "Invalid primitive tag '" + child.nodeName + "'.";
-        
+
         let res = this.parseAttributes(child, primitiveTags[child.nodeName]);
-        switch(child.nodeName){
+        switch (child.nodeName) {
             case "rectangle":
                 return new Rectangle(this.scene, res.x1, res.y1, res.x2, res.y2);
             case "triangle":
@@ -544,16 +560,16 @@ class MySceneGraph {
 
         this.components = {};
 
-        for (let key in this.componentValues){
+        for (let key in this.componentValues) {
             let currComponent = this.componentValues[key];
-            for (let i = 0; i < currComponent.children.components.length; i++){
+            for (let i = 0; i < currComponent.children.components.length; i++) {
                 let id = currComponent.children.components[i];
                 if (!this.componentValues.hasOwnProperty(id)) throw "Invalid componentref='" + id + "'.";
             }
             this.components[key] = new Component(this, this.scene, key, currComponent);
         }
 
-        for (let key in this.components){
+        for (let key in this.components) {
             this.components[key].setupChildrenComponents();
         }
 
@@ -569,7 +585,7 @@ class MySceneGraph {
         let res = {};
 
         for (let i = 0; i < node.length; i++) {
-            if (componentTags.indexOf(node[i].nodeName) != -1){
+            if (componentTags.indexOf(node[i].nodeName) != -1) {
                 res[node[i].nodeName] = this["parseComponent" + jsUcfirst(node[i].nodeName)](node[i]);
             }
         }
@@ -591,13 +607,19 @@ class MySceneGraph {
         let res = [];
 
         for (let i = 0; i < node.length; i++) {
-            if (transformationTags.hasOwnProperty(node[i].nodeName)){
+            if (transformationTags.hasOwnProperty(node[i].nodeName)) {
                 let transf = this.parseAttributes(node[i], transformationTags[node[i].nodeName]);
                 if (node[i].nodeName == "transformationref") {
                     if (!this.transformations.hasOwnProperty(transf.id)) throw "Transformation with id='" + transf.id + "' doesn't exist.";
-                    res.push({type: "ref", id: transf.id});
+                    res.push({
+                        type: "ref",
+                        id: transf.id
+                    });
                 } else {
-                    res.push({type: node[i].nodeName, param: transf});
+                    res.push({
+                        type: node[i].nodeName,
+                        param: transf
+                    });
                 }
             } else throw "Invalid tag '" + node[i].nodeName + "'.";
         }
@@ -618,7 +640,7 @@ class MySceneGraph {
                 res.push(mat.id);
             } else throw "Invalid tag '" + node[i].nodeName + "'.";
         }
-        
+
         return res;
     }
 
@@ -649,9 +671,9 @@ class MySceneGraph {
         res.primitives = [];
 
         for (let i = 0; i < node.length; i++) {
-            if (childrenTags.indexOf(node[i].nodeName) != -1){
+            if (childrenTags.indexOf(node[i].nodeName) != -1) {
                 let child = this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]);
-                if (node[i].nodeName == "primitiveref"){
+                if (node[i].nodeName == "primitiveref") {
                     if (!this.primitives.hasOwnProperty(child.id)) throw "Invalid primitive id.";
                 }
                 res[node[i].nodeName.slice(0, -3) + "s"].push(child.id);
@@ -661,9 +683,9 @@ class MySceneGraph {
         return res;
     }
 
-    displayScene(root){
+    displayScene(root) {
         if (root == null) this.components[this.idRoot].display();
-        else this.components[root].display(); 
+        else this.components[root].display();
     }
 
 

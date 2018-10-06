@@ -2,11 +2,10 @@
  * Rectangle
  * @constructor
  */
-class Rectangle extends CGFobject
-{
+class Rectangle extends CGFobject {
 	constructor(scene, x0, y0, x1, y1) {
 		super(scene);
-		
+
 		this.x = [x0, x1];
 		this.y = [y0, y1];
 		/* this.minS = minS || 0;
@@ -16,18 +15,17 @@ class Rectangle extends CGFobject
 		this.initBuffers();
 	};
 
-	initBuffers() 
-	{
+	initBuffers() {
 		this.vertices = [
-		this.x[0], this.y[0], 0,
-		this.x[1], this.y[0], 0,
-		this.x[0], this.y[1], 0,
-		this.x[1], this.y[1], 0
+			this.x[0], this.y[0], 0,
+			this.x[1], this.y[0], 0,
+			this.x[0], this.y[1], 0,
+			this.x[1], this.y[1], 0
 		];
 
 		this.indices = [
-		0, 1, 2, 
-		3, 2, 1
+			0, 1, 2,
+			3, 2, 1
 		];
 
 		this.normals = [

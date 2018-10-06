@@ -53,19 +53,19 @@ class XMLscene extends CGFscene {
         // Reads the lights from the scene graph.
         for (let key in this.graph.lights) {
             if (i >= 8)
-                break;              // Only eight lights allowed by WebGL.
+                break; // Only eight lights allowed by WebGL.
 
             if (this.graph.lights.hasOwnProperty(key)) {
                 let light = this.graph.lights[key];
-                
+
                 //lights are predefined in cgfscene
                 let lightProp = light.properties;
                 this.lights[i].setPosition(lightProp.location.x, lightProp.location.y, lightProp.location.z, lightProp.location.w);
-                this.lights[i].setAmbient(lightProp.ambient.r,lightProp.ambient.g, lightProp.ambient.b, lightProp.ambient.a);
-                this.lights[i].setDiffuse(lightProp.diffuse.r,lightProp.diffuse.g, lightProp.diffuse.b, lightProp.diffuse.a);
-                this.lights[i].setSpecular(lightProp.specular.r,lightProp.specular.g, lightProp.specular.b, lightProp.specular.a);
+                this.lights[i].setAmbient(lightProp.ambient.r, lightProp.ambient.g, lightProp.ambient.b, lightProp.ambient.a);
+                this.lights[i].setDiffuse(lightProp.diffuse.r, lightProp.diffuse.g, lightProp.diffuse.b, lightProp.diffuse.a);
+                this.lights[i].setSpecular(lightProp.specular.r, lightProp.specular.g, lightProp.specular.b, lightProp.specular.a);
 
-                if (light.type == "spot"){
+                if (light.type == "spot") {
                     let target = vec3.fromValues(lightProp.target.x, lightProp.target.y, lightProp.target.z);
                     let direction = vec4.normalize(vec4.create(), vec4.subtract(vec4.create(), target, this.lights[i].position));
                     this.lights[i].setSpotDirection(direction[0], direction[1], direction[2]);
@@ -73,7 +73,7 @@ class XMLscene extends CGFscene {
                     this.lights[i].setSpotCutOff(light.angle);
 
                 }
-  
+
                 this.lightValues[key] = light.enabled;
 
                 this.lights[i].setVisible(true);
@@ -96,7 +96,7 @@ class XMLscene extends CGFscene {
      * As loading is asynchronous, this may be called already after the application has started the run loop
      */
     onGraphLoaded() {
-        
+
         let defaultCamera = this.graph.views.children[0].attr;
         let defaultCameraPos = defaultCamera.attr;
         let position = Object.values(defaultCameraPos.from);
@@ -105,7 +105,7 @@ class XMLscene extends CGFscene {
         this.camera.setPosition(position);
         this.camera.setTarget(target);
         this.camera.direction = this.camera.calculateDirection();
-        
+
         this.camera.near = defaultCamera.near;
         this.camera.far = defaultCamera.far;
         this.camera.fov = defaultCamera.angle;
@@ -154,8 +154,7 @@ class XMLscene extends CGFscene {
                     if (this.lightValues[key]) {
                         this.lights[i].setVisible(true);
                         this.lights[i].enable();
-                    }
-                    else {
+                    } else {
                         this.lights[i].setVisible(false);
                         this.lights[i].disable();
                     }
@@ -166,8 +165,7 @@ class XMLscene extends CGFscene {
 
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
-        }
-        else {
+        } else {
             // Draw axis
             this.axis.display();
         }
