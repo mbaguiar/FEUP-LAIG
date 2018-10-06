@@ -1,5 +1,5 @@
 /**
- * Sphere
+ * MyLamp
  * @constructor
  */
 class Sphere extends CGFobject
@@ -9,6 +9,7 @@ class Sphere extends CGFobject
 		super(scene);
 		this.slices = slices;
 		this.stacks = stacks;
+		this.radius = radius;
 
 		this.initBuffers();
 	};
@@ -20,27 +21,28 @@ class Sphere extends CGFobject
 		this.normals = [];
 
 		let theta = Math.PI * 2 / this.slices;
-		let phi = Math.PI / this.stacks;
+		let phi = (Math.PI) / this.stacks;
+		let nVertices = 0;
 
-		for(let i = 0; i <= this.stacks; i++) {
-			for(let j = 0; j < this.slices; j++) {
-				let x = 1*Math.cos(phi*i)*Math.cos(theta*j);
-				let y = 1*Math.cos(phi*i)*Math.sin(theta*j);
-				let z = 1*Math.sin(phi*i);
-				this.vertices.push(x/ 2, y/2 , z);
+		for(let i = 0; i <= this.slices; i++) {
+			for(let j = 0; j <= this.stacks; j++) {
+
+				let x = Math.sin(phi*j)*Math.cos(theta*i);
+				let y = Math.sin(phi*j)*Math.sin(theta*i);
+				let z = Math.cos(phi*j);
+
+				this.vertices.push(this.radius * x, this.radius * y ,this.radius * z);
+				nVertices++;
 				this.normals.push(x, y, z);
+
+				if (i > 0 && j > 0) {
+					this.indices.push(nVertices - this.stacks - 1, nVertices - 1, nVertices - this.stacks - 2);
+					this.indices.push(nVertices - 1, nVertices - 2, nVertices - this.stacks - 2);
+				}
+
 			}
 		}
 			
-		for(let i = 0; i < this.stacks; i++) {
-			for(let j = 0; j < this.slices - 1; j++) {
-				this.indices.push(i*this.slices + j, i*this.slices + j+1, (i+1)*this.slices + j);
-				this.indices.push(i*this.slices + j+1, (i+1)*this.slices + j+1, (i+1)*this.slices + j);
-			}
-
-			this.indices.push(i*this.slices + this.slices - 1, i*this.slices, (i+1)*this.slices + this.slices - 1);
-			this.indices.push(i*this.slices, i*this.slices + this.slices, (i+1)*this.slices + this.slices - 1);
-		}
 		this.primitiveType = this.scene.gl.TRIANGLES;
 
 		this.initGLBuffers();
