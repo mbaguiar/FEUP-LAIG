@@ -14,7 +14,7 @@
     <!-- deve definir-se um objeto para raiz da arvore, assim -->
     <!-- como o comprimento dos tres eixos (cilindros) -->
     <scene root="bed" axis_length="15" />
-       
+
     <views default="persp">
         <!-- tem de existir, pelo menos, uma vista de -->
         <!-- entre as seguintes (perspective ou ortho) -->
@@ -64,9 +64,9 @@
     <materials>
         <!-- Deve existir um ou mais blocos "material" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <material id="wood" shininess = "0">
-            <emission r="1" g="1" b="1" a="1" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1" /> 
+        <material id="wood" shininess="0">
+            <emission r="0.1" g="0.1" b="0.1" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.678" g="0.698" b="0.741" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
@@ -166,7 +166,7 @@
             <!-- do tipo escalamento violem esta regra. -->
             <!-- Nao e' necessario aplicar fatores de escala em -->
             <!-- quadricas (esfera, cilindro...) -->
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <!-- bloco "children" obrigatorio num "component" -->
             <children>
                 <!-- deve existir uma ou mais tags "componentref" e/ou -->
@@ -182,7 +182,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -194,7 +194,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -206,7 +206,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -218,7 +218,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -230,7 +230,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -241,7 +241,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="0" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="face1" />
                 <componentref id="face2" />
@@ -258,7 +258,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -270,7 +270,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -282,7 +282,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -293,7 +293,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="wood" length_s="0" length_t="1" />
+            <texture id="wood" length_s="1" length_t="1" />
             <children>
                 <componentref id="frame"/>
                 <componentref id="headboard"/>

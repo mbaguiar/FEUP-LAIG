@@ -7,6 +7,7 @@ class Component {
         this.componentObject = component;
         this.initTransformations();
         this.initMaterials();
+        this.initTextures();
         this.initChildren();
     }
 
@@ -37,6 +38,12 @@ class Component {
         }
     }
 
+    initTextures() {
+        this.texture = this.componentObject.texture;
+        if (this.texture.id != "inherit" && this.texture.id != "none")
+            this.texture["textureObj"] = this.graph.textures[this.texture.id];
+    }
+
     setupChildrenComponents() {
         for (let i = 0; i < this.componentObject.children.components.length; i++) {
             this.children.push(this.graph.components[this.componentObject.children.components[i]]);
@@ -44,10 +51,24 @@ class Component {
     }
 
     display(material, texture) {
+        if (this.materials.length > 0) {
+            if (this.materials[0] != "inherit") material = this.materials[0];
+        }
+
+        if (this.texture.id == "none")
+            texture = null;
+        else if (this.texture.id != "inherit")
+            texture = this.texture;
+
+        material.setTexture(texture.textureObj);
+        if (texture != null) material.setTextureWrap(texture.length_s, texture.length_s);
+
+        material.apply();
+
         this.scene.pushMatrix();
         this.scene.multMatrix(this.transformations);
         for (let i = 0; i < this.children.length; i++) {
-            this.children[i].display();
+            this.children[i].display(Object.assign(new CGFappearance(this.scene), material), texture);
         }
         this.scene.popMatrix();
     }

@@ -33,6 +33,8 @@ class XMLscene extends CGFscene {
         this.gl.enable(this.gl.CULL_FACE);
         this.gl.depthFunc(this.gl.LEQUAL);
 
+        this.defaultMaterial = new CGFappearance(this);
+
         this.axis = new CGFaxis(this);
     }
 
@@ -146,6 +148,7 @@ class XMLscene extends CGFscene {
         this.pushMatrix();
 
         if (this.sceneInited) {
+            this.defaultMaterial.apply();
             // Draw axis
             this.axis.display();
             var i = 0;

@@ -8,10 +8,6 @@ class Rectangle extends CGFobject {
 
 		this.x = [x0, x1];
 		this.y = [y0, y1];
-		/* this.minS = minS || 0;
-		this.maxS = maxS || 1;
-		this.minT = minT || 0;
-		this.maxT = maxT || 1; */
 		this.initBuffers();
 	};
 
@@ -35,12 +31,12 @@ class Rectangle extends CGFobject {
 			0, 0, 1
 		];
 
-		/* this.texCoords = [
-			this.minS, this.maxT,
-			this.maxS, this.maxT,
-			this.minS, this.minT,
-			this.maxS, this.minT
-		]; */
+		this.texCoords = [
+			0, 1,
+			1, 1,
+			0, 0,
+			1, 0
+		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
