@@ -539,6 +539,8 @@ class MySceneGraph {
                 return new Triangle(this.scene, res.x1, res.y1, res.z1, res.x2, res.y2, res.z2, res.x3, res.y3, res.z3);
             case "sphere":
                 return new Sphere(this.scene, res.radius, res.slices, res.stacks);
+            case "cylinder":
+                return new Cylinder(this.scene, res.base, res.top, res.height, res.slices, res.stacks);
         }
 
     }
