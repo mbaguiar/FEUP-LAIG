@@ -241,6 +241,7 @@ class MySceneGraph {
     parsePerspective(node) {
 
         let res = this.parseAttributes(node, this.perspectiveAttr);
+        res.angle = toRadian(res.angle);
 
         let perspectiveChildren = node.children;
         let perspectiveChildrenRes = {};
