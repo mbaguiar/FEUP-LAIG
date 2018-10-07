@@ -2,7 +2,7 @@
     <scene root="bedroom" axis_length="15" />
     <views default="persp">
         <perspective id="persp" near="0.1" far="500" angle="0.4">
-            <from x="60" y="60" z="60" />
+            <from x="40" y="40" z="40" />
             <to x="0" y="0" z="0" />
         </perspective>
     </views>
@@ -44,9 +44,12 @@
     </lights>
     <textures>
         <texture id="wood" file="/scenes/images/trunk-image.jpg" />
-        <texture id="white" file="/scenes/images/bank.jpg" />
+        <texture id="white" file="/scenes/images/white_wall.jpg" />
         <texture id="lightwood" file="/scenes/images/light_wood.jpg" />
         <texture id="darkwood" file="/scenes/images/dark_wood.jpg" />
+        <texture id="rug" file="/scenes/images/grey_rug.jpg" />
+        <texture id="windowglass" file="/scenes/images/window_glass.jpg" />
+        <texture id="duvet" file="/scenes/images/duvet.png" />
     </textures>
     <materials>
         <material id="wood" shininess = "0">
@@ -314,7 +317,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="white" length_s="1" length_t="1" />
+            <texture id="duvet" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -439,7 +442,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="30" length_t="40" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -451,7 +454,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="white" length_s="1" length_t="1" />
+            <texture id="rug" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="rug"/>
             </children>
@@ -513,7 +516,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="white" length_s="1" length_t="1" />
+            <texture id="windowglass" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -525,7 +528,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="wood" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -537,7 +540,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="wood" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -549,7 +552,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="wood" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -561,7 +564,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="wood" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
