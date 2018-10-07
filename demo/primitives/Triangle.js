@@ -2,8 +2,7 @@
  * MyQuad
  * @constructor
  */
-class Triangle extends CGFobject
-{
+class Triangle extends CGFobject {
 	constructor(scene, x0, y0, z0, x1, y1, z1, x2, y2, z2) {
 		super(scene);
 		/* this.minS = minS || 0;
@@ -18,8 +17,7 @@ class Triangle extends CGFobject
 		this.initBuffers();
 	};
 
-	initBuffers() 
-	{
+	initBuffers() {
 		this.vertices = [
 			...this.p0,
 			...this.p1,
@@ -27,10 +25,12 @@ class Triangle extends CGFobject
 		];
 
 		this.indices = [
-		0, 1, 2, 
+			0, 1, 2,
 		];
 
-		let v1 = vec3.create(), v2 = vec3.create(), n = vec3.create();
+		let v1 = vec3.create(),
+			v2 = vec3.create(),
+			n = vec3.create();
 
 		vec3.sub(v1, this.p2, this.p0);
 		vec3.sub(v2, this.p2, this.p1);
@@ -44,11 +44,11 @@ class Triangle extends CGFobject
 			...n
 		];
 
-		/* this.texCoords = [
-			this.minS, this.maxT,
-			this.maxS, this.maxT,
-			this.minS, this.minT,
-		]; */
+		this.texCoords = [
+			0, 1,
+			1, 1,
+			0, 0
+		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
