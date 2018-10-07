@@ -541,6 +541,8 @@ class MySceneGraph {
                 return new Sphere(this.scene, res.radius, res.slices, res.stacks);
             case "cylinder":
                 return new Cylinder(this.scene, res.base, res.top, res.height, res.slices, res.stacks);
+            case "torus":
+                return new Torus(this.scene, res.inner, res.outer, res.slices, res.loops);
         }
 
     }
