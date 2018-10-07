@@ -18,6 +18,7 @@ class NoBaseCylinder extends CGFobject {
 		this.vertices = [];
 		this.indices = [];
 		this.normals = [];
+		//this.texCoords = [];
 
 		let ang = 0;
 		let angDelta = Math.PI * 2 / this.slices;
@@ -40,6 +41,7 @@ class NoBaseCylinder extends CGFobject {
 				this.normals.push(Math.cos(ang), Math.sin(ang), 0);
 				
 				ang += angDelta;
+
 			}
 
 			z += zDelta;
@@ -55,6 +57,20 @@ class NoBaseCylinder extends CGFobject {
 			this.indices.push(aux + 2 * this.slices - 2, aux + 2 * this.slices - 1, aux);
 		}
 
+		/*
+		var s = 0;
+		var t = 0;
+		var s_inc = 1 / this.slices;
+		var t_inc = 1 / this.stacks;
+		for (var i = 0; i <= this.stacks; i++) {
+			for (var j = 0; j < this.slices; j++) {
+				this.texCoords.push(s, t);
+				s += s_inc;
+			}
+			s = 0;
+			t += t_inc;
+		}
+*/
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 

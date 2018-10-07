@@ -1,8 +1,8 @@
 <yas>
-    <scene root="bed" axis_length="15" />       
+    <scene root="bedroom" axis_length="15" />       
     <views default="persp">
         <perspective id="persp" near="0.1" far="500" angle="0.4">
-            <from x="40" y="40" z="40" />
+            <from x="60" y="60" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
     </views>
@@ -45,6 +45,8 @@
     <textures>
         <texture id="wood" file="/scenes/images/trunk-image.jpg" />
         <texture id="white" file="/scenes/images/bank.jpg" />
+        <texture id="lightwood" file="/scenes/images/light_wood.jpg" />
+        <texture id="darkwood" file="/scenes/images/dark_wood.jpg" />
     </textures>
     <materials>
         <material id="wood" shininess = "0">
@@ -84,13 +86,89 @@
         </transformation>
         <transformation id="frame">
             <translate x="0" y="2" z="7" />
-            <scale x="12" y="2" z="16" />
+            <scale x="12" y="1" z="16" />
+        </transformation>
+        <transformation id="mattress">
+            <translate x="0" y="3.5" z="7.5" />
+            <scale x="12" y="2" z="15" />
         </transformation>
         <transformation id="bedfoot">
-            <scale x="0.5" y="2" z="0.5" />
+            <scale x="1" y="2.5" z="1" />
+            <translate x="0" y="0.1" z="-0.5" />
         </transformation>
         <transformation id="cube">
             <translate x="2" y="0.5" z="2" />
+        </transformation>
+        <transformation id="bedfoot1">
+            <translate x="5.5" y="0" z="0"/>
+        </transformation>
+        <transformation id="bedfoot2">
+            <translate x="-5.5" y="0" z="0"/>
+        </transformation>
+        <transformation id="bedfoot3">
+            <translate x="5.5" y="0" z="15"/>
+        </transformation>
+        <transformation id="bedfoot4">3
+            <translate x="-5.5" y="0" z="15"/>
+        </transformation>
+        <transformation id="wall1">
+            <translate x="15" y="10" z="0" />
+            <scale x="30" y="20" z="0.1" />
+        </transformation>
+        <transformation id="wall2">
+            <translate x="0" y="10" z="20" />
+            <scale x="0.1" y="20" z="40" />
+            <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="floor">
+            <translate x="15" y="0" z="20" />
+            <scale x="30" y="0.1" z="40" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="bed">
+            <translate x="15" y="1" z="2" />
+        </transformation>
+        <transformation id="rug">
+            <translate x="15" y="0" z="20" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="lampbase">
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="lampshade">
+            <translate x="0" y="10" z="0" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="lamppilar">
+            <translate x="0" y="0.5" z="0" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="lamp">
+            <translate x="4" y="0" z="3.5" />
+        </transformation>
+        <transformation id="windowglass">
+            <scale x="7" y="4" z="0.1" />
+        </transformation>
+        <transformation id="windowframe1">
+            <translate x="0" y="2" z="0" />
+            <scale x="7.5" y="0.5" z="0.5" />
+        </transformation>
+        <transformation id="windowframe2">
+            <translate x="0" y="-2" z="0" />
+            <scale x="7.5" y="0.5" z="0.5" />
+        </transformation>
+        <transformation id="windowframe3">
+            <translate x="3.5" y="0" z="0" />
+            <scale x="0.5" y="4.5" z="0.5" />
+        </transformation>
+        <transformation id="windowframe4">
+            <translate x="-3.5" y="0" z="0" />
+            <scale x="0.5" y="4.5" z="0.5" />
+        </transformation>
+        <transformation id="window">
+            <translate x="0" y="10" z="15" />
+            <scale x="1" y="2" z="2" />
+            <rotate axis="y" angle="90" />
         </transformation>
     </transformations>
     <primitives>
@@ -100,8 +178,17 @@
         <primitive id="sphere1">
             <sphere radius="5" slices="50" stacks="50" />
         </primitive>
-        <primitive id="cylinder">
-            <cylinder base="1" top="5" height="5" slices="50" stacks="20" />
+        <primitive id="rug">
+            <cylinder base="10" top="10" height="0.1" slices="50" stacks="20" />
+        </primitive>
+        <primitive id="lamppilar">
+            <cylinder base="0.25" top="0.25" height="10" slices="50" stacks="20" />
+        </primitive>
+         <primitive id="lampbase">
+            <cylinder base="1.5" top="0.25" height="0.5" slices="50" stacks="20" />
+        </primitive>
+         <primitive id="lampshade">
+            <cylinder base="3" top="2" height="4" slices="50" stacks="20" />
         </primitive>
         <primitive id="torus">
             <torus inner="4" outer="5" slices="20" loops="10" />
@@ -220,6 +307,18 @@
                 <componentref id="cube"/>
             </children>
         </component>
+        <component id="mattress">
+            <transformation>
+                <transformationref id="mattress" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube"/>
+            </children>
+        </component>
         <component id="bedfoot">
             <transformation>
                 <transformationref id="bedfoot" />
@@ -232,7 +331,258 @@
                 <componentref id="cube"/>
             </children>
         </component>
+        <component id="bedfoot1">
+            <transformation>
+                <transformationref id="bedfoot1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedfoot"/>
+            </children>
+        </component>
+        <component id="bedfoot2">
+            <transformation>
+                <transformationref id="bedfoot2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedfoot"/>
+            </children>
+        </component>
+        <component id="bedfoot3">
+            <transformation>
+                <transformationref id="bedfoot3" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedfoot"/>
+            </children>
+        </component>
+        <component id="bedfoot4">
+            <transformation>
+                <transformationref id="bedfoot4" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedfoot"/>
+            </children>
+        </component>
+        <component id="bedframe">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedfoot1" />
+                <componentref id="bedfoot2" />
+                <componentref id="bedfoot3" />
+                <componentref id="bedfoot4" />
+                <componentref id="headboard" />
+                <componentref id="frame" />
+            </children>
+        </component>
         <component id="bed">
+            <transformation>
+                <transformationref id="bed" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="bedframe" />
+                <componentref id="mattress" />
+            </children>
+        </component>
+        <component id="wall1">
+            <transformation>
+                <transformationref id="wall1" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="wall2">
+            <transformation>
+                <transformationref id="wall2" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="floor">
+            <transformation>
+                <transformationref id="floor" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="rug">
+            <transformation>
+                <transformationref id="rug" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="rug"/>
+            </children>
+        </component>
+        <component id="lampbase">
+            <transformation>
+                <transformationref id="lampbase" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="lampbase"/>
+            </children>
+        </component>
+        <component id="lamppilar">
+            <transformation>
+                <transformationref id="lamppilar" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="lamppilar"/>
+            </children>
+        </component>
+        <component id="lampshade">
+            <transformation>
+                <transformationref id="lampshade" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="lampshade"/>
+            </children>
+        </component>
+        <component id="lamp">
+            <transformation>
+                 <transformationref id="lamp" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <componentref id="lampbase" />
+                <componentref id="lamppilar" />
+                <componentref id="lampshade" />
+            </children>
+        </component>
+        <component id="windowglass">
+            <transformation>
+                 <transformationref id="windowglass" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="white" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="windowframe1">
+            <transformation>
+                 <transformationref id="windowframe1" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="windowframe2">
+            <transformation>
+                 <transformationref id="windowframe2" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="windowframe3">
+            <transformation>
+                 <transformationref id="windowframe3" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="windowframe4">
+            <transformation>
+                 <transformationref id="windowframe4" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="window">
+            <transformation>
+                <transformationref id="window" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="wood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="windowglass" />
+                <componentref id="windowframe1" />
+                <componentref id="windowframe2" />
+                <componentref id="windowframe3" />
+                <componentref id="windowframe4" />
+            </children>
+        </component>
+        <component id="bedroom">
             <transformation>
             </transformation>
             <materials>
@@ -240,9 +590,13 @@
             </materials>
             <texture id="wood" length_s="1" length_t="1" />
             <children>
-                <componentref id="bedfoot" />
-                <componentref id="headboard" />
-                <componentref id="frame" />
+                <componentref id="bed" />
+                <componentref id="wall1" />
+                <componentref id="wall2" />
+                <componentref id="floor" />
+                <componentref id="rug" />
+                <componentref id="lamp" />
+                <componentref id="window" />
             </children>
         </component>
     </components>
