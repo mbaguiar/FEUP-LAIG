@@ -1,5 +1,5 @@
 /**
- * MyLamp
+ * Sphere
  * @constructor
  */
 class Sphere extends CGFobject
