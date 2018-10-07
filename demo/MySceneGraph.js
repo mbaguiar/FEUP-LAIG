@@ -400,12 +400,15 @@ class MySceneGraph {
                 let res = this.parseAttributes(children[i], materialAttr);
                 if (this.materials.hasOwnProperty(res.id)) throw "Material with id='" + res.id + "' already exists.";
                 let childrenRes = this.parseMaterial(children[i].children);
-                this.materials[res.id] = Object.assign({
-                    shininess: res.shininess
-                }, childrenRes);
+                let material = new CGFappearance(this.scene);
+                material.setShininess(res.shininess);
+                material.setEmission(childrenRes.emission.r, childrenRes.emission.g, childrenRes.emission.b, childrenRes.emission.a);
+                material.setAmbient(childrenRes.ambient.r, childrenRes.ambient.g, childrenRes.ambient.b, childrenRes.ambient.a);
+                material.setDiffuse(childrenRes.diffuse.r, childrenRes.diffuse.g, childrenRes.diffuse.b, childrenRes.diffuse.a);
+                material.setSpecular(childrenRes.specular.r, childrenRes.specular.g, childrenRes.specular.b, childrenRes.specular.a);
+                this.materials[res.id] = material;
             } else throw "Invalid material tag '" + children[i].nodeName + "'.";
         }
-
     }
 
     parseMaterial(node) {
