@@ -55,14 +55,16 @@ class Component {
             if (this.materials[0] != "inherit") material = this.materials[0];
         }
 
-        if (this.texture.id == "none")
+        if (this.texture.id == "none") {
             texture = null;
-        else if (this.texture.id != "inherit")
+            material.setTexture(null);
+        } else if (this.texture.id != "inherit")
             texture = this.texture;
 
-        material.setTexture(texture.textureObj);
-        if (texture != null) material.setTextureWrap(texture.length_s, texture.length_s);
-
+        if (texture != null) {
+            material.setTexture(texture.textureObj);
+            material.setTextureWrap(texture.length_s, texture.length_s);
+        }
         material.apply();
 
         this.scene.pushMatrix();

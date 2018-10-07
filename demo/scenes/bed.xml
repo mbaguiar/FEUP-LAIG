@@ -1,5 +1,5 @@
 <yas>
-    <scene root="bedroom" axis_length="15" />       
+    <scene root="bedroom" axis_length="15" />
     <views default="persp">
         <perspective id="persp" near="0.1" far="500" angle="0.4">
             <from x="60" y="60" z="60" />
@@ -50,8 +50,8 @@
     </textures>
     <materials>
         <material id="wood" shininess = "0">
-            <emission r="1" g="1" b="1" a="1" />
-            <ambient r="0.1" g="0.1" b="0.1" a="1" /> 
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.678" g="0.698" b="0.741" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
@@ -184,10 +184,10 @@
         <primitive id="lamppilar">
             <cylinder base="0.25" top="0.25" height="10" slices="50" stacks="20" />
         </primitive>
-         <primitive id="lampbase">
+        <primitive id="lampbase">
             <cylinder base="1.5" top="0.25" height="0.5" slices="50" stacks="20" />
         </primitive>
-         <primitive id="lampshade">
+        <primitive id="lampshade">
             <cylinder base="3" top="2" height="4" slices="50" stacks="20" />
         </primitive>
         <primitive id="torus">
@@ -494,7 +494,7 @@
         </component>
         <component id="lamp">
             <transformation>
-                 <transformationref id="lamp" />
+                <transformationref id="lamp" />
             </transformation>
             <materials>
                 <material id="wood" />
@@ -508,7 +508,7 @@
         </component>
         <component id="windowglass">
             <transformation>
-                 <transformationref id="windowglass" />
+                <transformationref id="windowglass" />
             </transformation>
             <materials>
                 <material id="wood" />
@@ -520,7 +520,7 @@
         </component>
         <component id="windowframe1">
             <transformation>
-                 <transformationref id="windowframe1" />
+                <transformationref id="windowframe1" />
             </transformation>
             <materials>
                 <material id="wood" />
@@ -532,7 +532,7 @@
         </component>
         <component id="windowframe2">
             <transformation>
-                 <transformationref id="windowframe2" />
+                <transformationref id="windowframe2" />
             </transformation>
             <materials>
                 <material id="wood" />
@@ -544,7 +544,7 @@
         </component>
         <component id="windowframe3">
             <transformation>
-                 <transformationref id="windowframe3" />
+                <transformationref id="windowframe3" />
             </transformation>
             <materials>
                 <material id="wood" />
@@ -556,7 +556,7 @@
         </component>
         <component id="windowframe4">
             <transformation>
-                 <transformationref id="windowframe4" />
+                <transformationref id="windowframe4" />
             </transformation>
             <materials>
                 <material id="wood" />
