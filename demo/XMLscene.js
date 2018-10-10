@@ -22,9 +22,9 @@ class XMLscene extends CGFscene {
     init(application) {
         super.init(application);
 
-        this.sceneInited = false;
+        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 
-        this.initCameras();
+        this.sceneInited = false;
 
         this.enableTextures(true);
 
@@ -38,12 +38,6 @@ class XMLscene extends CGFscene {
         this.axis = new CGFaxis(this);
     }
 
-    /**
-     * Initializes the scene cameras.
-     */
-    initCameras() {
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-    }
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
@@ -99,18 +93,7 @@ class XMLscene extends CGFscene {
      */
     onGraphLoaded() {
 
-        let defaultCamera = this.graph.views.children[0].attr;
-        let defaultCameraPos = defaultCamera.attr;
-        let position = Object.values(defaultCameraPos.from);
-        let target = Object.values(defaultCameraPos.to);
-
-        this.camera.setPosition(position);
-        this.camera.setTarget(target);
-        this.camera.direction = this.camera.calculateDirection();
-
-        this.camera.near = defaultCamera.near;
-        this.camera.far = defaultCamera.far;
-        this.camera.fov = defaultCamera.angle;
+        this.initCameras();
 
         this.axis = new CGFaxis(this, this.graph.axisLength);
 
@@ -127,6 +110,29 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
+
+    initCameras() {
+        this.cameras = {};
+        for (let key in this.graph.views) {
+            const cam = this.graph.views[key];
+            let newCam;
+            if (cam.type == "perspective") {
+                newCam = new CGFcamera(
+                    cam.angle, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to)
+                );
+
+            } else if (cam.type == "ortho") {
+                newCam = new CGFcameraOrtho(
+                    cam.left, cam.right, cam.bottom, cam.top, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to), vec3.fromValues(0, 1, 0)
+                );
+            }
+            this.cameras[cam.id] = newCam;
+            if (cam.id == this.graph.defaultViewId) {
+                this.camera = newCam;
+                this.interface.setActiveCamera(this.camera);
+            }
+        }
+    }
 
     /**
      * Displays the scene.

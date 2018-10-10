@@ -5,10 +5,10 @@
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <omni id="ss" near="ff" far="ff" left="ff" right="ff" top="ff" bottom="ff">
+        <ortho id="ss" near="ff" far="ff" left="ff" right="ff" top="ff" bottom="ff">
             <from x="15" y="15" z="15" />
-            <from x="0" y="0" z="0" />
-        </omni>
+            <to x="0" y="0" z="0" />
+        </ortho>
     </views>
     <ambient>
         <ambient r="0" g="0" b="0" a="1" />

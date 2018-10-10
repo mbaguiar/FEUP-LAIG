@@ -215,27 +215,25 @@ class MySceneGraph {
     parseViews(node) {
         this.views = {};
 
-        this.views = this.parseAttributes(node, [this.newAttribute("default", "string", true)]);
+        this.defaultViewId = this.parseAttributes(node, [this.newAttribute("default", "string", true)])["default"];
 
         let viewsChildren = node.children;
 
-        let childrenRes = [];
+        let res;
 
         for (let i = 0; i < viewsChildren.length; i++) {
             if (viewsChildren[i].nodeName == "perspective") {
-                childrenRes.push({
-                    type: "perspective",
-                    attr: this.parsePerspective(viewsChildren[i])
-                });
+                res = this.parsePerspective(viewsChildren[i]);
+
             } else if (viewsChildren[i].nodeName == "ortho") {
-                childrenRes.push({
-                    type: "ortho",
-                    attr: this.parseOrtho(viewsChildren[i])
-                });
-            }
+                res = this.parseOrtho(viewsChildren[i]);
+            } else throw "Invalid views tag <" + viewsChildren[i].nodeName + ">.";
+
+            this.views[res.id] = res;
         }
 
-        this.views.children = childrenRes;
+        if (!this.views.hasOwnProperty(this.defaultViewId)) throw "Invalid default view.";
+
     }
 
     parsePerspective(node) {
@@ -243,18 +241,9 @@ class MySceneGraph {
         let res = this.parseAttributes(node, this.perspectiveAttr);
         res.angle = toRadian(res.angle);
 
-        let perspectiveChildren = node.children;
-        let perspectiveChildrenRes = {};
+        Object.assign(res, this.parseCameraChildren(node.children));
 
-        for (let i = 0; i < perspectiveChildren.length; i++) {
-            if (perspectiveChildren[i].nodeName == "from") {
-                perspectiveChildrenRes["from"] = this.parseAttributes(perspectiveChildren[i], this.xyzAttr);
-            } else if (perspectiveChildren[i].nodeName == "to") {
-                perspectiveChildrenRes["to"] = this.parseAttributes(perspectiveChildren[i], this.xyzAttr);
-            }
-        }
-
-        res.attr = perspectiveChildrenRes;
+        res.type = "perspective";
 
         return res;
 
@@ -263,6 +252,26 @@ class MySceneGraph {
     parseOrtho(node) {
 
         let res = this.parseAttributes(node, this.orthoAttr);
+
+        Object.assign(res, this.parseCameraChildren(node.children));
+
+        res.type = "ortho";
+
+        return res;
+
+    }
+
+    parseCameraChildren(node) {
+
+        let res = {};
+
+        for (let i = 0; i < node.length; i++) {
+            if (node[i].nodeName == "from") {
+                res["from"] = this.parseAttributes(node[i], this.xyzAttr);
+            } else if (node[i].nodeName == "to") {
+                res["to"] = this.parseAttributes(node[i], this.xyzAttr);
+            }
+        }
 
         return res;
 

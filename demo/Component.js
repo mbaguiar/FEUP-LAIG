@@ -70,6 +70,7 @@ class Component {
         this.scene.pushMatrix();
         this.scene.multMatrix(this.transformations);
         for (let i = 0; i < this.children.length; i++) {
+            //TODO: find better alternative
             this.children[i].display(Object.assign(new CGFappearance(this.scene), material), texture);
         }
         this.scene.popMatrix();
