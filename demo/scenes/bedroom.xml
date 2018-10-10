@@ -5,9 +5,9 @@
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <ortho id="ss" near="ff" far="ff" left="ff" right="ff" top="ff" bottom="ff">
-            <from x="15" y="15" z="15" />
-            <to x="0" y="0" z="0" />
+        <ortho id="ortho1" near="2" far="3" left="1" right="2" top="3" bottom="4">
+            <from x="30" y="30" z="30" />
+            <from x="0" y="0" z="0" />
         </ortho>
     </views>
     <ambient>
@@ -174,9 +174,12 @@
             <scale x="0.5" y="4.5" z="0.5" />
         </transformation>
         <transformation id="window">
-            <translate x="0" y="10" z="15" />
+            <translate x="0.5" y="10" z="15" />
             <scale x="1" y="2" z="2" />
             <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="torus">
+            <translate x="30" y="5" z="30" />
         </transformation>
     </transformations>
     <primitives>
@@ -199,7 +202,7 @@
             <cylinder base="3" top="2" height="4" slices="50" stacks="20" />
         </primitive>
         <primitive id="torus">
-            <torus inner="4" outer="5" slices="20" loops="10" />
+            <torus inner="2" outer="5" slices="20" loops="10" />
         </primitive>
     </primitives>
     <components>
@@ -425,7 +428,7 @@
             </materials>
             <texture id="white" length_s="1" length_t="1" />
             <children>
-                <primitiveref id="quad"/>
+                <componentref id="cube"/>
             </children>
         </component>
         <component id="wall2">
@@ -437,7 +440,7 @@
             </materials>
             <texture id="white" length_s="1" length_t="1" />
             <children>
-                <primitiveref id="quad"/>
+                <componentref id="cube"/>
             </children>
         </component>
         <component id="floor">
@@ -449,7 +452,7 @@
             </materials>
             <texture id="darkwood" length_s="30" length_t="40" />
             <children>
-                <primitiveref id="quad"/>
+                <componentref id="cube"/>
             </children>
         </component>
         <component id="rug">
@@ -533,7 +536,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -545,7 +548,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -557,7 +560,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -569,7 +572,7 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
                 <componentref id="cube" />
             </children>
@@ -581,13 +584,25 @@
             <materials>
                 <material id="wood" />
             </materials>
-            <texture id="white" length_s="1" length_t="1" />
+            <texture id="darkwood" length_s="1" length_t="1" />
             <children>
                 <componentref id="windowglass" />
                 <componentref id="windowframe1" />
                 <componentref id="windowframe2" />
                 <componentref id="windowframe3" />
                 <componentref id="windowframe4" />
+            </children>
+        </component>
+        <component id="torus">
+            <transformation>
+                <transformationref id="torus" />
+            </transformation>
+            <materials>
+                <material id="wood" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="torus" />
             </children>
         </component>
         <component id="bedroom">
@@ -605,6 +620,7 @@
                 <componentref id="rug" />
                 <componentref id="lamp" />
                 <componentref id="window" />
+                <componentref id="torus" />
             </children>
         </component>
     </components>
