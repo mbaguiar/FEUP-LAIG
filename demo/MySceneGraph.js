@@ -230,6 +230,7 @@ class MySceneGraph {
             } else throw "Invalid views tag <" + viewsChildren[i].nodeName + ">.";
 
             this.views[res.id] = res;
+
         }
 
         if (!this.views.hasOwnProperty(this.defaultViewId)) throw "Invalid default view.";

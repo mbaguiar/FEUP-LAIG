@@ -95,6 +95,8 @@ class XMLscene extends CGFscene {
 
         this.initCameras();
 
+        this.interface.addViewsGroup(this.cameras);
+
         this.axis = new CGFaxis(this, this.graph.axisLength);
 
         let bg = this.graph.ambient.background;
@@ -127,11 +129,16 @@ class XMLscene extends CGFscene {
                 );
             }
             this.cameras[cam.id] = newCam;
-            if (cam.id == this.graph.defaultViewId) {
+            if (cam.id === this.graph.defaultViewId) {
                 this.camera = newCam;
                 this.interface.setActiveCamera(this.camera);
+                this["selectedCamera"] = key;
             }
         }
+    }
+
+    setActiveCamera(id) {
+        this.camera = this.cameras[id];
     }
 
     /**
