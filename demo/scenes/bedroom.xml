@@ -5,9 +5,9 @@
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <ortho id="ortho1" near="2" far="3" left="1" right="2" top="3" bottom="4">
-            <from x="30" y="30" z="30" />
-            <from x="0" y="0" z="0" />
+        <ortho id="ortho1" near="1" far="200" left="-30" right="30" top="30" bottom="-30">
+            <from x="20" y="10" z="60" />
+            <to x="20" y="10" z="0" />
         </ortho>
     </views>
     <ambient>
