@@ -1,15 +1,3 @@
-// Order of the groups in the XML document.
-
-
-function jsUcfirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-function toRadian(a) {
-    return a * Math.PI / 180;
-}
-
-
 class MySceneGraph {
     constructor(filename, scene) {
         this.loadedOk = null;
@@ -21,15 +9,15 @@ class MySceneGraph {
         this.idRoot = null; // The id of the root element.
         this.axisLength = 1; // Axis length
 
-        this.axisCoords = [];
-        this.axisCoords['x'] = [1, 0, 0];
-        this.axisCoords['y'] = [0, 1, 0];
-        this.axisCoords['z'] = [0, 0, 1];
-
         //Constants
         this.tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
-            'transformations', 'primitives', 'components'
-        ];
+            'transformations', 'primitives', 'components'];
+
+        /* this.tags = {};
+
+        tagNames.forEach(el => {
+            this.tags[el] = 0;
+        }); */
 
         this.typeFunc = {
             int: 'getInteger',
@@ -154,8 +142,6 @@ class MySceneGraph {
         this.log("XML Loading finished.");
         let rootElement = this.reader.xmlDoc.documentElement;
 
-        // Here should go the calls for different functions to parse the letious blocks
-
         try {
             this.parseXMLFile(rootElement);
         } catch (error) {
@@ -165,13 +151,34 @@ class MySceneGraph {
 
         this.loadedOk = true;
 
-        // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
-
-        //TODO after parsing
         this.scene.onGraphLoaded();
     }
 
     parseXMLFile(rootElement) {
+
+        /* if (rootElement.nodeName != "yas")
+            return "root tag <yas> missing";
+
+        let nodes = rootElement.children;
+
+        // Processes each node, verifying errors.
+
+        for (let i = 0; i < nodes.length; i++){
+            let name = nodes[i].nodeName;
+            if (this.tags.hasOwnProperty(name)){
+                if (this.tags[name]) {
+                    this.onXMLMinorError("Repeated tag <"+ name +">. Ignoring its contents.");
+                    continue;
+                }
+
+                if (Object.keys(this.tags).indexOf(name) != i) this.onXMLMinorError("Tag <" + name + "> out of order");
+
+                let funcName = 'parse' + capitalize(name);
+                this[funcName](nodes[i]);
+                this.tags[name] = 1;
+
+            } else this.onXMLMinorError("Ignoring unknow tag <" + name + ">.");
+        } */
 
         if (rootElement.nodeName != "yas")
             return "root tag <yas> missing";
@@ -185,8 +192,6 @@ class MySceneGraph {
             nodeNames.push(nodes[i].nodeName);
         }
 
-        let error;
-
         // Processes each node, verifying errors.
 
         for (let i = 0; i < this.tags.length; i++) {
@@ -198,10 +203,9 @@ class MySceneGraph {
                     this.onXMLMinorError("tag <" + this.tags[i] + "> out of order");
             }
 
-            let funcName = 'parse' + jsUcfirst(this.tags[i]);
+            let funcName = 'parse' + capitalize(this.tags[i]);
 
-            if ((error = this[funcName](nodes[index])) != null)
-                return error;
+            this[funcName](nodes[index]);
         }
 
     }
@@ -286,6 +290,7 @@ class MySceneGraph {
 
         for (let i = 0; i < ambientChildren.length; i++) {
             if (ambientChildren[i].nodeName == "ambient") {
+                this.parseAttr(ambientChildren[i], defaults.colorAttrSet);
                 res["ambient"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
             } else if (ambientChildren[i].nodeName == "background") {
                 res["background"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
@@ -606,7 +611,7 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (componentTags.indexOf(node[i].nodeName) != -1) {
-                res[node[i].nodeName] = this["parseComponent" + jsUcfirst(node[i].nodeName)](node[i]);
+                res[node[i].nodeName] = this["parseComponent" + capitalize(node[i].nodeName)](node[i]);
             }
         }
 
@@ -755,6 +760,19 @@ class MySceneGraph {
         }
 
         return res;
+    }
+
+    parseMainTag(tagNode, tagAttributes, childrenParser){
+        let res = this.parseAttributes(tagNode, tagAttributes);
+    }
+
+    parseAttr(node, attrSet) {
+        let res = {};
+        for (let i = 0; i < attrSet.attributes.length; i++) {
+            let attr = attrSet.attributes[i];
+            res[attr.name] = this.reader[this.typeFunc[attr.type]](node, attr.name, false);
+        }
+        res = attrSet.styleRes(res);
     }
 
 
