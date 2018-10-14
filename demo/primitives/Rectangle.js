@@ -38,16 +38,21 @@ class Rectangle extends CGFobject {
 			1, 0
 		];
 
+
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};
 
 	setTexCoords(s, t) {
+
+		let c = this.x[1] - this.x[0];
+		let l = this.y[1] - this.y[0];
+
 		this.texCoords = [
-			0, 1 / t,
-			1 / s, 1 / t,
+			0, c / t,
+			l / s, c / t,
 			0, 0,
-			1 / s, 0
+			l / s, 0
 		]
 
 		this.updateTexCoordsGLBuffers();
