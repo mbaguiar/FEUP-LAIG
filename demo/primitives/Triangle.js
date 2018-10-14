@@ -50,21 +50,21 @@ class Triangle extends CGFobject {
 			0, 0
 		];
 
-		this.setTexCoords(2, 2);
+		this.setTexCoords(1, 1);
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};
 
 	setTexCoords(s, t) {
 
-		let a = Math.sqrt(Math.pow(this.p0[0] - this.p2[0]) + Math.pow(this.p0[1] - this.p2[1]) + Math.pow(this.p0[2] - this.p2[2]));
-		let b = Math.sqrt(Math.pow(this.p1[0] - this.p0[0]) + Math.pow(this.p1[1] - this.p0[1]) + Math.pow(this.p1[2] - this.p0[2]));
-		let c = Math.sqrt(Math.pow(this.p2[0] - this.p1[0]) + Math.pow(this.p2[1] - this.p1[1]) + Math.pow(this.p2[2] - this.p1[2]));
+		let a = vec3.dist(this.p0, this.p2);
+		let b = vec3.dist(this.p0, this.p1);
+		let c = vec3.dist(this.p1, this.p2);
 
-		let B = ((a * a - b * b + c * c) / (2 * a * c));
+		let B = Math.acos((Math.pow(a, 2) - Math.pow(b, 2) + Math.pow(c, 2)) / (2 * a * c));
 
 		this.texCoords = [
-			(c - a * Math.cos(B)) / s, (a * Math.sin(B)) / t,
+			(c - a * Math.cos(B)) / s, 1 - (a * Math.sin(B)) / t,
 			0, 1 / t,
 			c / s, 1 / t,
 		]
