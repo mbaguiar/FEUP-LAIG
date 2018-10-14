@@ -63,7 +63,7 @@ class Component {
 
         if (texture != null) {
             material.setTexture(texture.textureObj);
-            material.setTextureWrap(texture.length_s, texture.length_s);
+
         }
         material.apply();
 
@@ -71,6 +71,10 @@ class Component {
         this.scene.multMatrix(this.transformations);
         for (let i = 0; i < this.children.length; i++) {
             //TODO: find better alternative
+            if ((this.children[i] instanceof Rectangle || this.children[i] instanceof Triangle) && texture != null) {
+                this.children[i].setTexCoords(texture.length_s, texture.length_t);
+
+            }
             this.children[i].display(Object.assign(new CGFappearance(this.scene), material), texture);
         }
         this.scene.popMatrix();

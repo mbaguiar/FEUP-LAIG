@@ -50,7 +50,6 @@ class Triangle extends CGFobject {
 			0, 0
 		];
 
-		this.setTexCoords(1, 1);
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	};

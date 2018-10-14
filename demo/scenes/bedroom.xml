@@ -566,7 +566,7 @@
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="darkwood" length_s="30" length_t="40" />
+            <texture id="darkwood" length_s="0.2" length_t="0.5" />
             <children>
                 <componentref id="cube"/>
             </children>
