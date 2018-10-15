@@ -6,17 +6,22 @@ class Attribute {
 		this.default = def;
 	}
 	
-	isValid(a){
-		if (a == null){
-			
+	check(a){
+		if (a === null){
+			return false;
 		}
+		if (this.type === "float" || this.type === "int") {
+			if (isNaN(a)) return false;
+			else if (this.rangeRest){
+				if (a < this.rangeMin || a > this.rangeMax) return false;
+			}
+		} else if (this.type === "string")
+			if (a === "") return false;
+
+		if (this.choiceRest)
+			if (this.choices.indexOf(a) === -1) return false;
 		
-		if ()
-
-	}
-
-	useDefault(a){
-		if (this.default != null) a = this.default;
+		return true;
 	}
 
 	addRangeRestriction(min, max){
@@ -38,8 +43,8 @@ class AttributeSet {
 	}
 
 	styleRes(res){
-		if (this.outputStyle  == null) return res;
-		if (this.outputStyle  instanceof Array){
+		if (this.outputStyle === null) return res;
+		if (this.outputStyle instanceof Array){
 			let result = [];
 			this.outputStyle.forEach(el => {
 				result.push(res[el]);
