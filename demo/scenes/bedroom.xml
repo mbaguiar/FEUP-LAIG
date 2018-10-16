@@ -1,5 +1,5 @@
 <yas>
-    <scene root="bedroom" axis_length="15" />
+    <scene root="bedroom"  />
     <views default="persp">
         <perspective id="persp" near="0.1" far="500" angle="40">
             <from x="60" y="25" z="60" />

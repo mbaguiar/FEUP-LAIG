@@ -3,7 +3,7 @@ const gravity = [
 ];
 
 const type = [
-	"missing", "invalid", "upper", "lower"
+	"missing", "invalid", "under", "over"
 ];
 
 
@@ -18,10 +18,11 @@ class AttributeError extends Error{
 	constructor(gravity, type, attr, solution){
 		super(gravity, type);
 		this.attribute = attr;
+		this.solution = solution;
 	}
 
 	getMessage(){
-		let message = "Attribute '" + attr.name + "' ";
+		let message = "Attribute '" + this.attribute.name + "' ";
 		switch(this.type){
 			case "missing":
 				message += "is missing.";
@@ -29,11 +30,11 @@ class AttributeError extends Error{
 			case "invalid":
 				message += "is invalid.";
 				break;
-			case "upper": case "lower":
-				message += "is off range (" + attr.rangeMin + "-" + attr.rangeMax + ")."
+			case "under": case "over":
+				message += "is off range (" + this.attribute.rangeMin + "-" + this.attribute.rangeMax + ")."
 				break;
 		}
-		if (solution) message += " Using default value = '" + solution + "'.";
+		if (this.solution) message += " Using default value = '" + this.solution + "'.";
 		
 		return message;
 	}

@@ -203,6 +203,8 @@ class MySceneGraph {
                     this.onXMLMinorError("tag <" + this.tags[i] + "> out of order");
             }
 
+            this.parseMainTag(nodes[index]);
+
             let funcName = 'parse' + capitalize(this.tags[i]);
 
             this[funcName](nodes[index]);
@@ -290,7 +292,6 @@ class MySceneGraph {
 
         for (let i = 0; i < ambientChildren.length; i++) {
             if (ambientChildren[i].nodeName == "ambient") {
-                this.parseAttr(ambientChildren[i], defaults.colorAttrSet);
                 res["ambient"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
             } else if (ambientChildren[i].nodeName == "background") {
                 res["background"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
@@ -762,19 +763,25 @@ class MySceneGraph {
         return res;
     }
 
-    parseMainTag(tagNode, tagAttributes, childrenParser){
-        let res = this.parseAttributes(tagNode, tagAttributes);
-    }
-
-    parseAttr(node, attrSet) {
-        let res = {};
-        for (let i = 0; i < attrSet.attributes.length; i++) {
-            let attr = attrSet.attributes[i];
-            res[attr.name] = this.reader[this.typeFunc[attr.type]](node, attr.name, false);
+    parseMainTag(tagNode){
+        let attrSet = defaults[tagNode.nodeName + "AttrSet"];
+        if (attrSet == null) console.log("no attr to parse at tag " + tagNode.nodeName);
+        else {
+            attrSet.parse(this.reader, tagNode);
+            this.treatErrors(tagNode.nodeName, attrSet.errors);
+            console.log(this[tagNode.nodeName + "X"]);
         }
-        res = attrSet.styleRes(res);
     }
 
+    treatErrors(name, err) {
+        let ident = "At tag <" + name + ">: ";
+        if (err.length > 0){
+            err.forEach(e => {
+                if (e.gravity === "major") return this.onXMLError(ident + e.getMessage());
+                else if (e.gravity === "minor") return this.onXMLMinorError(ident + e.getMessage());  
+            });
+        }
+    }
 
     newAttribute(name, type, required, def) {
         let newAttr = {
