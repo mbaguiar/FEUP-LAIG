@@ -80,5 +80,9 @@ class Component {
         this.scene.popMatrix();
     }
 
+    nextMaterial(){
+        if (this.materials.length > 1) this.materials.push(this.materials.shift());
+    }
+
 
 }

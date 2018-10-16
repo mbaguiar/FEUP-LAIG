@@ -23,7 +23,7 @@ class XMLscene extends CGFscene {
         super.init(application);
 
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-
+        this.changeMaterials = 0;
         this.sceneInited = false;
 
         this.enableTextures(true);
@@ -162,6 +162,8 @@ class XMLscene extends CGFscene {
 
         if (this.sceneInited) {
             this.defaultMaterial.apply();
+            if (this.changeMaterials) this.graph.changeMaterials();
+            this.changeMaterials = 0;
             // Draw axis
             this.axis.display();
             var i = 0;

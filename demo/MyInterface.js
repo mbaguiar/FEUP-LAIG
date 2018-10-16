@@ -25,6 +25,13 @@ class MyInterface extends CGFinterface {
         return true;
     }
 
+    processKeyDown(event){
+        super.processKeyDown(event);
+        if (event.code === "KeyM") {
+            this.scene.changeMaterials = 1;
+        }
+    }
+
     /**
      * Adds a folder containing the IDs of the lights passed as parameter.
      * @param {array} lights

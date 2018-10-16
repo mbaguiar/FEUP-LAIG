@@ -768,4 +768,10 @@ class MySceneGraph {
 
         return newAttr;
     }
+
+    changeMaterials(){
+        for (let key in this.components){
+            this.components[key].nextMaterial();
+        }
+    }
 }
