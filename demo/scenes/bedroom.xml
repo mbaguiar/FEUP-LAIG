@@ -291,9 +291,6 @@
         <primitive id="pillow1">
             <cylinder base="1" top="1" height="4" slices="20" stacks="10" />
         </primitive>
-        <primitive id="triangle">
-            <triangle x1="0" y1="0" z1="0" x2="8" y2="0" z2="8" x3="3" y3="0" z3="-2"/>
-        </primitive>
     </primitives>
     <components>
         <component id="face1">
@@ -566,7 +563,7 @@
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="darkwood" length_s="0.2" length_t="0.5" />
+            <texture id="darkwood" length_s="30" length_t="40" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -906,9 +903,9 @@
             <transformation>
             </transformation>
             <materials>
-                <material id="inherit" />
+                <material id="default" />
             </materials>
-            <texture id="rug" length_s="1" length_t="1" />
+            <texture id="white" length_s="1" length_t="1" />
             <children>
                 <componentref id="bed" />
                 <componentref id="wall1" />
@@ -918,7 +915,6 @@
                 <componentref id="lamp" />
                 <componentref id="window" />
                 <componentref id="sidetable" />
-                <primitiveref id="triangle" />
             </children>
         </component>
     </components>
