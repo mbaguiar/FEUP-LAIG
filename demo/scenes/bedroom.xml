@@ -906,7 +906,7 @@
             <transformation>
             </transformation>
             <materials>
-                <material id="default" />
+                <material id="inherit" />
             </materials>
             <texture id="rug" length_s="1" length_t="1" />
             <children>

@@ -52,7 +52,12 @@ class Component {
 
     display(material, texture) {
         if (this.materials.length > 0) {
-            if (this.materials[0] != "inherit") material = this.materials[0];
+            if (this.materials[0] !== "inherit") material = this.materials[0];
+            else {
+                if (material == null) {
+                    material = this.scene.defaultMaterial;
+                }
+            }
         }
 
         if (this.texture.id == "none") {
