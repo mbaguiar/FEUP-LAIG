@@ -1,7 +1,7 @@
 // Order of the groups in the XML document.
 
 
-function jsUcfirst(string) {
+function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
@@ -20,120 +20,6 @@ class MySceneGraph {
 
         this.idRoot = null; // The id of the root element.
         this.axisLength = 1; // Axis length
-
-        this.axisCoords = [];
-        this.axisCoords['x'] = [1, 0, 0];
-        this.axisCoords['y'] = [0, 1, 0];
-        this.axisCoords['z'] = [0, 0, 1];
-
-        //Constants
-        this.tags = ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
-            'transformations', 'primitives', 'components'
-        ];
-
-        this.typeFunc = {
-            int: 'getInteger',
-            float: 'getFloat',
-            string: 'getString',
-            bool: 'getBoolean'
-        };
-
-        this.sceneAttr = [
-            this.newAttribute("root", "string", true),
-            this.newAttribute("axis_length", "float", false, 1)
-        ];
-
-        this.perspectiveAttr = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("near", "float", false, 0.1),
-            this.newAttribute("far", "float", false, 500),
-            this.newAttribute("angle", "float", false, 0.4)
-        ];
-
-        this.xyzAttr = [
-            this.newAttribute("x", "float", "false", 1),
-            this.newAttribute("y", "float", "false", 1),
-            this.newAttribute("z", "float", "false", 1),
-        ];
-
-        this.orthoAttr = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("near", "float", false, 0.1),
-            this.newAttribute("far", "float", false, 500),
-            this.newAttribute("left", "float", false, -1),
-            this.newAttribute("right", "float", false, 1),
-            this.newAttribute("top", "float", false, -1),
-            this.newAttribute("bottom", "float", false, 1),
-        ];
-
-        this.xyzwAttr = [
-            ...this.xyzAttr,
-            this.newAttribute("w", "float", "false", 1)
-        ];
-
-        this.rgbaAttr = [
-            this.newAttribute("r", "float", true),
-            this.newAttribute("g", "float", true),
-            this.newAttribute("b", "float", true),
-            this.newAttribute("a", "float", false, 1),
-        ];
-
-        this.omniAttr = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("enabled", "bool", false, true),
-        ];
-
-        this.spotAttr = [
-            ...this.omniAttr,
-            this.newAttribute("angle", "float", false, 0),
-            this.newAttribute("exponent", "float", false, 1)
-        ];
-
-        this.rectangleAttr = [
-            this.newAttribute("x1", "float", true),
-            this.newAttribute("y1", "float", true),
-            this.newAttribute("x2", "float", true),
-            this.newAttribute("y2", "float", true),
-        ];
-
-        this.triangleAttr = [
-            this.newAttribute("x1", "float", true),
-            this.newAttribute("y1", "float", true),
-            this.newAttribute("z1", "float", true),
-            this.newAttribute("x2", "float", true),
-            this.newAttribute("y2", "float", true),
-            this.newAttribute("z2", "float", true),
-            this.newAttribute("x3", "float", true),
-            this.newAttribute("y3", "float", true),
-            this.newAttribute("z3", "float", true),
-        ];
-
-        this.cylinderAttr = [
-            this.newAttribute("base", "float", true),
-            this.newAttribute("top", "float", true),
-            this.newAttribute("height", "float", true),
-            this.newAttribute("slices", "int", true),
-            this.newAttribute("stacks", "int", true),
-        ];
-
-        this.sphereAttr = [
-            this.newAttribute("radius", "float", true),
-            this.newAttribute("slices", "int", true),
-            this.newAttribute("stacks", "int", true),
-
-        ];
-
-        this.torusAttr = [
-            this.newAttribute("inner", "float", true),
-            this.newAttribute("outer", "float", true),
-            this.newAttribute("slices", "int", true),
-            this.newAttribute("loops", "int", true),
-        ];
-
-        this.rotateAttr = [
-            this.newAttribute("axis", "string", true),
-            this.newAttribute("angle", "float", true)
-        ];
 
         // File reading 
         this.reader = new CGFXMLreader();
@@ -167,47 +53,44 @@ class MySceneGraph {
 
         // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 
-        //TODO after parsing
         this.scene.onGraphLoaded();
     }
 
     parseXMLFile(rootElement) {
 
         if (rootElement.nodeName != "yas")
-            return "root tag <yas> missing";
+            throw "root tag <yas> missing";
 
         let nodes = rootElement.children;
 
-        // Reads the names of the nodes to an auxiliary buffer.
-        let nodeNames = [];
+        this.rootTags = {};
 
-        for (let i = 0; i < nodes.length; i++) {
-            nodeNames.push(nodes[i].nodeName);
-        }
-
-        let error;
+        defaults.rootTags.forEach(el => {
+            this.rootTags[el] = 0;
+        });
 
         // Processes each node, verifying errors.
 
-        for (let i = 0; i < this.tags.length; i++) {
-            let index;
-            if ((index = nodeNames.indexOf(this.tags[i])) == -1)
-                return "tag <" + this.tags[i] + "> missing";
-            else {
-                if (index != i)
-                    this.onXMLMinorError("tag <" + this.tags[i] + "> out of order");
-            }
+        for (let i = 0; i < nodes.length; i++){
+            let name = nodes[i].nodeName;
+            if (this.rootTags.hasOwnProperty(name)){
+                if (this.rootTags[name]) {
+                    this.onXMLMinorError("Repeated tag <"+ name +">. Ignoring its contents.");
+                    continue;
+                }
 
-            let funcName = 'parse' + jsUcfirst(this.tags[i]);
+                if (Object.keys(this.rootTags).indexOf(name) != i) this.onXMLMinorError("Tag <" + name + "> out of order");
 
-            if ((error = this[funcName](nodes[index])) != null)
-                return error;
+                let funcName = 'parse' + capitalize(name);
+                this[funcName](nodes[i]);
+                this.rootTags[name] = 1;
+
+            } else this.onXMLMinorError("Ignoring unknow tag <" + name + ">.");
         }
-
     }
 
     parseScene(node) {
-        let res = this.parseAttributes(node, this.sceneAttr);
+        let res = this.parseAttributes(node, defaultAttributes.sceneAttr);
         this.idRoot = res.root;
         this.axisLength = res.axis_length;
     }
@@ -215,9 +98,14 @@ class MySceneGraph {
     parseViews(node) {
         this.views = {};
 
-        this.defaultViewId = this.parseAttributes(node, [this.newAttribute("default", "string", true)])["default"];
+        this.defaultViewId = this.parseAttributes(node, defaultAttributes.idAttr)["default"];
 
         let viewsChildren = node.children;
+
+        if (viewsChildren.length == 0){
+            this.onXMLMinorError("No views declared. Setting default view.");
+            return;
+        }
 
         let res;
 
@@ -233,13 +121,16 @@ class MySceneGraph {
 
         }
 
-        if (!this.views.hasOwnProperty(this.defaultViewId)) throw "Invalid default view.";
+        if (!this.views.hasOwnProperty(this.defaultViewId)) { 
+            this.onXMLMinorError("Invalid default view. Defaulting to first view.");
+            this.defaultViewId = Object.keys(this.views)[0];
+        }
 
     }
 
     parsePerspective(node) {
 
-        let res = this.parseAttributes(node, this.perspectiveAttr);
+        let res = this.parseAttributes(node, defaultAttributes.perspectiveAttr);
         res.angle = toRadian(res.angle);
 
         Object.assign(res, this.parseCameraChildren(node.children));
@@ -252,7 +143,7 @@ class MySceneGraph {
 
     parseOrtho(node) {
 
-        let res = this.parseAttributes(node, this.orthoAttr);
+        let res = this.parseAttributes(node, defaultAttributes.orthoAttr);
 
         Object.assign(res, this.parseCameraChildren(node.children));
 
@@ -268,9 +159,9 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (node[i].nodeName == "from") {
-                res["from"] = this.parseAttributes(node[i], this.xyzAttr);
+                res["from"] = this.parseAttributes(node[i], defaultAttributes.xyzAttr);
             } else if (node[i].nodeName == "to") {
-                res["to"] = this.parseAttributes(node[i], this.xyzAttr);
+                res["to"] = this.parseAttributes(node[i], defaultAttributes.xyzAttr);
             }
         }
 
@@ -286,9 +177,9 @@ class MySceneGraph {
 
         for (let i = 0; i < ambientChildren.length; i++) {
             if (ambientChildren[i].nodeName == "ambient") {
-                res["ambient"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
+                res["ambient"] = this.parseAttributes(ambientChildren[i], defaultAttributes.rgbaAttr);
             } else if (ambientChildren[i].nodeName == "background") {
-                res["background"] = this.parseAttributes(ambientChildren[i], this.rgbaAttr);
+                res["background"] = this.parseAttributes(ambientChildren[i], defaultAttributes.rgbaAttr);
             }
         }
 
@@ -307,11 +198,16 @@ class MySceneGraph {
 
             if (light.nodeName != "omni" && light.nodeName != "spot") throw "Invalid light type.";
 
-            let attr = this[light.nodeName + "Attr"];
+            let attr = defaultAttributes[light.nodeName + "Attr"];
 
             let lightRes = this.parseAttributes(light, attr);
 
-            if (res.hasOwnProperty(lightRes.id)) throw "Light with id='" + lightRes.id + "' already exists.";
+            if (res.hasOwnProperty(lightRes.id)) {
+                let newId = lightRes.id + "(1)";
+                this.onXMLMinorError("Light with id='" + lightRes.id + "' already exists." +
+                                    "Renaming it to " + newId + ".");
+                lightRes.id = newId;
+            }
 
             res[lightRes.id] = {
                 enabled: lightRes.enabled,
@@ -336,19 +232,19 @@ class MySceneGraph {
 
         let lightsTags = [{
                 name: "location",
-                attr: this.xyzwAttr
+                attr: defaultAttributes.xyzwAttr
             },
             {
                 name: "ambient",
-                attr: this.rgbaAttr
+                attr: defaultAttributes.rgbaAttr
             },
             {
                 name: "diffuse",
-                attr: this.rgbaAttr
+                attr: defaultAttributes.rgbaAttr
             },
             {
                 name: "specular",
-                attr: this.rgbaAttr
+                attr: defaultAttributes.rgbaAttr
             }
         ];
 
@@ -357,7 +253,7 @@ class MySceneGraph {
         if (node.nodeName == "spot") {
             lightsTags.push({
                 name: "target",
-                attr: this.xyzAttr
+                attr: defaultAttributes.xyzAttr
             });
         }
 
@@ -378,16 +274,11 @@ class MySceneGraph {
 
         let children = node.children;
 
-        const textureAttr = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("file", "string", true)
-        ];
-
         this.textures = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "texture") {
-                let res = this.parseAttributes(children[i], textureAttr);
+                let res = this.parseAttributes(children[i], defaultAttributes.textureAttr);
                 if (this.textures.hasOwnProperty(res.id)) throw "Texture with id='" + res.id + "' already exists.";
                 this.textures[res.id] = new CGFtexture(this.scene, res.file);
             } else throw "Invalid texture tag '" + children[i].nodeName + "'.";
@@ -401,14 +292,9 @@ class MySceneGraph {
 
         this.materials = {};
 
-        const materialAttr = [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("shininess", "float", false, 1)
-        ];
-
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "material") {
-                let res = this.parseAttributes(children[i], materialAttr);
+                let res = this.parseAttributes(children[i], defaultAttributes.materialAttr);
                 if (this.materials.hasOwnProperty(res.id)) throw "Material with id='" + res.id + "' already exists.";
                 let childrenRes = this.parseMaterial(children[i].children);
                 let material = new CGFappearance(this.scene);
@@ -423,18 +309,13 @@ class MySceneGraph {
     }
 
     parseMaterial(node) {
-
-        const materialTags = [
-            "emission", "ambient", "diffuse", "specular"
-        ];
-
         let res = {};
 
         for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < materialTags.length; j++) {
+            for (let j = 0; j < defaults.materialTags.length; j++) {
                 let child = node[i];
-                if (child.nodeName == materialTags[j]) {
-                    res[child.nodeName] = this.parseAttributes(child, this.rgbaAttr);
+                if (child.nodeName == defaults.materialTags[j]) {
+                    res[child.nodeName] = this.parseAttributes(child, defaultAttributes.rgbaAttr);
                 }
             }
         }
@@ -446,15 +327,11 @@ class MySceneGraph {
 
         let children = node.children;
 
-        const transformationAttr = [
-            this.newAttribute("id", "string", true),
-        ];
-
         this.transformations = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "transformation") {
-                let res = this.parseAttributes(children[i], transformationAttr);
+                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
                 if (this.transformations.hasOwnProperty(res.id)) throw "Transformation with id='" + res.id + "' already exists.";
                 let childrenRes = this.parseTransformation(children[i].children);
                 this.transformations[res.id] = childrenRes;
@@ -464,19 +341,13 @@ class MySceneGraph {
 
     parseTransformation(node) {
 
-        const transformationTags = {
-            translate: this.xyzAttr,
-            rotate: this.rotateAttr,
-            scale: this.xyzAttr
-        };
-
         let res = mat4.create();
         mat4.identity(res);
 
         for (let i = 0; i < node.length; i++) {
-            if (transformationTags.hasOwnProperty(node[i].nodeName)) {
+            if (defaults.transformationTags.hasOwnProperty(node[i].nodeName)) {
                 let child = node[i];
-                let param = this.parseAttributes(child, transformationTags[child.nodeName]);
+                let param = this.parseAttributes(child, defaults.transformationTags[child.nodeName]);
                 mat4.mul(res, res, this.getTransformationMatrix(child.nodeName, param));
             } else throw "Invalid transformation type '" + node[i].nodeName + "'.";
 
@@ -486,17 +357,11 @@ class MySceneGraph {
 
     getTransformationMatrix(type, param) {
 
-        const axis = {
-            x: vec3.fromValues(1, 0, 0),
-            y: vec3.fromValues(0, 1, 0),
-            z: vec3.fromValues(0, 0, 1),
-        };
-
         let res = mat4.create();
 
         switch (type) {
             case "rotate":
-                mat4.rotate(res, res, toRadian(param.angle), axis[param.axis]);
+                mat4.rotate(res, res, toRadian(param.angle), defaults.axis[param.axis]);
                 break;
             case "translate":
                 mat4.translate(res, res, Object.values(param));
@@ -505,22 +370,17 @@ class MySceneGraph {
                 mat4.scale(res, res, Object.values(param));
                 break;
         }
-
         return res;
     }
 
     parsePrimitives(node) {
         let children = node.children;
 
-        const primitiveAttr = [
-            this.newAttribute("id", "string", true),
-        ];
-
         this.primitives = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "primitive") {
-                let res = this.parseAttributes(children[i], primitiveAttr);
+                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
                 if (this.primitives.hasOwnProperty(res.id)) throw "Primitive with id='" + res.id + "' already exists.";
                 let childrenRes = this.parsePrimitive(children[i].children);
                 this.primitives[res.id] = childrenRes;
@@ -529,23 +389,14 @@ class MySceneGraph {
     }
 
     parsePrimitive(node) {
-        const primitiveTags = {
-            rectangle: this.rectangleAttr,
-            triangle: this.triangleAttr,
-            cylinder: this.cylinderAttr,
-            sphere: this.sphereAttr,
-            torus: this.torusAttr,
-        };
-
-
-
+    
         if (node.length != 1) throw "Primitive should have one and only one tag.";
 
         let child = node[0];
 
-        if (!primitiveTags.hasOwnProperty(child.nodeName)) throw "Invalid primitive tag '" + child.nodeName + "'.";
+        if (!defaults.primitiveTags.hasOwnProperty(child.nodeName)) throw "Invalid primitive tag '" + child.nodeName + "'.";
 
-        let res = this.parseAttributes(child, primitiveTags[child.nodeName]);
+        let res = this.parseAttributes(child, defaults.primitiveTags[child.nodeName]);
         switch (child.nodeName) {
             case "rectangle":
                 return new Rectangle(this.scene, res.x1, res.y1, res.x2, res.y2);
@@ -564,15 +415,11 @@ class MySceneGraph {
     parseComponents(node) {
         let children = node.children;
 
-        const componentAttr = [
-            this.newAttribute("id", "string", true),
-        ];
-
         this.componentValues = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName == "component") {
-                let res = this.parseAttributes(children[i], componentAttr);
+                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
                 if (this.componentValues.hasOwnProperty(res.id)) throw "Component with id='" + res.id + "' already exists.";
                 this.componentValues[res.id] = this.parseComponent(children[i].children);
             } else throw "Invalid component tag '" + children[i].nodeName + "'.";
@@ -598,15 +445,11 @@ class MySceneGraph {
 
     parseComponent(node) {
 
-        const componentTags = [
-            "transformation", "materials", "texture", "children"
-        ];
-
         let res = {};
 
         for (let i = 0; i < node.length; i++) {
-            if (componentTags.indexOf(node[i].nodeName) != -1) {
-                res[node[i].nodeName] = this["parseComponent" + jsUcfirst(node[i].nodeName)](node[i]);
+            if (defaults.componentTags.indexOf(node[i].nodeName) != -1) {
+                res[node[i].nodeName] = this["parseComponent" + capitalize(node[i].nodeName)](node[i]);
             }
         }
 
@@ -617,12 +460,11 @@ class MySceneGraph {
 
         node = node.children;
 
-        const transformationTags = {
-            transformationref: [this.newAttribute("id", "string", true)],
-            translate: this.xyzAttr,
-            rotate: this.rotateAttr,
-            scale: this.xyzAttr
+        let transformationTags = {
+            transformationref: [new Attribute("id", "string", true)]
         };
+
+        Object.assign(transformationTags, defaults.transformationTags);
 
         let res = [];
 
@@ -655,7 +497,7 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (node[i].nodeName == "material") {
-                let mat = this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]);
+                let mat = this.parseAttributes(node[i], defaultAttributes.idAttr);
                 if (!this.materials.hasOwnProperty(mat.id) && mat.id != "inherit") throw "Material with id='" + mat.id + "' doesn't exist.";
                 res.push(mat.id);
             } else throw "Invalid tag '" + node[i].nodeName + "'.";
@@ -666,11 +508,7 @@ class MySceneGraph {
 
     parseComponentTexture(node) {
 
-        let res = this.parseAttributes(node, [
-            this.newAttribute("id", "string", true),
-            this.newAttribute("length_s", "float", true),
-            this.newAttribute("length_t", "float", true)
-        ]);
+        let res = this.parseAttributes(node, defaultAttributes.componentTextureAttr);
 
         if (!this.textures.hasOwnProperty(res.id) && res.id != "inherit" && res.id != "none") throw "Invalid texture id.";
 
@@ -682,17 +520,13 @@ class MySceneGraph {
 
         node = node.children;
 
-        const childrenTags = [
-            "componentref", "primitiveref"
-        ];
-
         let res = {};
         res.components = [];
         res.primitives = [];
 
         for (let i = 0; i < node.length; i++) {
-            if (childrenTags.indexOf(node[i].nodeName) != -1) {
-                let child = this.parseAttributes(node[i], [this.newAttribute("id", "string", true)]);
+            if (defaults.childrenTags.indexOf(node[i].nodeName) != -1) {
+                let child = this.parseAttributes(node[i], defaultAttributes.idAttr);
                 if (node[i].nodeName == "primitiveref") {
                     if (!this.primitives.hasOwnProperty(child.id)) throw "Invalid primitive id.";
                 }
@@ -732,16 +566,16 @@ class MySceneGraph {
      * @param {string} message
      */
     log(message) {
-        console.log("   " + message);
+        console.log(" " + message);
     }
 
     parseAttributes(node, attributes) {
         let res = {};
         for (let i = 0; i < attributes.length; i++) {
             let attr = attributes[i];
-            res[attr.name] = this.reader[this.typeFunc[attr.type]](node, attr.name, false);
+            res[attr.name] = this.reader[defaults.typeFunc[attr.type]](node, attr.name, false);
 
-            if (res[attr.name] == null) {
+            /* if (res[attr.name] == null) {
                 if (attr.required) throw "Attribute '" + attr.name + "' missing.";
                 else {
                     this.onXMLMinorError(attr.name + " attribute missing. Assuming value=" + attr.default);
@@ -751,22 +585,10 @@ class MySceneGraph {
                     res[attr.name] = attr.default;
                     this.onXMLMinorError(attr.name + " attribute corrupted. Assuming value=" + attr.default);
                 }
-            }
+            } */
         }
 
         return res;
-    }
-
-
-    newAttribute(name, type, required, def) {
-        let newAttr = {
-            name: name,
-            type: type,
-            required: required,
-            default: def
-        };
-
-        return newAttr;
     }
 
     changeMaterials(){

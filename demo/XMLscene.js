@@ -22,9 +22,10 @@ class XMLscene extends CGFscene {
     init(application) {
         super.init(application);
 
-        this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+        this.camera = new CGFcamera(40*DEGREE_TO_RAD, 0.1, 500, vec3.fromValues(60, 25, 60), vec3.fromValues(0, 0, 0));
         this.changeMaterials = 0;
         this.sceneInited = false;
+        this.selectedCamera;
 
         this.enableTextures(true);
 
@@ -115,6 +116,10 @@ class XMLscene extends CGFscene {
 
     initCameras() {
         this.cameras = {};
+        if ((Object.keys(this.graph.views)).length == 0){
+            this.cameras["default"] = this.camera;
+            this.selectedCamera = "default";
+        }
         for (let key in this.graph.views) {
             const cam = this.graph.views[key];
             let newCam;
@@ -132,7 +137,7 @@ class XMLscene extends CGFscene {
             if (cam.id === this.graph.defaultViewId) {
                 this.camera = newCam;
                 this.interface.setActiveCamera(this.camera);
-                this["selectedCamera"] = key;
+                this.selectedCamera = key;
             }
         }
     }
