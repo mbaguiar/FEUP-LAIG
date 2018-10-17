@@ -283,7 +283,7 @@
             <scale x="6.25" y="1.5" z="0.5" />
         </transformation>
         <transformation id="desk">
-            <translate x="4" y="0.25" z="32" />
+            <translate x="3.5" y="0.25" z="32" />
         </transformation>
         <transformation id="deskdraw1">
             <translate x="0" y="0.5" z="3" />
@@ -322,6 +322,10 @@
         <transformation id="knob2">
             <translate x="1" y="5" z="5" />
             <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="shelf">
+            <translate x="1" y="13" z="32" />
+            <scale x="3" y="0.5" z="12" />
         </transformation>
     </transformations>
     <primitives>
@@ -764,7 +768,7 @@
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="none" length_s="1" length_t="1" />
             <children>
                 <componentref id="windowglass" />
                 <componentref id="windowframe1" />
@@ -1185,6 +1189,18 @@
 
             </children>
         </component>
+        <component id="shelf">
+            <transformation>
+                <transformationref id="shelf" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
         <component id="bedroom">
             <transformation>
             </transformation>
@@ -1202,6 +1218,8 @@
                 <componentref id="window" />
                 <componentref id="sidetable" />
                 <componentref id="desk" />
+                <componentref id="shelf" />
+
             </children>
         </component>
     </components>

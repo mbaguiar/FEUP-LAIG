@@ -69,6 +69,8 @@ class Component {
         if (texture != null) {
             material.setTexture(texture.textureObj);
 
+        } else {
+            material.setTexture(null);
         }
         material.apply();
 
@@ -85,7 +87,7 @@ class Component {
         this.scene.popMatrix();
     }
 
-    nextMaterial(){
+    nextMaterial() {
         if (this.materials.length > 1) this.materials.push(this.materials.shift());
     }
 
