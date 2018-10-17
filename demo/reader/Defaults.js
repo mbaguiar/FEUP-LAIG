@@ -1,11 +1,14 @@
 const defaultAttributes = {
 	idAttr: [
-		new Attribute("id", "string")
+		new Attribute ("id", "string")
 	],
     sceneAttr: [
         new Attribute ("root", "string"),
         new Attribute ("axis_length", "float", 1)
-        ],
+		],
+	viewsAttr: [
+		new Attribute ("default", "string")
+	],
     perspectiveAttr: [
         new Attribute ("id", "string"),
         new Attribute ("near", "float", 0.1),
@@ -21,22 +24,22 @@ const defaultAttributes = {
         new Attribute ("id", "string"),
         new Attribute ("near", "float", 0.1),
         new Attribute ("far", "float", 500),
-        new Attribute ("left", "float", -1),
-        new Attribute ("right", "float", 1),
-        new Attribute ("top", "float", -1),
-        new Attribute ("bottom", "float", 1),
+        new Attribute ("left", "float"),
+        new Attribute ("right", "float"),
+        new Attribute ("top", "float"),
+        new Attribute ("bottom", "float"),
     ],
     xyzwAttr: [
-        new Attribute ("x", "float", 1),
-        new Attribute ("y", "float", 1),
-        new Attribute ("z", "float", 1),
+        new Attribute ("x", "float"),
+        new Attribute ("y", "float"),
+        new Attribute ("z", "float"),
         new Attribute ("w", "float", 1)
     ],
     rgbaAttr: [
-        new Attribute ("r", "float"),
-        new Attribute ("g", "float"),
-        new Attribute ("b", "float"),
-        new Attribute ("a", "float", 1),
+        (new Attribute ("r", "float")).addRangeRestriction(0, 1),
+        (new Attribute ("g", "float")).addRangeRestriction(0, 1),
+        (new Attribute ("b", "float")).addRangeRestriction(0, 1),
+        (new Attribute ("a", "float", 1)).addRangeRestriction(0, 1),
     ],
     omniAttr: [
         new Attribute ("id", "string"),
@@ -107,9 +110,12 @@ const defaults = {
     rootTags: ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
 			'transformations', 'primitives', 'components'
 	],
-	materialTags: [
-		"emission", "ambient", "diffuse", "specular"
-	],
+	materialTags: {
+		emission: 0,
+		ambient: 0,
+		diffuse: 0,
+		specular: 0,
+	},
 	transformationTags: {
 		translate: defaultAttributes.xyzAttr,
 		rotate: defaultAttributes.rotateAttr,
@@ -138,5 +144,22 @@ const defaults = {
         float: 'getFloat',
         string: 'getString',
         bool: 'getBoolean'
-    },
+	},
+	light: {
+		name: "default",
+		type: "omni",
+		properties: {
+			location: {x: 15, y:20, z:15, w:1},
+			ambient: {r: 1, g: 1, b: 1, a:1},
+			diffuse: {r: 1, g: 1, b: 1, a:1},
+			specular: {r: 1, g: 1, b: 1, a:1}
+		}
+	},
+	lightTags: {
+		location: defaultAttributes.xyzwAttr,
+		ambient: defaultAttributes.rgbaAttr,
+		diffuse: defaultAttributes.rgbaAttr,
+		specular: defaultAttributes.rgbaAttr
+	},
+
 }

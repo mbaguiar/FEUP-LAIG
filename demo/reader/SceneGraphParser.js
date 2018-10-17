@@ -98,27 +98,24 @@ class MySceneGraph {
     parseViews(node) {
         this.views = {};
 
-        this.defaultViewId = this.parseAttributes(node, defaultAttributes.idAttr)["default"];
+        this.defaultViewId = this.parseAttributes(node, defaultAttributes.viewsAttr)["default"];
 
         let viewsChildren = node.children;
-
-        if (viewsChildren.length == 0){
-            this.onXMLMinorError("No views declared. Setting default view.");
-            return;
-        }
 
         let res;
 
         for (let i = 0; i < viewsChildren.length; i++) {
-            if (viewsChildren[i].nodeName == "perspective") {
-                res = this.parsePerspective(viewsChildren[i]);
-
-            } else if (viewsChildren[i].nodeName == "ortho") {
-                res = this.parseOrtho(viewsChildren[i]);
+            if (viewsChildren[i].nodeName == "perspective" || viewsChildren[i].nodeName == "ortho") {
+                res = this.parseCamera(viewsChildren[i], viewsChildren[i].nodeName);
             } else throw "Invalid views tag <" + viewsChildren[i].nodeName + ">.";
 
-            this.views[res.id] = res;
+            if (res != null)
+                this.views[res.id] = res;
+        }
 
+        if (Object.keys(this.views).length == 0){
+            this.onXMLMinorError("No views declared. Setting default view.");
+            return;
         }
 
         if (!this.views.hasOwnProperty(this.defaultViewId)) { 
@@ -128,45 +125,39 @@ class MySceneGraph {
 
     }
 
-    parsePerspective(node) {
-
-        let res = this.parseAttributes(node, defaultAttributes.perspectiveAttr);
-        res.angle = toRadian(res.angle);
-
-        Object.assign(res, this.parseCameraChildren(node.children));
-
-        res.type = "perspective";
-
+    parseCamera(node, type){
+        let attrs;
+        if (type == "perspective") attrs = defaultAttributes.perspectiveAttr;
+        else if (type == "ortho") attrs = defaultAttributes.orthoAttr;
+        let res;
+        try {
+            res = this.parseAttributes(node, attrs);
+            Object.assign(res, this.parseCameraChildren(node.children));
+        } catch (err) {
+            this.onXMLMinorError("At <" + type + "> tag: \n" + err + "Skipping view.");
+            return null;
+        }
+        res.type = type;
         return res;
-
-    }
-
-    parseOrtho(node) {
-
-        let res = this.parseAttributes(node, defaultAttributes.orthoAttr);
-
-        Object.assign(res, this.parseCameraChildren(node.children));
-
-        res.type = "ortho";
-
-        return res;
-
     }
 
     parseCameraChildren(node) {
 
         let res = {};
-
+        let error = "";
         for (let i = 0; i < node.length; i++) {
-            if (node[i].nodeName == "from") {
-                res["from"] = this.parseAttributes(node[i], defaultAttributes.xyzAttr);
-            } else if (node[i].nodeName == "to") {
-                res["to"] = this.parseAttributes(node[i], defaultAttributes.xyzAttr);
-            }
+            if (node[i].nodeName === "from" || node[i].nodeName === "to") {
+                try {
+                    res[node[i].nodeName] = this.parseAttributes(node[i], defaultAttributes.xyzAttr);
+                } catch (err) {
+                    error += "At tag <" + node[i].nodeName + ">: " + err + "\n";
+                }
+                
+            } else error += "Invalid tag <" + node[i].nodeName + ">.\n"
         }
+        if (error !== "") throw error;
 
         return res;
-
     }
 
     parseAmbient(node) {
@@ -176,46 +167,67 @@ class MySceneGraph {
         let res = {};
 
         for (let i = 0; i < ambientChildren.length; i++) {
-            if (ambientChildren[i].nodeName == "ambient") {
-                res["ambient"] = this.parseAttributes(ambientChildren[i], defaultAttributes.rgbaAttr);
-            } else if (ambientChildren[i].nodeName == "background") {
-                res["background"] = this.parseAttributes(ambientChildren[i], defaultAttributes.rgbaAttr);
+            if (ambientChildren[i].nodeName == "ambient" || ambientChildren[i].nodeName == "background") {
+                try {
+                    res[ambientChildren[i].nodeName] = this.parseAttributes(ambientChildren[i], defaultAttributes.rgbaAttr);
+                } catch (err) {
+                    this.onXMLMinorError("At tag <" + ambientChildren[i].nodeName + ">: " + err + " Setting default " + ambientChildren[i].nodeName + ".");
+                }    
             }
-        }
+        } 
 
         this.ambient = res;
-
     }
 
     parseLights(node) {
-        let lightsChildren = node.children;
+        let nodes = node.children;
+
+        if (nodes.length === 0) {
+            this.onXMLMinorError(`One or more lights required. Setting default light.`);
+            this.setDefaultLight();
+            return;
+        }
 
         let res = {};
 
-        for (let i = 0; i < lightsChildren.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
 
-            let light = lightsChildren[i];
+            let light = nodes[i];
 
-            if (light.nodeName != "omni" && light.nodeName != "spot") throw "Invalid light type.";
+            if (light.nodeName != "omni" && light.nodeName != "spot") {
+                this.onXMLMinorError("Invalid light type tag <" + light.nodeName + ">.");
+                continue;
+            }
 
             let attr = defaultAttributes[light.nodeName + "Attr"];
 
-            let lightRes = this.parseAttributes(light, attr);
+            let lightRes;
+
+            try {
+                lightRes = this.parseAttributes(light, attr);
+            } catch (err) {
+                this.onXMLMinorError(`Invalid ${light.nodeName} light. Skipping light.`);
+                continue
+            }
+            
 
             if (res.hasOwnProperty(lightRes.id)) {
-                let newId = lightRes.id + "(1)";
-                this.onXMLMinorError("Light with id='" + lightRes.id + "' already exists." +
-                                    "Renaming it to " + newId + ".");
-                lightRes.id = newId;
+                this.onXMLMinorError(`Light with id='${lightRes.id}' already exists. Skipping light.`);
+                continue;
             }
 
-            res[lightRes.id] = {
-                enabled: lightRes.enabled,
-                type: light.nodeName,
-                properties: this.parseLightsChildren(light),
+            try {
+                res[lightRes.id] = {
+                    enabled: lightRes.enabled,
+                    type: light.nodeName,
+                    properties: this.parseLightsChildren(light),
+                }
+            } catch(err) {
+                this.onXMLMinorError(`At light with id='${lightRes.id}': ${err} Skipping this light.`);
+                continue;
             }
 
-            if (light.nodeName == "spot") {
+            if (light.nodeName === "spot") {
                 res[lightRes.id].angle = lightRes.angle;
                 res[lightRes.id].exponent = lightRes.exponent;
             }
@@ -226,117 +238,146 @@ class MySceneGraph {
 
     }
 
-    parseLightsChildren(node) {
+    setDefaultLight(){
+        this.lights = {};
+        let light = defaults.light;
+        this.lights[light.name] = {
+            enabled: true,
+            type: light.type,
+            properties: {...light.properties}
+        };   
+    }
 
-        let children = node.children;
-
-        let lightsTags = [{
-                name: "location",
-                attr: defaultAttributes.xyzwAttr
-            },
-            {
-                name: "ambient",
-                attr: defaultAttributes.rgbaAttr
-            },
-            {
-                name: "diffuse",
-                attr: defaultAttributes.rgbaAttr
-            },
-            {
-                name: "specular",
-                attr: defaultAttributes.rgbaAttr
-            }
-        ];
-
+    parseLightsChildren({nodeName, children}) {
         let res = {};
-
-        if (node.nodeName == "spot") {
-            lightsTags.push({
-                name: "target",
-                attr: defaultAttributes.xyzAttr
-            });
-        }
+        const tags = {...defaults.lightTags};
+        if (nodeName === "spot") 
+            tags["target"] = defaultAttributes.xyzwAttr;
 
         for (let i = 0; i < children.length; i++) {
-            for (let j = 0; j < lightsTags.length; j++) {
-                let child = children[i];
-                if (child.nodeName == lightsTags[j].name) {
-                    res[child.nodeName] = this.parseAttributes(child, lightsTags[j].attr);
+            if (tags.hasOwnProperty(children[i].nodeName))
+                try {
+                    res[children[i].nodeName] = this.parseAttributes(children[i], tags[children[i].nodeName]);
+                } catch (e) {
+                    throw `At tag <${children[i].nodeName}>: ${e}`;
                 }
-            }
+            else throw `Invalid tag <${children[i].nodeName}>.`;
         }
 
         return res;
-
     }
 
     parseTextures(node) {
-
         let children = node.children;
 
         this.textures = {};
 
+        if (children.length === 0) {
+            this.onXMLMinorError(`No texture declared.`);
+            return;
+        }
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "texture") {
+            if (children[i].nodeName === "texture") {
                 let res = this.parseAttributes(children[i], defaultAttributes.textureAttr);
-                if (this.textures.hasOwnProperty(res.id)) throw "Texture with id='" + res.id + "' already exists.";
+                if (this.textures.hasOwnProperty(res.id)) {
+                    this.onXMLMinorError(`Texture with id=' ${res.id}' already exists. Skipping texture.`);
+                    continue;
+                }
                 this.textures[res.id] = new CGFtexture(this.scene, res.file);
-            } else throw "Invalid texture tag '" + children[i].nodeName + "'.";
+            } else this.onXMLMinorError(`Invalid texture tag <${children[i].nodeName}>.`);
         }
 
     }
 
-    parseMaterials(node) {
-
-        let children = node.children;
-
+    parseMaterials({children}) {
         this.materials = {};
-
+        let res;
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "material") {
-                let res = this.parseAttributes(children[i], defaultAttributes.materialAttr);
-                if (this.materials.hasOwnProperty(res.id)) throw "Material with id='" + res.id + "' already exists.";
-                let childrenRes = this.parseMaterial(children[i].children);
-                let material = new CGFappearance(this.scene);
-                material.setShininess(res.shininess);
-                material.setEmission(childrenRes.emission.r, childrenRes.emission.g, childrenRes.emission.b, childrenRes.emission.a);
-                material.setAmbient(childrenRes.ambient.r, childrenRes.ambient.g, childrenRes.ambient.b, childrenRes.ambient.a);
-                material.setDiffuse(childrenRes.diffuse.r, childrenRes.diffuse.g, childrenRes.diffuse.b, childrenRes.diffuse.a);
-                material.setSpecular(childrenRes.specular.r, childrenRes.specular.g, childrenRes.specular.b, childrenRes.specular.a);
-                this.materials[res.id] = material;
-            } else throw "Invalid material tag '" + children[i].nodeName + "'.";
+            if (children[i].nodeName === "material") {
+                try {
+                    res = this.parseAttributes(children[i], defaultAttributes.materialAttr);
+                    if (this.materials.hasOwnProperty(res.id)){
+                        this.onXMLMinorError(`Material with id='${res.id}' already exists. Skipping material.`);
+                        continue;
+                    }
+                    let childrenRes = this.parseMaterial(children[i].children);
+                    let material = this.setupMaterial(this.scene, res.shininess, childrenRes);
+                    this.materials[res.id] = material;
+                } catch(err){
+                    this.onXMLMinorError(`At material tag: ${err}`);
+                    continue
+                }
+            } else this.onXMLMinorError(`Invalid material tag <${children[i].nodeName}.`);
         }
+
+        if (Object.keys(this.materials).length === 0) this.onXMLMinorError("No materials defined. Resorting to default material.");
+    }
+
+    setupMaterial(scene, shininess, mat){
+        let material = new CGFappearance(scene);
+        material.setShininess(shininess);
+        if (mat.emission) material.setEmission(mat.emission.r, mat.emission.g, mat.emission.b, mat.emission.a);
+        if (mat.ambient) material.setAmbient(mat.ambient.r, mat.ambient.g, mat.ambient.b, mat.ambient.a);
+        if (mat.diffuse) material.setDiffuse(mat.diffuse.r, mat.diffuse.g, mat.diffuse.b, mat.diffuse.a);
+        if (mat.specular) material.setSpecular(mat.specular.r, mat.specular.g, mat.specular.b, mat.specular.a);
+        return material;
     }
 
     parseMaterial(node) {
         let res = {};
-
+        let tags = {...defaults.materialTags};
         for (let i = 0; i < node.length; i++) {
-            for (let j = 0; j < defaults.materialTags.length; j++) {
-                let child = node[i];
-                if (child.nodeName == defaults.materialTags[j]) {
-                    res[child.nodeName] = this.parseAttributes(child, defaultAttributes.rgbaAttr);
+            if (tags.hasOwnProperty(node[i].nodeName)){
+                if (tags[node[i].nodeName]){
+                    this.onXMLMinorError(`Duplicate attribute ${node[i].nodeName}.`);
+                    continue;
                 }
-            }
+                try {
+                    res[node[i].nodeName] = this.parseAttributes(node[i], defaultAttributes.rgbaAttr);
+                    tags[node[i].nodeName]++;
+                } catch (e) {
+                    throw `At tag ${node[i].nodeName}: ${e}`;
+                }
+            } else this.onXMLMinorError(`Invalid material tag <${node[i].nodeName}>.`);
         }
-
+        for(let key in tags){
+            if (!tags[key]) this.onXMLMinorError(`Missing attribute ${key}. Using default values.`);
+        }
         return res;
     }
 
-    parseTransformations(node) {
-
-        let children = node.children;
+    parseTransformations({children}) {
 
         this.transformations = {};
 
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "transformation") {
-                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
-                if (this.transformations.hasOwnProperty(res.id)) throw "Transformation with id='" + res.id + "' already exists.";
-                let childrenRes = this.parseTransformation(children[i].children);
-                this.transformations[res.id] = childrenRes;
-            } else throw "Invalid transformation tag '" + children[i].nodeName + "'.";
+            if (children[i].nodeName === "transformation") {
+                let res;
+                try {
+                    res = this.parseAttributes(children[i], defaultAttributes.idAttr);
+                } catch(err) {
+                    this.onXMLMinorError(`Invalid transformation id.`);
+                    continue;
+                }
+                
+                if (this.transformations.hasOwnProperty(res.id)) {
+                     this.onXMLMinorError(`Transformation with id='${res.id}' already exists. Skipping transformation.`);
+                     continue;
+                }
+
+                let childrenRes
+
+                try {
+                    childrenRes = this.parseTransformation(children[i].children);
+                    this.transformations[res.id] = childrenRes;
+                } catch (err) {
+                    this.onXMLMinorError(`At transformation='${res.id}': ${err}`);
+                }
+                
+            } else this.onXMLMinorError(`Invalid transformation tag <${children[i].nodeName}>.`);
         }
+
+        if (Object.keys(this.transformations).length === 0) this.onXMLMinorError("No transformations defined.");
     }
 
     parseTransformation(node) {
@@ -347,9 +388,13 @@ class MySceneGraph {
         for (let i = 0; i < node.length; i++) {
             if (defaults.transformationTags.hasOwnProperty(node[i].nodeName)) {
                 let child = node[i];
-                let param = this.parseAttributes(child, defaults.transformationTags[child.nodeName]);
-                mat4.mul(res, res, this.getTransformationMatrix(child.nodeName, param));
-            } else throw "Invalid transformation type '" + node[i].nodeName + "'.";
+                try {
+                    let param = this.parseAttributes(child, defaults.transformationTags[child.nodeName]);
+                    mat4.mul(res, res, this.getTransformationMatrix(child.nodeName, param));
+                } catch(err){
+                    throw `At tag <${node[i].nodeName}>: ${err}`;
+                }
+            } else throw `Invalid transformation type '${node[i].nodeName}'.`;
 
         }
         return res;
@@ -373,19 +418,33 @@ class MySceneGraph {
         return res;
     }
 
-    parsePrimitives(node) {
-        let children = node.children;
+    parsePrimitives({children}) {
 
         this.primitives = {};
 
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "primitive") {
-                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
-                if (this.primitives.hasOwnProperty(res.id)) throw "Primitive with id='" + res.id + "' already exists.";
-                let childrenRes = this.parsePrimitive(children[i].children);
-                this.primitives[res.id] = childrenRes;
-            } else throw "Invalid primitive tag '" + children[i].nodeName + "'.";
+            if (children[i].nodeName === "primitive") {
+                let res;
+                try {
+                    res = this.parseAttributes(children[i], defaultAttributes.idAttr);
+                } catch(err){
+                    this.onXMLMinorError(`Invalid primitive id.`);
+                    continue;
+                }
+                if (this.primitives.hasOwnProperty(res.id)) {
+                    this.onXMLMinorError(`Primitive with id='${res.id}' already exists. Skipping primitive.`);
+                    continue;
+                }
+                try {
+                    let childrenRes = this.parsePrimitive(children[i].children);
+                    this.primitives[res.id] = childrenRes;
+                } catch (err) {
+                    this.onXMLMinorError(`At primitive='${res.id}': ${err}`);
+                }
+            } else this.onXMLMinorError(`Invalid primitive tag <children[i].nodeName>.`);
         }
+
+        if (Object.keys(this.primitives).length === 0) this.onXMLMinorError("There's no way you can build a scene with no primitives :(");
     }
 
     parsePrimitive(node) {
@@ -394,7 +453,7 @@ class MySceneGraph {
 
         let child = node[0];
 
-        if (!defaults.primitiveTags.hasOwnProperty(child.nodeName)) throw "Invalid primitive tag '" + child.nodeName + "'.";
+        if (!defaults.primitiveTags.hasOwnProperty(child.nodeName)) throw `Invalid primitive tag <child.nodeName>.`;
 
         let res = this.parseAttributes(child, defaults.primitiveTags[child.nodeName]);
         switch (child.nodeName) {
@@ -412,26 +471,41 @@ class MySceneGraph {
 
     }
 
-    parseComponents(node) {
-        let children = node.children;
+    parseComponents({children}) {
 
         this.componentValues = {};
 
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName == "component") {
-                let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
-                if (this.componentValues.hasOwnProperty(res.id)) throw "Component with id='" + res.id + "' already exists.";
-                this.componentValues[res.id] = this.parseComponent(children[i].children);
-            } else throw "Invalid component tag '" + children[i].nodeName + "'.";
+            if (children[i].nodeName === "component") {
+                let res;
+                try {
+                    res = this.parseAttributes(children[i], defaultAttributes.idAttr);
+                } catch(err) {
+                    this.onXMLMinorError("Invalid component id.");
+                    continue;
+                }
+                if (this.componentValues.hasOwnProperty(res.id)) {
+                    this.onXMLMinorError(`Component with id='${res.id}' already exists. Skipping component`);
+                    continue;
+                }
+                try {
+                    this.componentValues[res.id] = this.parseComponent(children[i].children);
+                } catch (err) {
+                    this.onXMLMinorError(`At component='${res.id}': ${err}`);
+                }
+            } else this.onXMLMinorError(`Invalid component tag <children[i].nodeName>.`);
         }
 
         this.components = {};
 
         for (let key in this.componentValues) {
             let currComponent = this.componentValues[key];
-            for (let i = 0; i < currComponent.children.components.length; i++) {
+            for (let i = currComponent.children.components.length - 1; i >= 0 ; i--) {
                 let id = currComponent.children.components[i];
-                if (!this.componentValues.hasOwnProperty(id)) throw "Invalid componentref='" + id + "'.";
+                if (!this.componentValues.hasOwnProperty(id)) {
+                    this.onXMLMinorError(`Invalid componentref='${id}'. Discarding componentref.`);
+                    currComponent.children.splice(i, 1);
+                } 
             }
             this.components[key] = new Component(this, this.scene, key, currComponent);
         }
@@ -440,7 +514,7 @@ class MySceneGraph {
             this.components[key].setupChildrenComponents();
         }
 
-
+        if (Object.keys(this.components).length === 0) this.onXMLMinorError("A scene with no components isn't much fun :(");
     }
 
     parseComponent(node) {
@@ -461,7 +535,7 @@ class MySceneGraph {
         node = node.children;
 
         let transformationTags = {
-            transformationref: [new Attribute("id", "string", true)]
+            transformationref: [new Attribute("id", "string")]
         };
 
         Object.assign(transformationTags, defaults.transformationTags);
@@ -575,8 +649,8 @@ class MySceneGraph {
             let attr = attributes[i];
             res[attr.name] = this.reader[defaults.typeFunc[attr.type]](node, attr.name, false);
 
-            /* if (res[attr.name] == null) {
-                if (attr.required) throw "Attribute '" + attr.name + "' missing.";
+            if (res[attr.name] == null) {
+                if (!attr.default) throw "Attribute '" + attr.name + "' missing.";
                 else {
                     this.onXMLMinorError(attr.name + " attribute missing. Assuming value=" + attr.default);
                 }
@@ -585,7 +659,7 @@ class MySceneGraph {
                     res[attr.name] = attr.default;
                     this.onXMLMinorError(attr.name + " attribute corrupted. Assuming value=" + attr.default);
                 }
-            } */
+            } 
         }
 
         return res;

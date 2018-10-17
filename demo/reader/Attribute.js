@@ -48,10 +48,12 @@ class Attribute {
 		this.rangeRest = true;
 		this.rangeMin = min;
 		this.rangeMax = max;
+		return this;
 	}
 
 	addChoicesRestriction(choices){
 		this.choiceRest = true;
 		this.choices = choices;
+		return this;
 	}
 }

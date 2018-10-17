@@ -99,12 +99,17 @@ class XMLscene extends CGFscene {
         this.interface.addViewsGroup(this.cameras);
 
         this.axis = new CGFaxis(this, this.graph.axisLength);
+        
+        if (this.graph.ambient.background != null){
+            let bg = this.graph.ambient.background;
+            this.gl.clearColor(bg.r, bg.g, bg.b, bg.a);
+        }
 
-        let bg = this.graph.ambient.background;
-        let amb = this.graph.ambient.ambient;
-        this.gl.clearColor(bg.r, bg.g, bg.b, bg.a);
-        this.setGlobalAmbientLight(amb.r, amb.g, amb.b, amb.a);
-
+        if (this.graph.ambient.ambient != null){
+            let amb = this.graph.ambient.ambient;
+            this.setGlobalAmbientLight(amb.r, amb.g, amb.b, amb.a);
+        }
+    
         this.initLights();
 
         // Adds lights group.
@@ -125,7 +130,7 @@ class XMLscene extends CGFscene {
             let newCam;
             if (cam.type == "perspective") {
                 newCam = new CGFcamera(
-                    cam.angle, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to)
+                    cam.angle*DEGREE_TO_RAD, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to)
                 );
 
             } else if (cam.type == "ortho") {
