@@ -5,7 +5,7 @@
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <ortho id="ortho1" near="1" far="200" left="-30" right="30" top="30" bottom="-30">
+        <ortho id="ortho1" near="1" far="200" left="-30" right="30" top="20" bottom="-20">
             <from x="20" y="10" z="60" />
             <to x="20" y="10" z="0" />
         </ortho>
@@ -153,7 +153,7 @@
             <rotate axis="x" angle="-90" />
         </transformation>
         <transformation id="bed">
-            <translate x="15" y="1" z="2" />
+            <translate x="15" y="1" z="1.5" />
         </transformation>
         <transformation id="rug">
             <translate x="15" y="0" z="20" />
@@ -258,6 +258,74 @@
         <transformation id="pillow2">
             <translate x="1" y="5.5" z="1" />
             <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="deskwall1">
+            <scale x="6" y="0.5" z="12" />
+        </transformation>
+        <transformation id="deskwall2">
+            <translate x="0" y="1" z="0" />
+            <scale x="6" y="0.5" z="12" />
+        </transformation>
+        <transformation id="deskwall3">
+            <translate x="-3" y="0.5" z="0" />
+            <scale x="0.5" y="1.5" z="12" />
+        </transformation>
+        <transformation id="deskwall4">
+            <translate x="-0.125" y="0.5" z="-6" />
+            <scale x="6.25" y="1.5" z="0.5" />
+        </transformation>
+        <transformation id="deskwall5">
+            <translate x="-0.125" y="0.5" z="6" />
+            <scale x="6.25" y="1.5" z="0.5" />
+        </transformation>
+        <transformation id="deskwall6">
+            <translate x="-0.125" y="0.5" z="0" />
+            <scale x="6.25" y="1.5" z="0.5" />
+        </transformation>
+        <transformation id="desk">
+            <translate x="3.5" y="0.25" z="32" />
+        </transformation>
+        <transformation id="deskdraw1">
+            <translate x="0" y="0.5" z="3" />
+            <scale x="6" y="0.5" z="5.5" />
+        </transformation>
+        <transformation id="deskdraw2">
+            <translate x="0" y="0.5" z="-3" />
+            <scale x="6" y="0.5" z="5.5" />
+        </transformation>
+        <transformation id="deskleg1">
+            <translate x="2.75" y="2.25" z="6" />
+            <scale x="0.5" y="5" z="0.5"/>
+        </transformation>
+        <transformation id="deskleg2">
+            <translate x="-2.75" y="2.25" z="6" />
+            <scale x="0.5" y="5" z="0.5"/>
+        </transformation>
+        <transformation id="deskleg3">
+            <translate x="2.75" y="2.25" z="-6" />
+            <scale x="0.5" y="5" z="0.5"/>
+        </transformation>
+        <transformation id="deskleg4">
+            <translate x="-2.75" y="2.25" z="-6" />
+            <scale x="0.5" y="5" z="0.5"/>
+        </transformation>
+        <transformation id="deskframe">
+            <translate x="0" y="5" z="0" />
+        </transformation>
+        <transformation id="deskdraws">
+            <translate x="0" y="10" z="0" />
+        </transformation>
+        <transformation id="knob1">
+            <translate x="1" y="5" z="-1" />
+            <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="knob2">
+            <translate x="1" y="5" z="5" />
+            <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="shelf">
+            <translate x="1" y="13" z="32" />
+            <scale x="3" y="0.5" z="12" />
         </transformation>
     </transformations>
     <primitives>
@@ -566,7 +634,7 @@
             <materials>
                 <material id="default" />
             </materials>
-                <texture id="darkwood" length_s="0.2" length_t="0.5" />
+            <texture id="darkwood" length_s="0.2" length_t="0.5" />
             <children>
                 <componentref id="cube"/>
             </children>
@@ -700,7 +768,7 @@
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="darkwood" length_s="1" length_t="1" />
+            <texture id="none" length_s="1" length_t="1" />
             <children>
                 <componentref id="windowglass" />
                 <componentref id="windowframe1" />
@@ -884,9 +952,8 @@
                 <componentref id="drawknob" />
             </children>
         </component>
-        <component id="sidetable">
+        <component id="sidetableframe">
             <transformation>
-                <transformationref id="sidetable" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -898,8 +965,240 @@
                 <componentref id="sidetablewall3" />
                 <componentref id="sidetablewall4" />
                 <componentref id="sidetablewall5" />
+            </children>
+        </component>
+        <component id="sidetable">
+            <transformation>
+                <transformationref id="sidetable" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="sidetableframe" />
                 <componentref id="sidetabledraw" />
                 <componentref id="lamp2" />
+            </children>
+        </component>
+        <component id="deskwall1">
+            <transformation>
+                <transformationref id="deskwall1" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskwall2">
+            <transformation>
+                <transformationref id="deskwall2" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskwall3">
+            <transformation>
+                <transformationref id="deskwall3" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskwall4">
+            <transformation>
+                <transformationref id="deskwall4" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskwall5">
+            <transformation>
+                <transformationref id="deskwall5" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskwall6">
+            <transformation>
+                <transformationref id="deskwall6" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskdraw1">
+            <transformation>
+                <transformationref id="deskdraw1" />
+                <transformationref id="deskdraws" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskdraw2">
+            <transformation>
+                <transformationref id="deskdraw2" />
+                <transformationref id="deskdraws" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskleg1">
+            <transformation>
+                <transformationref id="deskleg1" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskleg2">
+            <transformation>
+                <transformationref id="deskleg2" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskleg3">
+            <transformation>
+                <transformationref id="deskleg3" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="deskleg4">
+            <transformation>
+                <transformationref id="deskleg4" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="knob1">
+            <transformation>
+                <transformationref id="knob1" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="drawknob" />
+            </children>
+        </component>
+        <component id="knob2">
+            <transformation>
+                <transformationref id="knob2" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <componentref id="drawknob" />
+            </children>
+        </component>
+        <component id="deskframe">
+            <transformation>
+                <transformationref id="deskframe" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="deskwall1" />
+                <componentref id="deskwall2" />
+                <componentref id="deskwall3" />
+                <componentref id="deskwall4" />
+                <componentref id="deskwall5" />
+                <componentref id="deskwall6" />
+            </children>
+        </component>
+        <component id="desk">
+            <transformation>
+                <transformationref id="desk" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="deskframe" />
+                <componentref id="deskdraw1" />
+                <componentref id="deskdraw2" />
+                <componentref id="deskleg1" />
+                <componentref id="deskleg2" />
+                <componentref id="deskleg3" />
+                <componentref id="deskleg4" />
+                <componentref id="knob1" />
+                <componentref id="knob2" />
+
+            </children>
+        </component>
+        <component id="shelf">
+            <transformation>
+                <transformationref id="shelf" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="lightwood" length_s="1" length_t="1" />
+            <children>
+                <componentref id="cube" />
             </children>
         </component>
         <component id="bedroom">
@@ -908,7 +1207,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-                <texture id="rug" length_s="1" length_t="1" />
+            <texture id="rug" length_s="1" length_t="1" />
             <children>
                 <componentref id="bed" />
                 <componentref id="wall1" />
@@ -918,7 +1217,9 @@
                 <componentref id="lamp" />
                 <componentref id="window" />
                 <componentref id="sidetable" />
-                <primitiveref id="triangle" />
+                <componentref id="desk" />
+                <componentref id="shelf" />
+
             </children>
         </component>
     </components>

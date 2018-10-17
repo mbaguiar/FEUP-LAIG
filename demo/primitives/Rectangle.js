@@ -49,10 +49,10 @@ class Rectangle extends CGFobject {
 		let l = this.y[1] - this.y[0];
 
 		this.texCoords = [
-			0, c / t,
-			l / s, c / t,
+			0, l / t,
+			c / s, l / t,
 			0, 0,
-			l / s, 0
+			c / s, 0
 		]
 
 		this.updateTexCoordsGLBuffers();
