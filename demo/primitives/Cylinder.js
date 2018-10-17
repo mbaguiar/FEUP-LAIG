@@ -3,22 +3,22 @@
  * @constructor
  */
 class Cylinder extends CGFobject {
-	constructor(scene, base, top, height, slices, stacks) {
-		super(scene);
-		this.slices = slices;
-		this.stacks = stacks;
-		this.top = top;
-		this.base = base;
+    constructor(scene, base, top, height, slices, stacks) {
+        super(scene);
+        this.slices = slices;
+        this.stacks = stacks;
+        this.top = top;
+        this.base = base;
         this.height = height;
         this.noBaseCylinder = new NoBaseCylinder(scene, base, top, height, slices, stacks);
         this.topCircle = new Circle(scene, slices);
         this.baseCircle = new Circle(scene, slices);
 
-		this.initBuffers();
-	};
+        this.initBuffers();
+    };
 
-	display() {
-        
+    display() {
+
         this.noBaseCylinder.display();
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI, 0, 1, 0);
