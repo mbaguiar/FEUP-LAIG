@@ -504,8 +504,8 @@ class MySceneGraph {
                 let id = currComponent.children.components[i];
                 if (!this.componentValues.hasOwnProperty(id)) {
                     this.onXMLMinorError(`Invalid componentref='${id}'. Discarding componentref.`);
-                    currComponent.children.splice(i, 1);
-                } 
+                    currComponent.children.components.splice(i, 1);
+                }
             }
             this.components[key] = new Component(this, this.scene, key, currComponent);
         }
@@ -544,9 +544,18 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (transformationTags.hasOwnProperty(node[i].nodeName)) {
-                let transf = this.parseAttributes(node[i], transformationTags[node[i].nodeName]);
-                if (node[i].nodeName == "transformationref") {
-                    if (!this.transformations.hasOwnProperty(transf.id)) throw "Transformation with id='" + transf.id + "' doesn't exist.";
+                let transf;
+                try {
+                    transf = this.parseAttributes(node[i], transformationTags[node[i].nodeName]);
+                } catch (err){
+                    this.onXMLMinorError(`Invalid transformation id.`);
+                    continue;
+                }
+                if (node[i].nodeName === "transformationref") {
+                    if (!this.transformations.hasOwnProperty(transf.id)) {
+                        this.onXMLMinorError(`Transformation with id='${transf.id}' doesn't exist.`);
+                        continue;
+                    }
                     res.push({
                         type: "ref",
                         id: transf.id
@@ -557,7 +566,7 @@ class MySceneGraph {
                         param: transf
                     });
                 }
-            } else throw "Invalid tag '" + node[i].nodeName + "'.";
+            } else this.onXMLMinorError(`Invalid transformation tag <${node[i].nodeName}>.`);
         }
         return res;
 
@@ -570,21 +579,46 @@ class MySceneGraph {
         let res = [];
 
         for (let i = 0; i < node.length; i++) {
-            if (node[i].nodeName == "material") {
-                let mat = this.parseAttributes(node[i], defaultAttributes.idAttr);
-                if (!this.materials.hasOwnProperty(mat.id) && mat.id != "inherit") throw "Material with id='" + mat.id + "' doesn't exist.";
+            if (node[i].nodeName === "material") {
+                let mat;
+                try {
+                    mat = this.parseAttributes(node[i], defaultAttributes.idAttr);
+                } catch (err) {
+                    this.onXMLMinorError(`Invalid component material id.`);
+                    continue;
+                }
+                if (!this.materials.hasOwnProperty(mat.id) && mat.id != "inherit"){ 
+                    this.onXMLMinorError(`Material with id='${mat.id}' doesn't exist.`);
+                    continue;
+                }
                 res.push(mat.id);
-            } else throw "Invalid tag '" + node[i].nodeName + "'.";
+            } else this.onXMLMinorError(`Invalid material tag <${node[i].nodeName}>.`);
         }
+
+        if (res.length == 0) this.onXMLMinorError("No valid material declared. Using default material.");
 
         return res;
     }
 
     parseComponentTexture(node) {
 
-        let res = this.parseAttributes(node, defaultAttributes.componentTextureAttr);
+        let res;
 
-        if (!this.textures.hasOwnProperty(res.id) && res.id != "inherit" && res.id != "none") throw "Invalid texture id.";
+        try {
+            res = this.parseAttributes(node, defaultAttributes.componentTextureAttr);
+        } catch (err) {
+            this.onXMLMinorError(`Invalid component texture: ${err}`);
+            return;
+        }
+
+        if (res == null) {
+            this.onXMLMinorError("No valid texture declared. Using no texture.");
+            return;
+        }
+
+        if (!this.textures.hasOwnProperty(res.id) && res.id != "inherit" && res.id != "none") { 
+            this.onXMLMinorError(`Invalid texture with id='${res.id}'.`);
+        }
 
         return res;
 
@@ -600,12 +634,21 @@ class MySceneGraph {
 
         for (let i = 0; i < node.length; i++) {
             if (defaults.childrenTags.indexOf(node[i].nodeName) != -1) {
-                let child = this.parseAttributes(node[i], defaultAttributes.idAttr);
-                if (node[i].nodeName == "primitiveref") {
-                    if (!this.primitives.hasOwnProperty(child.id)) throw "Invalid primitive id.";
+                let child;
+                try {
+                    child = this.parseAttributes(node[i], defaultAttributes.idAttr);
+                } catch (err) {
+                    this.onXMLMinorError(`Invalid component child: ${err}`);
+                    continue;
+                }
+                if (node[i].nodeName === "primitiveref") {
+                    if (!this.primitives.hasOwnProperty(child.id)) {
+                        this.onXMLMinorError(`Primitive with id='${child.id}'. Discarding primitiveref.`);
+                        continue;
+                    }
                 }
                 res[node[i].nodeName.slice(0, -3) + "s"].push(child.id);
-            } else throw "Invlaid tag '" + node[i].nodeName + "'.";
+            } else this.onXMLMinorError(`Invalid component child tag <${node[i].nodeName}>.`);
         }
 
         return res;
