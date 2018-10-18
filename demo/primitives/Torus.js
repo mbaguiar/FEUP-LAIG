@@ -33,8 +33,8 @@ class Torus extends CGFobject {
 				let x = (this.outer + (this.inner * cosTheta)) * cosPhi;
 				let y = (this.outer + (this.inner * cosTheta)) * sinPhi
 				let z = this.inner * sinTheta;
-				let s = 1 - (i / this.stacks);
-				let t = 1 - (j / this.slices);
+				let t = (i / this.stacks);
+				let s = (j / this.slices);
 
 				this.vertices.push(x, y, z);
 				this.normals.push(x, y, z);

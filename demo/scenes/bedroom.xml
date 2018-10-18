@@ -62,6 +62,8 @@
         <texture id="greenbook" file="scenes/images/green_book.jpg" />
         <texture id="redbook" file="scenes/images/red_book.jpg" />
         <texture id="painting" file="scenes/images/forest.png" />
+        <texture id="mirror" file="scenes/images/mirror.jpg" />
+        <texture id="pattern" file="scenes/images/pattern.jpg" />
     </textures>
     <materials>
         <material id="default" shininess = "0">
@@ -334,6 +336,11 @@
             <translate x="15" y="13" z="0.1" />
             <scale x="10" y="6" z="1" />
         </transformation>
+        <transformation id="mirror">
+            <translate x="1" y="8.75" z="32" />
+            <rotate axis="z" angle="24"/>
+            <rotate axis="y" angle="90" />
+        </transformation>
     </transformations>
     <primitives>
         <primitive id="quad">
@@ -377,6 +384,15 @@
         </primitive>
         <primitive id="mirrortorus">
             <torus inner="0.25" outer="2" slices="20" loops="10" />
+        </primitive>
+        <primitive id="mirror">
+            <cylinder base="2" top="2" height="0.1" slices="20" stacks="10" />
+        </primitive>
+        <primitive id="mug">
+            <cylinder base="0.5" top="0.5" height="1" slices="20" stacks="10" />
+        </primitive>
+        <primitive id="handle">
+            <torus inner="0.05" outer="0.5" slices="20" loops="10" />
         </primitive>
     </primitives>
     <components>
@@ -1289,6 +1305,43 @@
                 <primitiveref id="quad" />
             </children>
         </component>
+        <component id="vanitymirror">
+            <transformation>
+                <transformationref id="mirror" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="mirror" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="mirrortorus" />
+                <primitiveref id="mirror" />
+            </children>
+        </component>
+        <component id="vanitymirrorframe">
+            <transformation>
+                <transformationref id="mirror" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="copper" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="mirrortorus" />
+            </children>
+        </component>
+        <component id="vanitymirrorframe">
+            <transformation>
+                <transformationref id="mirror" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="copper" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="mirrortorus" />
+            </children>
+        </component>
         <component id="bedroom">
             <transformation>
             </transformation>
@@ -1315,7 +1368,8 @@
                 <componentref id="book" />
                 <componentref id="book6" />
                 <componentref id="painting" />
-                <primitiveref id="mirrortorus" />
+                <componentref id="vanitymirror" />
+                <componentref id="vanitymirrorframe" />
             </children>
         </component>
     </components>
