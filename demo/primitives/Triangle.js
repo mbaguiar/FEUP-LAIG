@@ -64,8 +64,8 @@ class Triangle extends CGFobject {
 
 		this.texCoords = [
 			(c - a * Math.cos(B)) / s, 1 - (a * Math.sin(B)) / t,
-			0, 1 / t,
-			c / s, 1 / t
+			0, 1,
+			c / s, 1
 		]
 
 		this.updateTexCoordsGLBuffers();

@@ -90,6 +90,24 @@
             <diffuse r="0.678" g="0.698" b="1" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
+        <material id="mug1" shininess = "0">
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="0.631" g="0.478" b="0.776" a="1" />
+            <specular r="0.03" g="0.03" b="0.03" a="1" />
+        </material>
+        <material id="mug2" shininess = "0">
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="0.100" g="0.478" b="0.776" a="1" />
+            <specular r="0.03" g="0.03" b="0.03" a="1" />
+        </material>
+        <material id="mug3" shininess = "0">
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="0.631" g="0.478" b="0.100" a="1" />
+            <specular r="0.03" g="0.03" b="0.03" a="1" />
+        </material>
     </materials>
     <transformations>
         <transformation id="face1">
@@ -341,6 +359,39 @@
             <rotate axis="z" angle="24"/>
             <rotate axis="y" angle="90" />
         </transformation>
+        <transformation id="mugcup">
+            <rotate axis="x" angle="90" />
+        </transformation>
+        <transformation id="handle">
+            <translate x="-0.5" y="-0.8" z="0"/>
+        </transformation>
+        <transformation id="mug">
+            <translate x="4" y="8" z="28" />
+            <rotate axis="y" angle="-90" />
+        </transformation>
+        <transformation id="puf1">
+            <rotate axis="x" angle="90" />
+        </transformation>
+        <transformation id="puf2">
+            <rotate axis="x" angle="90" />
+        </transformation>
+        <transformation id="puf3">
+            <translate x="0" y="-3" z="0" />
+            <rotate axis="x" angle="90" />
+        </transformation>
+        <transformation id="puf">
+            <translate x="27" y="3.2" z="37" />
+        </transformation>
+        <transformation id="mirror1">
+            <translate x="0.1" y="6" z="5"/>
+            <rotate axis="x" angle="180" />
+        </transformation>
+        <transformation id="mirrorset1">
+            <translate x="0" y="7" z="15"/>
+        </transformation>
+        <transformation id="mirrorset2">
+            <translate x="0" y="5" z="9"/>
+        </transformation>
     </transformations>
     <primitives>
         <primitive id="quad">
@@ -377,7 +428,7 @@
             <cylinder base="0.5" top="1" height="1" slices="20" stacks="10" />
         </primitive>
         <primitive id="triangle">
-            <triangle x1="0" y1="0" z1="0" x2="8" y2="0" z2="8" x3="3" y3="0" z3="-2"/>
+            <triangle x1="0" y1="0" z1="0" x2="0" y2="5" z2="0" x3="0" y3="0" z3="5"/>
         </primitive>
         <primitive id="cactusplant">
             <sphere radius="0.75" slices="20" stacks="20" />
@@ -389,10 +440,16 @@
             <cylinder base="2" top="2" height="0.1" slices="20" stacks="10" />
         </primitive>
         <primitive id="mug">
-            <cylinder base="0.5" top="0.5" height="1" slices="20" stacks="10" />
+            <cylinder base="0.6" top="0.6" height="1.5" slices="20" stacks="10" />
         </primitive>
         <primitive id="handle">
-            <torus inner="0.05" outer="0.5" slices="20" loops="10" />
+            <torus inner="0.1" outer="0.5" slices="20" loops="10" />
+        </primitive>
+        <primitive id="puf">
+            <cylinder base="2" top="2" height="3" slices="20" stacks="10" />
+        </primitive>
+        <primitive id="puf2">
+            <torus inner="0.2" outer="2" slices="20" loops="10" />
         </primitive>
     </primitives>
     <components>
@@ -1330,16 +1387,143 @@
                 <primitiveref id="mirrortorus" />
             </children>
         </component>
-        <component id="vanitymirrorframe">
+        <component id="mugcup">
             <transformation>
-                <transformationref id="mirror" />
+                <transformationref id="mugcup" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="mug" />
+            </children>
+        </component>
+        <component id="handle">
+            <transformation>
+                <transformationref id="handle" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="handle" />
+            </children>
+        </component>
+        <component id="mug">
+            <transformation>
+                <transformationref id="mug" />
+            </transformation>
+            <materials>
+                <material id="mug1" />
+                <material id="mug2" />
+                <material id="mug3" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <componentref id="mugcup" />
+                <componentref id="handle" />
+            </children>
+        </component>
+        <component id="puf1">
+            <transformation>
+                <transformationref id="puf1" />
             </transformation>
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="copper" length_s="1" length_t="1" />
+            <texture id="inherit" length_s="1" length_t="1" />
             <children>
-                <primitiveref id="mirrortorus" />
+                <primitiveref id="puf" />
+            </children>
+        </component>
+        <component id="puf2">
+            <transformation>
+                <transformationref id="puf2" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="puf2" />
+            </children>
+        </component>
+        <component id="puf3">
+            <transformation>
+                <transformationref id="puf3" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="inherit" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="puf2" />
+            </children>
+        </component>
+        <component id="puf">
+            <transformation>
+                <transformationref id="puf" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="pattern" length_s="1" length_t="1" />
+            <children>
+                <componentref id="puf1" />
+                <componentref id="puf2" />
+                <componentref id="puf3" />
+            </children>
+        </component>
+        <component id="mirror1">
+            <transformation>
+                <transformationref id="mirror1" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="mirror" length_s="5" length_t="5" />
+            <children>
+                <primitiveref id="triangle" />
+            </children>
+        </component>
+        <component id="mirror2">
+            <transformation>
+
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="mirror" length_s="5" length_t="5" />
+            <children>
+                <primitiveref id="triangle" />
+            </children>
+        </component>
+        <component id="mirrorset">
+            <transformation>
+                <transformationref id="mirrorset1" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="mirror" length_s="1" length_t="1" />
+            <children>
+                <componentref id="mirror1" />
+                <componentref id="mirror2" />
+            </children>
+        </component>
+        <component id="mirrorset2">
+            <transformation>
+                <transformationref id="mirrorset2" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="mirror" length_s="1" length_t="1" />
+            <children>
+                <componentref id="mirror1" />
+                <componentref id="mirror2" />
             </children>
         </component>
         <component id="bedroom">
@@ -1370,6 +1554,10 @@
                 <componentref id="painting" />
                 <componentref id="vanitymirror" />
                 <componentref id="vanitymirrorframe" />
+                <componentref id="mug" />
+                <componentref id="puf" />
+                <componentref id="mirrorset" />
+                <componentref id="mirrorset2" />
             </children>
         </component>
     </components>
