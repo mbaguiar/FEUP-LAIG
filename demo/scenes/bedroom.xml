@@ -1,14 +1,23 @@
 <yas>
     <scene root="bedroom" axis_length="15" />
-    <views default="persp">
+    <views default="default">
         <perspective id="persp" near="0.1" far="500" angle="40">
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <ortho id="ortho1" near="1" far="200" left="-30" right="30" top="20" bottom="-20">
+        <ortho id="bed_orthocamera" near="1" far="200" left="-30" right="30" top="20" bottom="-20">
             <from x="20" y="10" z="60" />
             <to x="20" y="10" z="0" />
         </ortho>
+        <perspective id="desk_camera" near="0.1" far="250" angle="60">
+            <from x="30" y="10" z="30" />
+            <to x="0" y="10" z="30" />
+        </perspective>
+        <perspective id="sidetable_camera" near="0.1" far="100" angle="60">
+            <from x="25" y="7" z="25" />
+            <to x="25" y="7" z="0" />
+        </perspective>
+
     </views>
     <ambient>
         <ambient r="0" g="0" b="0" a="1" />
@@ -16,35 +25,42 @@
     </ambient>
     <lights>
         <omni id="light1" enabled="1">
-            <location x="0" y="30" z="0" w="1" />
+            <location x="5" y="40" z="5" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
         <omni id="light2" enabled="1">
-            <location x="0" y="30" z="-30" w="1" />
+            <location x="5" y="40" z="35" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
         <omni id="light3" enabled="1">
-            <location x="30" y="30" z="30" w="1" />
+            <location x="25" y="40" z="5" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
         <omni id="light4" enabled="1">
-            <location x="30" y="30" z="0" w="1" />
+            <location x="25" y="40" z="35" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
         <omni id="light5" enabled="1">
-            <location x="-30" y="30" z="30" w="1" />
+            <location x="15" y="40" z="20" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
+        <spot id="lamp_light" enabled="1" angle="10" exponent="6">
+            <location x="3" y="10" z="3" w="1" />
+            <target x="5" y="0" z="3" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1" />
+            <diffuse r="0.4" g="0.4" b="0.4" a="0.4" />
+            <specular r="0.4" g="0.4" b="0.4" a="0.4" />
+        </spot>
     </lights>
     <textures>
         <texture id="white" file="scenes/images/white_wall.jpg" />
@@ -383,14 +399,14 @@
             <translate x="27" y="3.2" z="37" />
         </transformation>
         <transformation id="mirror1">
-            <translate x="0.1" y="6" z="5"/>
+            <translate x="0" y="6" z="5"/>
             <rotate axis="x" angle="180" />
         </transformation>
         <transformation id="mirrorset1">
-            <translate x="0" y="7" z="15"/>
+            <translate x="0.1" y="7" z="15"/>
         </transformation>
         <transformation id="mirrorset2">
-            <translate x="0" y="5" z="9"/>
+            <translate x="0.1" y="5" z="9"/>
         </transformation>
     </transformations>
     <primitives>
