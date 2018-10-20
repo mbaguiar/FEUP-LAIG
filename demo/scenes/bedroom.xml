@@ -1,7 +1,7 @@
 <yas>
     <scene root="bedroom" axis_length="15" />
     <views default="default">
-        <perspective id="persp" near="0.1" far="500" angle="40">
+        <perspective id="default" near="0.1" far="500" angle="40">
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
@@ -88,37 +88,37 @@
             <diffuse r="0.678" g="0.698" b="0.741" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="lampcolor1" shininess = "0">
+        <material id="lampcolor1" shininess = "50">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="1" g="0.698" b="0.741" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="lampcolor2" shininess = "0">
+        <material id="lampcolor2" shininess = "50">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.678" g="1" b="0.741" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="lampcolor3" shininess = "0">
+        <material id="lampcolor3" shininess = "50">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.678" g="0.698" b="1" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="mug1" shininess = "0">
+        <material id="mug1" shininess = "20">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.631" g="0.478" b="0.776" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="mug2" shininess = "0">
+        <material id="mug2" shininess = "20">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.100" g="0.478" b="0.776" a="1" />
             <specular r="0.03" g="0.03" b="0.03" a="1" />
         </material>
-        <material id="mug3" shininess = "0">
+        <material id="mug3" shininess = "20">
             <emission r="0" g="0" b="0" a="1" />
             <ambient r="0.1" g="0.1" b="0.1" a="1" />
             <diffuse r="0.631" g="0.478" b="0.100" a="1" />
@@ -306,10 +306,12 @@
         <transformation id="deskdraw1">
             <translate x="0" y="0.5" z="3" />
             <scale x="6" y="0.5" z="5.5" />
+            <translate x="0" y="10" z="0" />
         </transformation>
         <transformation id="deskdraw2">
             <translate x="0" y="0.5" z="-3" />
             <scale x="6" y="0.5" z="5.5" />
+            <translate x="0" y="10" z="0" />
         </transformation>
         <transformation id="deskleg1">
             <translate x="2.75" y="2.25" z="6" />
@@ -329,9 +331,6 @@
         </transformation>
         <transformation id="deskframe">
             <translate x="0" y="5" z="0" />
-        </transformation>
-        <transformation id="deskdraws">
-            <translate x="0" y="10" z="0" />
         </transformation>
         <transformation id="knob1">
             <translate x="1" y="5" z="-1" />
@@ -360,6 +359,28 @@
         </transformation>
         <transformation id="book1">
             <translate x="0" y="0" z="-0.5" />
+            <translate x="1" y="14.5" z="32" />
+            <scale x="2" y="3" z="0.5" />
+        </transformation>
+        <transformation id="book2">
+            <translate x="0" y="0" z="-1" />
+            <translate x="1" y="14.5" z="32" />
+            <scale x="2" y="3" z="0.5" />
+        </transformation>
+        <transformation id="book3">
+            <translate x="0" y="0" z="-1.5" />
+            <translate x="1" y="14.5" z="32" />
+            <scale x="2" y="3" z="0.5" />
+        </transformation>
+         <transformation id="book4">
+            <translate x="0" y="0" z="-2" />
+            <translate x="1" y="14.5" z="32" />
+            <scale x="2" y="3" z="0.5" />
+        </transformation>
+        <transformation id="book5">
+            <translate x="0" y="0" z="-2.5" />
+            <translate x="1" y="14.5" z="32" />
+            <scale x="2" y="3" z="0.5" />
         </transformation>
         <transformation id="book6">
             <translate x="1" y="14.6" z="28.2" />
@@ -406,7 +427,7 @@
             <translate x="0.1" y="7" z="15"/>
         </transformation>
         <transformation id="mirrorset2">
-            <translate x="0.1" y="5" z="9"/>
+            <translate x="0.1l" y="5" z="9"/>
         </transformation>
     </transformations>
     <primitives>
@@ -806,18 +827,6 @@
                 <componentref id="lampshade" />
             </children>
         </component>
-        <component id="torus">
-            <transformation>
-
-            </transformation>
-            <materials>
-                <material id="default" />
-            </materials>
-            <texture id="white" length_s="1" length_t="1" />
-            <children>
-                <primitiveref id="torus" />
-            </children>
-        </component>
         <component id="sidetablewall1">
             <transformation>
                 <transformationref id="sidetablewall1" />
@@ -1085,7 +1094,6 @@
         <component id="deskdraw1">
             <transformation>
                 <transformationref id="deskdraw1" />
-                <transformationref id="deskdraws" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1098,7 +1106,6 @@
         <component id="deskdraw2">
             <transformation>
                 <transformationref id="deskdraw2" />
-                <transformationref id="deskdraws" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1282,7 +1289,6 @@
         <component id="book1">
             <transformation>
                 <transformationref id="book1" />
-                <transformationref id="book" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1294,9 +1300,7 @@
         </component>
         <component id="book2">
             <transformation>
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book" />
+                <transformationref id="book2" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1308,10 +1312,7 @@
         </component>
         <component id="book3">
             <transformation>
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book" />
+                <transformationref id="book3" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1323,11 +1324,7 @@
         </component>
         <component id="book4">
             <transformation>
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book" />
+                <transformationref id="book4" />
             </transformation>
             <materials>
                 <material id="default" />
@@ -1339,12 +1336,7 @@
         </component>
         <component id="book5">
             <transformation>
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book1" />
-                <transformationref id="book" />
+                <transformationref id="book5" />
             </transformation>
             <materials>
                 <material id="default" />
