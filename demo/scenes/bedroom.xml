@@ -372,7 +372,7 @@
             <translate x="1" y="14.5" z="32" />
             <scale x="2" y="3" z="0.5" />
         </transformation>
-         <transformation id="book4">
+        <transformation id="book4">
             <translate x="0" y="0" z="-2" />
             <translate x="1" y="14.5" z="32" />
             <scale x="2" y="3" z="0.5" />
@@ -1498,7 +1498,6 @@
         </component>
         <component id="mirror2">
             <transformation>
-
             </transformation>
             <materials>
                 <material id="default" />
