@@ -101,8 +101,8 @@ const defaultAttributes = {
 	],
 	componentTextureAttr: [
 		new Attribute ("id", "string"),
-		new Attribute ("length_s", "float", 1),
-		new Attribute ("length_t", "float", 1)
+		new Attribute ("length_s", "float"),
+		new Attribute ("length_t", "float")
 	]
 }
 

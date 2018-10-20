@@ -51,6 +51,7 @@ class Component {
     }
 
     display(material, texture) {
+
         if (this.materials.length > 0) {
             if (this.materials[0] !== "inherit") material = this.materials[0];
             else {
@@ -60,11 +61,12 @@ class Component {
             }
         }
 
-        if (this.texture.id == "none") {
+        if (this.texture.id === "none") {
             texture = null;
             material.setTexture(null);
-        } else if (this.texture.id != "inherit")
+        } else if (this.texture.id !== "inherit"){
             texture = this.texture;
+        }
 
         if (texture != null) {
             material.setTexture(texture.textureObj);
@@ -84,6 +86,7 @@ class Component {
             }
             this.children[i].display(Object.assign(new CGFappearance(this.scene), material), texture);
         }
+        
         this.scene.popMatrix();
     }
 
