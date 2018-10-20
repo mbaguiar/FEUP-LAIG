@@ -44,12 +44,10 @@ class Sphere extends CGFobject {
 					this.indices.push(nVertices - 1, nVertices - 2, nVertices - this.stacks - 2);
 				}
 
-				y += incY;
+				y = 1 - (j / this.stacks);
+				x = 1 - (i / this.slices);
 				this.texCoords.push(x, y);
 			}
-
-			y = 0;
-			x += incX;
 		}
 
 		this.primitiveType = this.scene.gl.TRIANGLES;

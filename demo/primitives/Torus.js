@@ -8,7 +8,7 @@ class Torus extends CGFobject {
 		this.inner = inner;
 		this.outer = outer;
 		this.slices = slices;
-		this.stacks = loops;
+		this.loops = loops;
 
 		this.initBuffers();
 	};
@@ -20,8 +20,8 @@ class Torus extends CGFobject {
 		this.normals = [];
 		this.texCoords = [];
 
-		for (let i = 0; i <= this.stacks; i++) {
-			let theta = i * 2 * Math.PI / this.stacks;
+		for (let i = 0; i <= this.loops; i++) {
+			let theta = i * 2 * Math.PI / this.loops;
 			let sinTheta = Math.sin(theta);
 			let cosTheta = Math.cos(theta);
 
@@ -33,8 +33,8 @@ class Torus extends CGFobject {
 				let x = (this.outer + (this.inner * cosTheta)) * cosPhi;
 				let y = (this.outer + (this.inner * cosTheta)) * sinPhi
 				let z = this.inner * sinTheta;
-				let s = 1 - (i / this.stacks);
-				let t = 1 - (j / this.slices);
+				let t = (i / this.loops);
+				let s = (j / this.slices);
 
 				this.vertices.push(x, y, z);
 				this.normals.push(x, y, z);
@@ -42,7 +42,7 @@ class Torus extends CGFobject {
 			}
 		}
 
-		for (let i = 0; i < this.stacks; i++) {
+		for (let i = 0; i < this.loops; i++) {
 			for (let j = 0; j < this.slices; j++) {
 				let first = (i * (this.slices + 1)) + j;
 				let second = first + this.slices + 1;
