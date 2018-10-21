@@ -5,6 +5,11 @@ class Attribute {
 		this.default = def;
 	}
 	
+	/**
+	 * Adds range restriction to Attribute
+	 * @param  {lower boundary} min
+	 * @param  {higher boundary} max
+	 */
 	addRangeRestriction(min, max){
 		this.rangeRest = true;
 		this.rangeMin = min;

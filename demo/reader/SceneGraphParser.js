@@ -1,14 +1,10 @@
-// Order of the groups in the XML document.
-
-
+/**
+ * Auxiliary function which capitalizes the first letter of a string
+ * @param  {string} string
+ */
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
-
-function toRadian(a) {
-    return a * Math.PI / 180;
-}
-
 
 class MySceneGraph {
     constructor(filename, scene) {
@@ -55,7 +51,10 @@ class MySceneGraph {
 
         this.scene.onGraphLoaded();
     }
-
+    /**
+     * Parses the XML File
+     * @param  {XML root element} rootElement
+     */
     parseXMLFile(rootElement) {
 
         if (rootElement.nodeName != "yas")
@@ -96,7 +95,10 @@ class MySceneGraph {
 
         console.log("✅ %cParsed XML", "font-weight:bold; font-size:16px");
     }
-
+    /**
+     * Parses <scene> tag
+     * @param  {scene node} node
+     */
     parseScene(node) {
         let res = this.parseAttributes(node, defaultAttributes.sceneAttr);
         if (res.errors.indexOf("root") != -1) throw `Missing root component id in <scene> tag.`;
@@ -104,7 +106,10 @@ class MySceneGraph {
         this.idRoot = res.attr.root;
         this.axisLength = res.attr.axis_length;
     }
-
+    /**
+     * Parses <views> tag
+     * @param  {views node} node
+     */
     parseViews(node) {
         this.views = {};
         
@@ -150,7 +155,12 @@ class MySceneGraph {
         }
 
     }
-
+    /**
+     * Parses camera node (<perspective>/<ortho> tags)
+     * @param  {view node} node
+     * @param  {type of view} type
+     * @returns Object with camera properties
+     */
     parseCamera(node, type){
         let attrs;
         if (type == "perspective") attrs = defaultAttributes.perspectiveAttr;
@@ -160,7 +170,11 @@ class MySceneGraph {
         res.attr.type = type;
         return res;
     }
-
+    /**
+     * Parses camera node children (<from>/<to> tags)
+     * @param  {camera positioning} node
+     * @returns Object with camera positioning
+     */
     parseCameraChildren(node) {
 
         let res = {};
@@ -173,7 +187,10 @@ class MySceneGraph {
 
         return res;
     }
-
+    /**
+     * Parses <ambient>/<background> tags
+     * @param  {ambient node children} {children}
+     */
     parseAmbient({children}) {
 
         let res = {};
@@ -190,7 +207,10 @@ class MySceneGraph {
 
         this.ambient = res;
     }
-
+    /**
+     * Parses <lights> tag
+     * @param  {lights node} node
+     */
     parseLights(node) {
         let nodes = node.children;
 
@@ -259,7 +279,9 @@ class MySceneGraph {
         }
         this.lights = res;
     }
-
+    /**
+     * Sets graph default light
+     */
     setDefaultLight(){
         this.lights = {};
         let light = defaults.light;
@@ -270,6 +292,11 @@ class MySceneGraph {
         };   
     }
 
+    /**
+     * Parses <omni>/<spot> tags
+     * @param  {light type node} {nodeName, children}
+     * @returns Object with light properties
+     */
     parseLightsChildren({nodeName, children}) {
         let res = {};
         const tags = {...defaults.lightTags};
@@ -284,7 +311,10 @@ class MySceneGraph {
 
         return res;
     }
-
+    /**
+     * Parses <textures> tag
+     * @param  {textures node} {children}
+     */
     parseTextures({children}) {
         this.textures = {};
 
@@ -308,7 +338,10 @@ class MySceneGraph {
         }
 
     }
-
+    /**
+     * Parses <materials> tag
+     * @param  {materials node} {children}
+     */
     parseMaterials({children}) {
         this.materials = {};
         let res;
@@ -342,7 +375,13 @@ class MySceneGraph {
 
         if (Object.keys(this.materials).length === 0) this.onXMLMinorError("No materials defined. Resorting to default material.");
     }
-
+    /**
+     * Creates and returns new material based on parameters
+     * @param  {scene} scene
+     * @param  {material shininess} shininess
+     * @param  {emission, ambient, diffuse, specular properties} mat
+     * @returns new CGFappearence 
+     */
     setupMaterial(scene, shininess, mat){
         let material = new CGFappearance(scene);
         material.setShininess(shininess);
@@ -352,7 +391,12 @@ class MySceneGraph {
         if (mat.specular) material.setSpecular(mat.specular.r, mat.specular.g, mat.specular.b, mat.specular.a);
         return material;
     }
-
+    
+    /**
+     * Parses <material> tag
+     * @param  {material node} node
+     * @returns Object containing material properties
+     */
     parseMaterial(node) {
         let res = {};
         let tags = {...defaults.materialTags};
@@ -378,6 +422,10 @@ class MySceneGraph {
         return res;
     }
 
+    /**
+     * Parses <transformations> tag
+     * @param  {transformations node} {children}
+     */
     parseTransformations({children}) {
 
         this.transformations = {};
@@ -408,7 +456,12 @@ class MySceneGraph {
 
         if (Object.keys(this.transformations).length === 0) this.onXMLMinorError("No transformations defined.");
     }
-
+    /**
+     * Parses indiviudal transformation block
+     * @param  {transformation children node} node
+     * @param  {<transformation> node} parent
+     * @returns transformation matrix on success, null otherwise
+     */
     parseTransformation(node, parent) {
 
         let res = mat4.create();
@@ -428,13 +481,18 @@ class MySceneGraph {
         }
         return res;
     }
-
+    /**
+     * Creates transformation matrix(mat4)
+     * @param  {transformation type} type
+     * @param  {transformation parameters} param
+     * @returns transformation matrix
+     */
     getTransformationMatrix(type, param) {
         let res = mat4.create();
 
         switch (type) {
             case "rotate":
-                mat4.rotate(res, res, toRadian(param.angle), defaults.axis[param.axis]);
+                mat4.rotate(res, res, param.angle*DEGREE_TO_RAD, defaults.axis[param.axis]);
                 break;
             case "translate":
                 mat4.translate(res, res, Object.values(param));
@@ -445,7 +503,10 @@ class MySceneGraph {
         }
         return res;
     }
-
+    /**
+     * Parses <primitives> tag
+     * @param  {primitives node} {children}
+     */
     parsePrimitives({children}) {
 
         this.primitives = {};
@@ -472,7 +533,12 @@ class MySceneGraph {
 
         if (Object.keys(this.primitives).length === 0) this.onXMLMinorError("There's no way you can build a scene with no primitives :(");
     }
-
+    /**
+     * Parses <primitive> tag
+     * @param  {primitive node children} node
+     * @param  {<primitive> tag node} parent
+     * @returns new Primitive(extends CGFobject) on success, null otherwise
+     */
     parsePrimitive(node, parent) {
     
         if (node.length != 1) {
@@ -507,7 +573,11 @@ class MySceneGraph {
 
     }
 
-    parseComponents({children}, parent) {
+    /**
+     * Parse <components> tag
+     * @param  {components node} {children}
+     */
+    parseComponents({children}) {
         this.componentValues = {};
 
         for (let i = 0; i < children.length; i++) {
@@ -549,7 +619,12 @@ class MySceneGraph {
 
         if (Object.keys(this.components).length === 0) this.onXMLMinorError("A scene with no components isn't much fun :(");
     }
-
+    /**
+     * Parses <component> tag
+     * @param  {component node children} node
+     * @param  {<component> tag node} parent
+     * @returns Object containing component properties
+     */
     parseComponent(node, parent) {
 
         let res = {};
@@ -562,7 +637,12 @@ class MySceneGraph {
 
         return res;
     }
-
+    /**
+     * Parses component <transformation> tag
+     * @param  {transformation node} node
+     * @param  {<component> tag node} parent
+     * @returns Object containing transformation information
+     */
     parseComponentTransformation(node, parent) {
 
         node = node.children;
@@ -607,7 +687,12 @@ class MySceneGraph {
         return res;
 
     }
-
+    /**
+     * Parses component <materials> tag
+     * @param  {materials node children} node
+     * @param  {<component> tag node} parent
+     * @returns Object containing materials information
+     */
     parseComponentMaterials(node, parent) {
 
         node = node.children;
@@ -632,6 +717,12 @@ class MySceneGraph {
         return res;
     }
 
+    /**
+     * Parses component <texture> tag
+     * @param  {texture node} node
+     * @param  {<component> tag node} parent
+     * @returns Object containing texture information
+     */
     parseComponentTexture(node, parent) {
 
         let res = this.parseAttributes(node, defaultAttributes.componentTextureAttr);
@@ -661,6 +752,12 @@ class MySceneGraph {
 
     }
 
+    /**
+     * Parses component <children> tag
+     * @param  {children node children} node
+     * @param  {<component> tag node} parent
+     * @returns Object containing children information
+     */
     parseComponentChildren(node, parent) {
 
         node = node.children;
@@ -686,6 +783,12 @@ class MySceneGraph {
         return res;
     }
 
+    
+    /**
+     * Calls recursive display starting on root node.
+     * In case this is null, uses graph default root
+     * @param  {root component} root
+     */
     displayScene(root) {
         if (root == null) this.components[this.idRoot].display();
         else this.components[root].display();
@@ -713,7 +816,12 @@ class MySceneGraph {
         console.log(" " + message);
     }
 
-
+    /**
+     * Parses node
+     * @param  {node} node
+     * @param  {Attribute array} attributes
+     * @returns Object{attr, errors, defaults} containing the parsed attributes and eventual errors or default replacements
+     */
     parseAttributes(node, attributes) {
         let res = {};
         res.attr = {};
@@ -754,7 +862,12 @@ class MySceneGraph {
         
 		return res;
     }
-
+    /**
+     * Prints errors/default replacements
+     * @param  {tag name} tag
+     * @param  {parsed object from parseAttributes()} res
+     * @param  {tag, id} parent
+     */
     printError(tag, res, parent){
         let message;
         let parentPrefix = "";
@@ -776,7 +889,9 @@ class MySceneGraph {
         if (message != prefix) this.onXMLMinorError(message);
     }
 
-
+    /**
+     * Calls material iteration on all graph components
+     */
     changeMaterials(){
         for (let key in this.components){
             this.components[key].nextMaterial();

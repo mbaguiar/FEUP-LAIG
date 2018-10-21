@@ -10,7 +10,9 @@ class Component {
         this.initTextures();
         this.initChildren();
     }
-
+    /**
+     * Computes component transformation matrix
+     */
     initTransformations() {
         this.transformations = mat4.create();
         mat4.identity(this.transformations);
@@ -22,7 +24,9 @@ class Component {
             mat4.mul(this.transformations, this.transformations, b);
         }
     }
-
+    /**
+     * Associates materials with graph references
+     */
     initMaterials() {
         this.materials = this.componentObject.materials;
         for (let i = 0; i < this.materials.length; i++) {
@@ -30,26 +34,36 @@ class Component {
                 this.materials[i] = this.graph.materials[this.materials[i]];
         }
     }
-
+    /**
+     * Associates primitives ids with graph primitives
+     */
     initChildren() {
         this.children = [];
         for (let i = 0; i < this.componentObject.children.primitives.length; i++) {
             this.children.push(this.graph.primitives[this.componentObject.children.primitives[i]]);
         }
     }
-
+    /**
+     * Associates textures ids with graph textures
+     */
     initTextures() {
         this.texture = this.componentObject.texture;
         if (this.texture.id != "inherit" && this.texture.id != "none")
             this.texture["textureObj"] = this.graph.textures[this.texture.id];
     }
-
+    /**
+     * Associates children components ids with graph components
+     */
     setupChildrenComponents() {
         for (let i = 0; i < this.componentObject.children.components.length; i++) {
             this.children.push(this.graph.components[this.componentObject.children.components[i]]);
         }
     }
-
+    /**
+     * Recursive display function which calls itself on all component children
+     * @param  {parent material} material
+     * @param  {parent texture} texture
+     */
     display(material, texture) {
 
         if (this.materials.length > 0) {
@@ -103,6 +117,9 @@ class Component {
         this.scene.popMatrix();
     }
 
+    /**
+     * Iterates to next material
+     */
     nextMaterial() {
         if (this.materials.length > 1) this.materials.push(this.materials.shift());
     }

@@ -120,7 +120,9 @@ class XMLscene extends CGFscene {
         this.sceneInited = true;
     }
 
-
+    /**
+     * Initializes scene cameras from graph views
+     */
     initCameras() {
         this.cameras = {};
         if ((Object.keys(this.graph.views)).length == 0){
@@ -148,7 +150,10 @@ class XMLscene extends CGFscene {
             }
         }
     }
-
+    /**
+     * Sets scene active camera
+     * @param  {camera id} id
+     */
     setActiveCamera(id) {
         this.camera = this.cameras[id];
     }
