@@ -340,7 +340,7 @@
             <rotate axis="y" angle="90" />
         </transformation>
         <transformation id="shelf">
-            <translate x="1" y="13" z="32" />
+            <translate x="1.5" y="13" z="32" />
             <scale x="3" y="0.5" z="12" />
         </transformation>
         <transformation id="cactusbase">
