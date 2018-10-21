@@ -67,7 +67,6 @@
         <texture id="lightwood" file="scenes/images/light_wood.jpg" />
         <texture id="darkwood" file="scenes/images/dark_wood.jpg" />
         <texture id="rug" file="scenes/images/grey_rug.jpg" />
-
         <texture id="duvet" file="scenes/images/duvet.png" />
         <texture id="copper" file="scenes/images/copper.jpg" />
         <texture id="lamp" file="scenes/images/lamp.jpg" />
@@ -497,7 +496,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="0" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -509,7 +508,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -521,7 +520,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -533,7 +532,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -545,7 +544,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -557,7 +556,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="quad"/>
             </children>
@@ -568,7 +567,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="inherit" length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <componentref id="face1" />
                 <componentref id="face2" />
