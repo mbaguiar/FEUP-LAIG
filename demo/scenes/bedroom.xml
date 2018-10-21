@@ -5,7 +5,7 @@
             <from x="60" y="25" z="60" />
             <to x="0" y="0" z="0" />
         </perspective>
-        <ortho id="bed_orthocamera" near="1" far="200" left="-30" right="30" top="20" bottom="-20">
+        <ortho id="bed_orthocamera" near="1" far="100" left="-30" right="30" top="30" bottom="-30">
             <from x="20" y="10" z="60" />
             <to x="20" y="10" z="0" />
         </ortho>
@@ -54,9 +54,9 @@
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
-        <spot id="lamp_light" enabled="1" angle="10" exponent="6">
+        <spot id="lamp_light" enabled="1" angle="70" exponent="0.1">
             <location x="3" y="10" z="3" w="1" />
-            <target x="5" y="0" z="3" />
+            <target x="3" y="0" z="3" w="1"/>
             <ambient r="0.2" g="0.2" b="0.2" a="1" />
             <diffuse r="0.4" g="0.4" b="0.4" a="0.4" />
             <specular r="0.4" g="0.4" b="0.4" a="0.4" />

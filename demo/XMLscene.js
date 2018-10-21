@@ -63,8 +63,10 @@ class XMLscene extends CGFscene {
                 this.lights[i].setSpecular(lightProp.specular.r, lightProp.specular.g, lightProp.specular.b, lightProp.specular.a);
 
                 if (light.type == "spot") {
-                    let target = vec3.fromValues(lightProp.target.x, lightProp.target.y, lightProp.target.z);
-                    let direction = vec4.normalize(vec4.create(), vec4.subtract(vec4.create(), target, this.lights[i].position));
+                    let target = vec4.fromValues(lightProp.target.x, lightProp.target.y, lightProp.target.z, lightProp.target.w);
+                    let direction = vec4.create();
+                    vec4.sub(direction, target, this.lights[i].position);
+                    vec4.normalize(direction, direction);
                     this.lights[i].setSpotDirection(direction[0], direction[1], direction[2]);
                     this.lights[i].setSpotExponent(light.exponent);
                     this.lights[i].setSpotCutOff(light.angle);
