@@ -629,12 +629,29 @@ class MySceneGraph {
 
         let res = {};
 
+        let componentTags = {};
+        defaults.componentTags.forEach(el => componentTags[el] = false);
+        let discard = false;
+
         for (let i = 0; i < node.length; i++) {
-            if (defaults.componentTags.indexOf(node[i].nodeName) != -1) {
+            if (componentTags.hasOwnProperty(node[i].nodeName) && !componentTags[node[i].nodeName]) {
                 res[node[i].nodeName] = this["parseComponent" + capitalize(node[i].nodeName)](node[i], parent);
+                componentTags[node[i].nodeName] = true;
+            } else {
+                this.onXMLMinorError(`At component with id='${parent.id}': Invalid tag <${node[i].nodeName}>. Discarding component.`);
+                discard = true;
             }
         }
 
+        for (let key in componentTags){
+            if (!componentTags[key]){
+                this.onXMLMinorError(`At component with id='${parent.id}': Missing tag <${key}>. Discarding component.`);
+                discard = true;
+            }
+        }
+
+
+        if (discard) return null;
         return res;
     }
     /**
