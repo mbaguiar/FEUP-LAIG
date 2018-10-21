@@ -85,9 +85,9 @@ class Component {
         } else {
             if (texture != null){
                 if (this.texture.hasOwnProperty("length_s"))
-                texture.length_s = this.texture.length_s;
-            if (this.texture.hasOwnProperty("length_s"))
-                texture.length_s = this.texture.length_s;
+                    texture.length_s = this.texture.length_s;
+                if (this.texture.hasOwnProperty("length_t"))
+                    texture.length_t = this.texture.length_t;
 
             if (texture.length_s != null) originalTexCoords.s = texture.length_s;
             if (texture.length_t != null) originalTexCoords.t = texture.length_t;
