@@ -61,11 +61,23 @@ class Component {
             }
         }
 
+        let originalTexCoords = {};
+
         if (this.texture.id === "none") {
             texture = null;
             material.setTexture(null);
-        } else if (this.texture.id !== "inherit"){
+        } else if (this.texture.id !== "inherit") {
             texture = this.texture;
+        } else {
+            if (texture != null){
+                if (this.texture.hasOwnProperty("length_s"))
+                texture.length_s = this.texture.length_s;
+            if (this.texture.hasOwnProperty("length_s"))
+                texture.length_s = this.texture.length_s;
+
+            if (texture.length_s != null) originalTexCoords.s = texture.length_s;
+            if (texture.length_t != null) originalTexCoords.t = texture.length_t;
+            }
         }
 
         if (texture != null) {
@@ -79,7 +91,8 @@ class Component {
         this.scene.pushMatrix();
         this.scene.multMatrix(this.transformations);
         for (let i = 0; i < this.children.length; i++) {
-            //TODO: find better alternative
+            if (originalTexCoords.hasOwnProperty("s")) texture.length_s = originalTexCoords.s;
+            if (originalTexCoords.hasOwnProperty("t")) texture.length_t = originalTexCoords.t;
             if ((this.children[i] instanceof Rectangle || this.children[i] instanceof Triangle) && texture != null) {
                 this.children[i].setTexCoords(texture.length_s, texture.length_t);
 

@@ -123,7 +123,7 @@ class MySceneGraph {
                 let childrenRes = this.parseCameraChildren(children[i].children);
                 if (childrenRes.hasOwnProperty("from") && childrenRes.hasOwnProperty("to")){
                     for (let key in childrenRes){
-                        this.printError(key, childrenRes[key]);
+                        this.printError(key, childrenRes[key], {tag: children[i].nodeName, id: res.attr.id});
                         if (childrenRes[key].errors.length == 0)
                             res.attr[key] = childrenRes[key].attr;
                         else discard = true;
@@ -320,7 +320,7 @@ class MySceneGraph {
                 let childrenRes = this.parseMaterial(children[i].children);
                 let props = {};
                 for (let key in childrenRes){
-                    this.printError(key, childrenRes[key]);
+                    this.printError(key, childrenRes[key], {tag: children[i].nodeName, id: res.attr.id});
                     if (childrenRes[key].errors.length == 0)
                         props[key] = childrenRes[key].attr;
                 }
@@ -364,11 +364,9 @@ class MySceneGraph {
                 }   
 
                 let childrenRes = this.parseAttributes(node[i], defaultAttributes.rgbaAttr);
-
-                if (childrenRes.errors.length == 0){
-                    res[node[i].nodeName] = childrenRes;
-                    tags[node[i].nodeName]++;
-                }
+                res[node[i].nodeName] = childrenRes;
+                tags[node[i].nodeName]++;
+                
                 
             } else this.onXMLMinorError(`Invalid material tag <${node[i].nodeName}>.`);
         }
@@ -390,7 +388,7 @@ class MySceneGraph {
                 let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
                 this.printError(children[i].nodeName, res);
                
-                let childrenRes = this.parseTransformation(children[i].children);
+                let childrenRes = this.parseTransformation(children[i].children, {tag: children[i].nodeName, id: res.attr.id});
                 if (childrenRes == null)
                     discard = true;
 
@@ -411,7 +409,7 @@ class MySceneGraph {
         if (Object.keys(this.transformations).length === 0) this.onXMLMinorError("No transformations defined.");
     }
 
-    parseTransformation(node) {
+    parseTransformation(node, parent) {
 
         let res = mat4.create();
         mat4.identity(res);
@@ -420,7 +418,7 @@ class MySceneGraph {
             if (defaults.transformationTags.hasOwnProperty(node[i].nodeName)) {
                 let child = node[i];
                 let param = this.parseAttributes(child, defaults.transformationTags[child.nodeName]);
-                this.printError(child.nodeName, param);
+                this.printError(child.nodeName, param, parent);
 
                 if (param.errors.length > 0) return null;
 
@@ -457,7 +455,7 @@ class MySceneGraph {
                 let discard = false;
                 let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
 
-                let childrenRes = this.parsePrimitive(children[i].children);
+                let childrenRes = this.parsePrimitive(children[i].children, {tag: children[i].nodeName, id: res.attr.id});
                 if (childrenRes == null) discard = true;
                 
                 if (res.errors.length > 0 || discard) continue;
@@ -475,7 +473,7 @@ class MySceneGraph {
         if (Object.keys(this.primitives).length === 0) this.onXMLMinorError("There's no way you can build a scene with no primitives :(");
     }
 
-    parsePrimitive(node) {
+    parsePrimitive(node, parent) {
     
         if (node.length != 1) {
             this.onXMLMinorError("Primitive should have one and only one tag.");
@@ -490,7 +488,7 @@ class MySceneGraph {
         }
 
         let res = this.parseAttributes(child, defaults.primitiveTags[child.nodeName]);
-        this.printError(child.nodeName, res);
+        this.printError(child.nodeName, res, parent);
         if (res.errors.length > 0)
             return null;
 
@@ -509,14 +507,14 @@ class MySceneGraph {
 
     }
 
-    parseComponents({children}) {
+    parseComponents({children}, parent) {
         this.componentValues = {};
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName === "component") {
                 let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
 
-                let component = this.parseComponent(children[i].children);
+                let component = this.parseComponent(children[i].children, {tag: children[i].nodeName, id: res.attr.id});
 
                 if (component == null || res.errors.length > 0){
                     continue;
@@ -552,22 +550,24 @@ class MySceneGraph {
         if (Object.keys(this.components).length === 0) this.onXMLMinorError("A scene with no components isn't much fun :(");
     }
 
-    parseComponent(node) {
+    parseComponent(node, parent) {
 
         let res = {};
 
         for (let i = 0; i < node.length; i++) {
             if (defaults.componentTags.indexOf(node[i].nodeName) != -1) {
-                res[node[i].nodeName] = this["parseComponent" + capitalize(node[i].nodeName)](node[i]);
+                res[node[i].nodeName] = this["parseComponent" + capitalize(node[i].nodeName)](node[i], parent);
             }
         }
 
         return res;
     }
 
-    parseComponentTransformation(node) {
+    parseComponentTransformation(node, parent) {
 
         node = node.children;
+
+        let ref = 0;
 
         let transformationTags = {
             transformationref: [new Attribute("id", "string")]
@@ -580,13 +580,18 @@ class MySceneGraph {
         for (let i = 0; i < node.length; i++) {
             if (transformationTags.hasOwnProperty(node[i].nodeName)) {
                 let transf = this.parseAttributes(node[i], transformationTags[node[i].nodeName]);
-                this.printError(node[i].nodeName, transf);
+                this.printError(node[i].nodeName, transf, parent);
                 if (transf.errors.length > 0) continue;
                 if (node[i].nodeName === "transformationref") {
+                    if (ref) {
+                        this.onXMLMinorError("Only 1 transformation tag is allowed per component. Discarding tag.");
+                        continue;
+                    }
                     if (!this.transformations.hasOwnProperty(transf.attr.id)) {
                         this.onXMLMinorError(`Transformation with id='${transf.attr.id}' doesn't exist.`);
                         continue;
                     }
+                    ref++;
                     res.push({
                         type: "ref",
                         id: transf.attr.id
@@ -603,7 +608,7 @@ class MySceneGraph {
 
     }
 
-    parseComponentMaterials(node) {
+    parseComponentMaterials(node, parent) {
 
         node = node.children;
 
@@ -612,7 +617,7 @@ class MySceneGraph {
         for (let i = 0; i < node.length; i++) {
             if (node[i].nodeName === "material") {
                 let mat = this.parseAttributes(node[i], defaultAttributes.idAttr);
-                this.printError(node[i].nodeName, mat);
+                this.printError(node[i].nodeName, mat, parent);
                 if (mat.errors.length > 0) continue;
                 if (!this.materials.hasOwnProperty(mat.attr.id) && mat.attr.id != "inherit"){ 
                     this.onXMLMinorError(`Material with id='${mat.attr.id}' doesn't exist.`);
@@ -627,7 +632,7 @@ class MySceneGraph {
         return res;
     }
 
-    parseComponentTexture(node) {
+    parseComponentTexture(node, parent) {
 
         let res = this.parseAttributes(node, defaultAttributes.componentTextureAttr);
         if (res.attr.id === "none" || res.attr.id === "inherit") {
@@ -637,7 +642,7 @@ class MySceneGraph {
             let t = res.errors.indexOf("length_t");
             if (t != -1) res.errors.splice(t,1);
         }
-        this.printError(node.nodeName, res);
+        this.printError(node.nodeName, res, parent);
         let discard = false;
 
         if (res.errors.length == 0) {
@@ -656,7 +661,7 @@ class MySceneGraph {
 
     }
 
-    parseComponentChildren(node) {
+    parseComponentChildren(node, parent) {
 
         node = node.children;
 
@@ -667,7 +672,7 @@ class MySceneGraph {
         for (let i = 0; i < node.length; i++) {
             if (defaults.childrenTags.indexOf(node[i].nodeName) != -1) {
                 let child = this.parseAttributes(node[i], defaultAttributes.idAttr);
-                this.printError(node[i].nodeName, child);
+                this.printError(node[i].nodeName, child, parent);
                 if (child.errors.length > 0) continue;
                 if (node[i].nodeName === "primitiveref") {
                     if (!this.primitives.hasOwnProperty(child.attr.id)) {
@@ -750,9 +755,12 @@ class MySceneGraph {
 		return res;
     }
 
-    printError(tag, res){
+    printError(tag, res, parent){
         let message;
-        const prefix = res.attr.hasOwnProperty("id")? `At tag <${tag}> with id='${res.attr.id}': `: `At tag <${tag}>: `;
+        let parentPrefix = "";
+        if (parent != null)
+            parentPrefix = (parent.id != null)? `At tag <${parent.tag}> with id='${parent.id}': `: `At tag <${parent.tag}>: `;
+        const prefix = res.attr.hasOwnProperty("id")? `${parentPrefix}At tag <${tag}> with id='${res.attr.id}': `: `${parentPrefix}At tag <${tag}>: `;
         const errorMessage = (attr) => `Atrribute ${attr} is missing/invalid.`;
         const defaultMessage = (attr, val) => `${errorMessage(attr)} Assuming value='${val}'.`;
         message = prefix;
