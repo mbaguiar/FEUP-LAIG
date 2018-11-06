@@ -301,7 +301,7 @@ class MySceneGraph {
         let res = {};
         const tags = {...defaults.lightTags};
         if (nodeName === "spot") 
-            tags["target"] = defaultAttributes.xyzwAttr;
+            tags["target"] = defaultAttributes.xyzAttr;
 
         for (let i = 0; i < children.length; i++) {
             if (tags.hasOwnProperty(children[i].nodeName))
