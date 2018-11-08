@@ -504,6 +504,79 @@ class MySceneGraph {
         return res;
     }
     /**
+     * Parses <animations> tag
+     * @param  {animations ndoe} {children}
+     */
+    parseAnimations({children}) {
+        this.animations = {};
+        let discard = false;
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+            if (defaults.animationTags.hasOwnProperty(node.nodeName)){
+                let res = this.parseAttributes(node, defaults.animationTags[node.nodeName]);
+                this.printError(node.nodeName, res);
+
+                if (node.nodeName === "linear") {
+                    let points = this.parseLinearAnimation(node, {tag: node.nodeName, id: res.attr.id});
+                    if (points != null){
+                        if (points.length < 2) {
+                            this.onXMLMinorError("There must be at lesat 2 control points in a linear animation.");
+                            discard = true;
+                        }
+                        res.attr["points"] = points;
+                    } else { 
+                        discard = true;
+                    }
+                }
+
+                res.attr["type"] = node.nodeName;
+                
+                if (res.errors.length > 0 || discard) {
+                    this.onXMLMinorError(`Invalid animation. Skipping tag.`);
+                    continue;
+                } 
+
+                if (this.animations.hasOwnProperty(res.attr.id)) {
+                    this.onXMLMinorError(`Animation with id='${res.attr.id}' already exists. Skipping animation.`);
+                    continue;
+                }
+
+                this.animations[res.attr.id] = res.attr;
+
+            } else this.onXMLMinorError(`Invalid animation tag <${node.nodeName}>.`);
+        }
+    }
+    /**
+     * Parses linear animation tag
+     * @param  {linear animation node} {children}
+     * @param  {<linear> node} parent
+     */
+    parseLinearAnimation({children}, parent) {
+        let res = [];
+        let discard = false;
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+            if (node.nodeName === "controlpoint"){
+                let point = this.parseAttributes(node, defaultAttributes.xyzAttr);
+                this.printError(node.nodeName, point, parent);
+                if (point.errors.length > 0) {
+                    discard = true;
+                } else {
+                    res.push(vec3.fromValues(point.attr["x"], point.attr["y"], point.attr["z"]));
+                }
+            } else {
+                this.onXMLMinorError(`Invalid animation tag <${node.nodeName}>.`);
+                discard = true;
+            }
+        }
+
+        if (discard)
+            return null;
+        else 
+            return res;
+    }
+
+    /**
      * Parses <primitives> tag
      * @param  {primitives node} {children}
      */
@@ -533,6 +606,7 @@ class MySceneGraph {
 
         if (Object.keys(this.primitives).length === 0) this.onXMLMinorError("There's no way you can build a scene with no primitives :(");
     }
+
     /**
      * Parses <primitive> tag
      * @param  {primitive node children} node
@@ -645,6 +719,7 @@ class MySceneGraph {
 
         for (let key in componentTags){
             if (!componentTags[key]){
+                if (key === "animations") continue;
                 this.onXMLMinorError(`At component with id='${parent.id}': Missing tag <${key}>. Discarding component.`);
                 discard = true;
             }
@@ -704,6 +779,35 @@ class MySceneGraph {
         return res;
 
     }
+    /**
+     * Parses component <animations> tag
+     * @param  {animations node children} node
+     * @param  {<component> tag node} parent
+     */
+    parseComponentAnimations(node, parent) {
+
+        node = node.children;
+        
+        let res = [];
+
+        for (let i = 0; i < node.length; i++) {
+            if (node[i].nodeName === "animationref") {
+                let animation = this.parseAttributes(node[i], defaultAttributes.idAttr);
+                this.printError(node[i].nodeName, animation, parent);
+                if (animation.errors.length > 0) {
+                    continue;
+                }
+                if (!this.animations.hasOwnProperty(animation.attr.id)){
+                    this.onXMLMinorError(`Animation with id='${animation.attr.id}' doesn't exist. Skipping tag.`);
+                    continue;
+                }
+                res.push(animation.attr.id);
+            } else this.onXMLReady(`Invalid animation tag <${node[i].nodeName}>.`);
+        }
+        
+        return res;
+    }
+
     /**
      * Parses component <materials> tag
      * @param  {materials node children} node

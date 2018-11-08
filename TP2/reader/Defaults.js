@@ -103,12 +103,24 @@ const defaultAttributes = {
 		new Attribute ("id", "string"),
 		new Attribute ("length_s", "float"),
 		new Attribute ("length_t", "float")
-	]
+    ],
+    linearAnimationAttr: [
+        new Attribute ("id", "string"),
+        new Attribute ("span", "float")
+    ],
+    circularAnimationAttr: [
+        new Attribute ("id", "string"),
+        new Attribute ("span", "float"),
+        new Attribute ("center", "vec3"),
+        new Attribute ("radius", "float"),
+        new Attribute ("startang", "float"),
+        new Attribute ("rotang", "float"),
+    ],
 }
 
 const defaults = {
     rootTags: ['scene', 'views', 'ambient', 'lights', 'textures', 'materials',
-			'transformations', 'primitives', 'components'
+			'transformations', 'animations', 'primitives', 'components', 
 	],
 	materialTags: {
 		emission: 0,
@@ -125,7 +137,11 @@ const defaults = {
 		x: [1, 0, 0],
 		y: [0, 1, 0],
 		z: [0, 0, 1],
-	},
+    },
+    animationTags: {
+        linear: defaultAttributes.linearAnimationAttr,
+        circular: defaultAttributes.circularAnimationAttr,
+    },
 	primitiveTags: {
 		rectangle: defaultAttributes.rectangleAttr,
 		triangle: defaultAttributes.triangleAttr,
@@ -134,7 +150,7 @@ const defaults = {
 		torus: defaultAttributes.torusAttr,
 	},
 	componentTags: [
-		"transformation", "materials", "texture", "children"
+		"transformation", "animations", "materials", "texture", "children"
 	],
 	childrenTags: [
 		"componentref", "primitiveref"
@@ -143,7 +159,8 @@ const defaults = {
         int: 'getInteger',
         float: 'getFloat',
         string: 'getString',
-        bool: 'getBoolean'
+        bool: 'getBoolean',
+        vec3: 'getVector3',
 	},
 	light: {
 		name: "default",

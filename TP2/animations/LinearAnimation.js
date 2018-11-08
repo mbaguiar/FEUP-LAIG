@@ -1,13 +1,12 @@
 class LinearAnimation extends Animation {
-	constructor(scene, id, timespan, controlPoints) {
-		super(scene, id, timespan);
+	constructor(scene, timespan, controlPoints) {
+		super(scene, timespan);
 		this.setupSpeed(controlPoints);
 		this.setupControlPoints(controlPoints);
 		this.reset();
 	}
 
 	setupSpeed(points) {
-		console.log(points);
 		let distance = 0;
 		for (let i = 0; i < points.length - 1; i++) {
 			distance += vec3.dist(points[i], points[i + 1]);

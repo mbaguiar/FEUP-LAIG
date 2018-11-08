@@ -429,6 +429,14 @@
             <translate x="0.1l" y="5" z="9"/>
         </transformation>
     </transformations>
+    <animations>
+        <linear id="anim1" span="10">
+            <controlpoint x="0" y="0" z="0"/>
+            <controlpoint x="1" y="0" z="0"/>
+            <controlpoint x="1" y="1" z="0"/>
+        </linear>
+        <circular id="anim2" span="5" center="1 1 1" radius="3" startang="20" rotang="40"/>
+    </animations>
     <primitives>
         <primitive id="quad">
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
@@ -1473,6 +1481,10 @@
             <transformation>
                 <transformationref id="puf" />
             </transformation>
+            <animations>
+                <animationref id="anim1" />
+                <animationref id="anim2" />
+            </animations>
             <materials>
                 <material id="default" />
             </materials>

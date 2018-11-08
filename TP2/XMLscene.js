@@ -21,8 +21,6 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
-        let a = new LinearAnimation(this, "animation", 10, [[0, 0, 0], [5, 0, 0], [10, 1, 0]]);
-        console.log(a);
         this.camera = new CGFcamera(40*DEGREE_TO_RAD, 0.1, 500, vec3.fromValues(60, 25, 60), vec3.fromValues(0, 0, 0));
         this.changeMaterials = 0;
         this.sceneInited = false;

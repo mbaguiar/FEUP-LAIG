@@ -9,6 +9,7 @@ class Component {
         this.initMaterials();
         this.initTextures();
         this.initChildren();
+        this.initAninmations();
     }
     /**
      * Computes component transformation matrix
@@ -50,6 +51,20 @@ class Component {
         this.texture = this.componentObject.texture;
         if (this.texture.id != "inherit" && this.texture.id != "none")
             this.texture["textureObj"] = this.graph.textures[this.texture.id];
+    }
+    initAninmations() {
+        if (!this.componentObject.animations) return;
+        this.animations = [];
+        for (let i = 0; i < this.componentObject.animations.length; i++) {
+            const id = this.componentObject.animations[i];
+            const animationObject = this.graph.animations[id];
+            if (animationObject.type === "linear"){
+                this.animations.push(new LinearAnimation(this.scene, animationObject.span, animationObject.points));
+            } else {
+                this.animations.push(new CircularAnimation(this.scene, animationObject.span, animationObject.center, animationObject.radius, animationObject.startang, animationObject.rotang));
+            }
+        }
+        if (this.animations.length) console.log(this.animations);
     }
     /**
      * Associates children components ids with graph components
