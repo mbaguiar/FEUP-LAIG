@@ -147,10 +147,12 @@ class Component {
         material.apply();
 
         this.scene.pushMatrix();
+        
+        this.scene.multMatrix(this.transformations);
+
         if (this.animations) {
             this.animations[this.currAnimationIndex].apply();
         }
-        this.scene.multMatrix(this.transformations);
         
         for (let i = 0; i < this.children.length; i++) {
             if (originalTexCoords.hasOwnProperty("s")) texture.length_s = originalTexCoords.s;

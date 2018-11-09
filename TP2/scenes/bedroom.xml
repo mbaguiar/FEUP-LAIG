@@ -403,7 +403,7 @@
         </transformation>
         <transformation id="mug">
             <translate x="4" y="8" z="28" />
-            <rotate axis="y" angle="-90" />
+            <!-- <rotate axis="y" angle="-90" /> !-->
         </transformation>
         <transformation id="puf1">
             <rotate axis="x" angle="90" />
@@ -1440,6 +1440,7 @@
             </transformation>
             <animations>
                 <animationref id="mug" />
+                <animationref id="mug2" />
             </animations>
             <materials>
                 <material id="mug1" />

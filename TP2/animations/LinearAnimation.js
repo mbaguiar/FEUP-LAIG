@@ -51,7 +51,6 @@ class LinearAnimation extends Animation {
 		let direction = keyframe.direction;
 		direction[1] = 0;
 		this.angle = angle(direction, Zaxis);
-
 	}
 
 	reset(){
@@ -62,6 +61,6 @@ class LinearAnimation extends Animation {
 
 	apply() {
 		this.scene.translate(this.position[0], this.position[1], this.position[2]);
-		//this.scene.rotate(this.angle*DEGREE_TO_RAD, 0, 1, 0);
+		this.scene.rotate(this.angle, 0, 1, 0);
 	}
 }
