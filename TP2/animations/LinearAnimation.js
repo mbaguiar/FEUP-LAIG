@@ -31,9 +31,6 @@ class LinearAnimation extends Animation {
 			const keyframe = this.controlPoints[i];
 			if (this.time >= keyframe.startTime && this.time <= keyframe.endTime){
 				this.currPointIndex = i;
-				if (i === (this.controlPoints.length - 1)){
-					this.finished = true;
-				}
 				return keyframe;
 			}
 		}
@@ -45,14 +42,15 @@ class LinearAnimation extends Animation {
 		}
 		const deltaSecs = delta * MILIS_TO_SECS;
 		this.time += deltaSecs;
-		if (this.time > this.timespan){
+		if (this.time >= this.timespan){
+			this.finished = true;
 			this.time = this.timespan;
 		}
 		const keyframe = this.getCurrentPoint();
 		this.position = keyframe.getPosition(this.time);
 		let direction = keyframe.direction;
 		direction[1] = 0;
-		this.angle = vec3.angle(direction, Zaxis);
+		this.angle = angle(direction, Zaxis);
 
 	}
 
@@ -64,6 +62,6 @@ class LinearAnimation extends Animation {
 
 	apply() {
 		this.scene.translate(this.position[0], this.position[1], this.position[2]);
-		this.scene.rotate(this.angle, 0, 1, 0);
+		//this.scene.rotate(this.angle*DEGREE_TO_RAD, 0, 1, 0);
 	}
 }

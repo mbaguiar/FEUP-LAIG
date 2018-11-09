@@ -21,12 +21,13 @@ class CircularAnimation extends Animation {
 		} else {
 			this.currAng += deltaSecs * this.speed;
 		}
-		this.position = scaleAndAdd(this.center, [Math.cos(this.currAng), 0, Math.sin(this.currAng)], this.radius);
+		this.position = scaleAndAdd(this.center, [Math.cos(this.currAng*DEGREE_TO_RAD), 0, Math.sin(this.currAng*DEGREE_TO_RAD)], this.radius);
 
 	}
 
 	apply() {
 		this.scene.translate(this.position[0], this.position[1], this.position[2]);
+		this.scene.rotate(-this.currAng*DEGREE_TO_RAD, 0, 1, 0);
 	}
 
 	reset() {

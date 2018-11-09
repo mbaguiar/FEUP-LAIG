@@ -11,6 +11,7 @@ class Component {
         this.initChildren();
         this.initAninmations();
     }
+
     /**
      * Computes component transformation matrix
      */
@@ -25,6 +26,7 @@ class Component {
             mat4.mul(this.transformations, this.transformations, b);
         }
     }
+
     /**
      * Associates materials with graph references
      */
@@ -35,6 +37,7 @@ class Component {
                 this.materials[i] = this.graph.materials[this.materials[i]];
         }
     }
+
     /**
      * Associates primitives ids with graph primitives
      */
@@ -44,6 +47,7 @@ class Component {
             this.children.push(this.graph.primitives[this.componentObject.children.primitives[i]]);
         }
     }
+
     /**
      * Associates textures ids with graph textures
      */
@@ -52,20 +56,44 @@ class Component {
         if (this.texture.id != "inherit" && this.texture.id != "none")
             this.texture["textureObj"] = this.graph.textures[this.texture.id];
     }
+    /**
+     * Associates animation ids with graph animations
+     */
     initAninmations() {
-        if (!this.componentObject.animations) return;
-        this.animations = [];
-        for (let i = 0; i < this.componentObject.animations.length; i++) {
-            const id = this.componentObject.animations[i];
-            const animationObject = this.graph.animations[id];
-            if (animationObject.type === "linear"){
-                this.animations.push(new LinearAnimation(this.scene, animationObject.span, animationObject.points));
-            } else {
-                this.animations.push(new CircularAnimation(this.scene, animationObject.span, animationObject.center, animationObject.radius, animationObject.startang, animationObject.rotang));
+        //FIX
+        if (this.componentObject.hasOwnProperty("animations") && this.componentObject.animations.length){
+            this.animations = [];
+            for (let id of this.componentObject.animations) {
+                const animationObject = this.graph.animations[id];
+                if (animationObject.type === "linear"){
+                    this.animations.push(new LinearAnimation(this.scene, animationObject.span, animationObject.points));
+                } else {
+                    this.animations.push(new CircularAnimation(this.scene, animationObject.span, animationObject.center, animationObject.radius, animationObject.startang, animationObject.rotang));
+                }
+            }
+            this.currAnimationIndex = 0;
+    }
+    }
+    /**
+     * Updates animations
+     * @param  delta time since last update
+     */
+    update(delta) {
+        if (this.hasOwnProperty("animations")) {
+            let currAnimation = this.animations[this.currAnimationIndex];
+            if (currAnimation.isFinished()){
+                this.currAnimationIndex = (this.currAnimationIndex + 1) % this.animations.length;
+                currAnimation = this.animations[this.currAnimationIndex];
+            }
+            currAnimation.update(delta);
+        } 
+        for (let child of this.children) {
+            if (child instanceof Component){
+                child.update(delta);
             }
         }
-        if (this.animations.length) console.log(this.animations);
     }
+
     /**
      * Associates children components ids with graph components
      */
@@ -74,6 +102,7 @@ class Component {
             this.children.push(this.graph.components[this.componentObject.children.components[i]]);
         }
     }
+    
     /**
      * Recursive display function which calls itself on all component children
      * @param  {parent material} material
@@ -118,7 +147,11 @@ class Component {
         material.apply();
 
         this.scene.pushMatrix();
+        if (this.animations) {
+            this.animations[this.currAnimationIndex].apply();
+        }
         this.scene.multMatrix(this.transformations);
+        
         for (let i = 0; i < this.children.length; i++) {
             if (originalTexCoords.hasOwnProperty("s")) texture.length_s = originalTexCoords.s;
             if (originalTexCoords.hasOwnProperty("t")) texture.length_t = originalTexCoords.t;

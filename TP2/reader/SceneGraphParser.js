@@ -1018,4 +1018,8 @@ class MySceneGraph {
             this.components[key].nextMaterial();
         }
     }
+
+    update(delta){
+        this.components[this.idRoot].update(delta);
+    }
 }

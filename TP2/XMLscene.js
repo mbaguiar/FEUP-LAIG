@@ -116,6 +116,9 @@ class XMLscene extends CGFscene {
         // Adds lights group.
         this.interface.addLightsGroup(this.lightValues);
 
+        this.setUpdatePeriod(1/60*1000);
+        this.lastUpdate = (new Date()).getTime();
+
         this.sceneInited = true;
     }
 
@@ -155,6 +158,15 @@ class XMLscene extends CGFscene {
      */
     setActiveCamera(id) {
         this.camera = this.cameras[id];
+    }
+
+    update(currTime) {
+        if (this.sceneInited){
+            const delta = currTime - this.lastUpdate;
+            this.graph.update(delta);
+            this.lastUpdate = currTime;
+        }
+        
     }
 
     /**
