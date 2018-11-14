@@ -95,6 +95,10 @@ const defaultAttributes = {
         new Attribute ("slices", "int"),
         new Attribute ("loops", "int"),
     ],
+    planeAttr: [
+        new Attribute ("npartsU", "int"),
+        new Attribute ("npartsV", "int"),
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -147,7 +151,8 @@ const defaults = {
 		triangle: defaultAttributes.triangleAttr,
 		cylinder: defaultAttributes.cylinderAttr,
 		sphere: defaultAttributes.sphereAttr,
-		torus: defaultAttributes.torusAttr,
+        torus: defaultAttributes.torusAttr,
+        plane: defaultAttributes.planeAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

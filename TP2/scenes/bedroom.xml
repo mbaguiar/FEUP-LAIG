@@ -503,6 +503,9 @@
         <primitive id="puf2">
             <torus inner="0.2" outer="2" slices="20" loops="10" />
         </primitive>
+        <primitive id="plane">
+            <plane npartsU="8" npartsV="6" />
+        </primitive>
     </primitives>
     <components>
         <component id="face1">
@@ -1584,6 +1587,7 @@
                 <componentref id="puf" />
                 <componentref id="mirrorset" />
                 <componentref id="mirrorset2" />
+                <primitiveref id="plane" />
             </children>
         </component>
     </components>

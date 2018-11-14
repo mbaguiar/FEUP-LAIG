@@ -643,7 +643,10 @@ class MySceneGraph {
                 return new Cylinder(this.scene, res.attr.base, res.attr.top, res.attr.height, res.attr.slices, res.attr.stacks);
             case "torus":
                 return new Torus(this.scene, res.attr.inner, res.attr.outer, res.attr.slices, res.attr.loops);
+            case "plane":
+                return new Plane(this.scene, res.attr.npartsU, res.attr.npartsV);
         }
+
 
     }
 
