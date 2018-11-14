@@ -21,7 +21,7 @@ class XMLscene extends CGFscene {
      */
     init(application) {
         super.init(application);
-        this.camera = new CGFcamera(40*DEGREE_TO_RAD, 0.1, 500, vec3.fromValues(60, 25, 60), vec3.fromValues(0, 0, 0));
+        this.camera = new CGFcamera(40 * DEGREE_TO_RAD, 0.1, 500, vec3.fromValues(60, 25, 60), vec3.fromValues(0, 0, 0));
         this.changeMaterials = 0;
         this.sceneInited = false;
         this.selectedCamera;
@@ -100,23 +100,23 @@ class XMLscene extends CGFscene {
         this.interface.addViewsGroup(this.cameras);
 
         this.axis = new CGFaxis(this, this.graph.axisLength);
-        
-        if (this.graph.ambient.background != null){
+
+        if (this.graph.ambient.background != null) {
             let bg = this.graph.ambient.background;
             this.gl.clearColor(bg.r, bg.g, bg.b, bg.a);
         }
 
-        if (this.graph.ambient.ambient != null){
+        if (this.graph.ambient.ambient != null) {
             let amb = this.graph.ambient.ambient;
             this.setGlobalAmbientLight(amb.r, amb.g, amb.b, amb.a);
         }
-    
+
         this.initLights();
 
         // Adds lights group.
         this.interface.addLightsGroup(this.lightValues);
 
-        this.setUpdatePeriod(1/60*1000);
+        this.setUpdatePeriod(1 / 60 * 1000);
         this.lastUpdate = (new Date()).getTime();
 
         this.sceneInited = true;
@@ -127,7 +127,7 @@ class XMLscene extends CGFscene {
      */
     initCameras() {
         this.cameras = {};
-        if ((Object.keys(this.graph.views)).length == 0){
+        if ((Object.keys(this.graph.views)).length == 0) {
             this.cameras["default"] = this.camera;
             this.selectedCamera = "default";
         }
@@ -136,7 +136,7 @@ class XMLscene extends CGFscene {
             let newCam;
             if (cam.type == "perspective") {
                 newCam = new CGFcamera(
-                    cam.angle*DEGREE_TO_RAD, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to)
+                    cam.angle * DEGREE_TO_RAD, cam.near, cam.far, Object.values(cam.from), Object.values(cam.to)
                 );
 
             } else if (cam.type == "ortho") {
@@ -161,12 +161,12 @@ class XMLscene extends CGFscene {
     }
 
     update(currTime) {
-        if (this.sceneInited){
+        if (this.sceneInited) {
             const delta = currTime - this.lastUpdate;
             this.graph.update(delta);
             this.lastUpdate = currTime;
         }
-        
+
     }
 
     /**

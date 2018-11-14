@@ -44,8 +44,8 @@ function getUrlVars() {
 //Include additional files here
 serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'MyInterface.js', 'primitives/Rectangle.js', 'primitives/Triangle.js',
     'primitives/Cylinder.js', 'primitives/Sphere.js', 'primitives/Circle.js', 'primitives/NoBaseCylinder.js', 'reader/Component.js',
-    'primitives/Torus.js', 'reader/Attribute.js', 'reader/Defaults.js', 'animations/Animation.js', 'animations/LinearAnimation.js', 
-    'animations/CircularAnimation.js', 'animations/KeyFrame.js', 'animations/vec3utils.js',
+    'primitives/Torus.js', 'reader/Attribute.js', 'reader/Defaults.js', 'animations/Animation.js', 'animations/LinearAnimation.js',
+    'animations/CircularAnimation.js', 'animations/KeyFrame.js', 'animations/vec3utils.js', 'primitives/Plane.js',
 
     main = function () {
         // Standard application, scene and interface setup
