@@ -1,6 +1,8 @@
 class LinearAnimation extends Animation {
 	constructor(scene, timespan, controlPoints) {
 		super(scene, timespan);
+		this.position = [0, 0, 0];
+		this.angle = 0;
 		this.setupSpeed(controlPoints);
 		this.setupControlPoints(controlPoints);
 		this.reset();
@@ -61,6 +63,6 @@ class LinearAnimation extends Animation {
 
 	apply() {
 		this.scene.translate(this.position[0], this.position[1], this.position[2]);
-		this.scene.rotate(this.angle, 0, 1, 0);
+		this.scene.rotate(-this.angle, 0, 1, 0);
 	}
 }

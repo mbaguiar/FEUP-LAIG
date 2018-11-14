@@ -5,6 +5,8 @@ class CircularAnimation extends Animation {
 		this.radius = radius;
 		this.startAng = startAng;
 		this.rotAng = rotAng;
+		this.position = [0, 0, 0];
+		this.currAng = 0;
 		this.speed = this.rotAng/this.timespan;
 		this.reset();
 	}

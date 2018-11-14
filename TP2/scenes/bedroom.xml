@@ -430,12 +430,6 @@
         </transformation>
     </transformations>
     <animations>
-        <linear id="anim1" span="10">
-            <controlpoint x="0" y="0" z="0"/>
-            <controlpoint x="1" y="0" z="0"/>
-            <controlpoint x="1" y="1" z="0"/>
-        </linear>
-        <circular id="anim2" span="5" center="1 1 1" radius="3" startang="20" rotang="40"/>
         <linear id="mug" span="10">
             <controlpoint x="0" y="0" z="0" />
             <controlpoint x="0" y="0" z="7" />
