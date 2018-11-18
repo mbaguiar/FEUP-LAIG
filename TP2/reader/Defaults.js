@@ -99,6 +99,12 @@ const defaultAttributes = {
         new Attribute ("npartsU", "int"),
         new Attribute ("npartsV", "int"),
     ],
+    patchAttr: [
+        new Attribute ("npointsU", "int"),
+        new Attribute ("npointsV", "int"),
+        new Attribute ("npartsU", "int"),
+        new Attribute ("npartsV", "int"),
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -153,6 +159,7 @@ const defaults = {
 		sphere: defaultAttributes.sphereAttr,
         torus: defaultAttributes.torusAttr,
         plane: defaultAttributes.planeAttr,
+        patch: defaultAttributes.patchAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

@@ -562,7 +562,7 @@ class MySceneGraph {
                 if (point.errors.length > 0) {
                     discard = true;
                 } else {
-                    res.push(vec3.fromValues(point.attr["x"], point.attr["y"], point.attr["z"]));
+                    res.push([point.attr["x"], point.attr["y"], point.attr["z"]]);
                 }
             } else {
                 this.onXMLMinorError(`Invalid animation tag <${node.nodeName}>.`);
@@ -645,6 +645,10 @@ class MySceneGraph {
                 return new Torus(this.scene, res.attr.inner, res.attr.outer, res.attr.slices, res.attr.loops);
             case "plane":
                 return new Plane(this.scene, res.attr.npartsU, res.attr.npartsV);
+            case "patch":
+                let controlPoints = this.parseLinearAnimation(child, parent);
+                console.log(controlPoints);
+                return new Patch(this.scene, res.attr.npointsU, res.attr.npointsV, res.attr.npartsU, res.attr.npartsV, controlPoints);
         }
 
 
