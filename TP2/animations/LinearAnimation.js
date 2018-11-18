@@ -50,7 +50,7 @@ class LinearAnimation extends Animation {
 		}
 		const keyframe = this.getCurrentPoint();
 		this.position = keyframe.getPosition(this.time);
-		let direction = keyframe.direction;
+		let direction = keyframe.direction.slice();
 		direction[1] = 0;
 		this.angle = angle(direction, Zaxis);
 	}

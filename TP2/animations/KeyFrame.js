@@ -4,11 +4,13 @@ class KeyFrame {
 		this.direction = direction;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		console.log(this.direction);
 	}
 
 	getPosition(time) {
 		const value = (time-this.startTime) / (this.endTime-this.startTime);
-		return scaleAndAdd(this.position, this.direction, value);
+		const pos = scaleAndAdd(this.position, this.direction, value);
+		return pos;
 	}
 
 }
