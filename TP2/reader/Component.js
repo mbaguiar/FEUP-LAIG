@@ -5,9 +5,6 @@ class Component {
         this.scene = scene;
         this.id = id;
         this.componentObject = component;
-        if (this.id === "lamp2"){
-            this.shader = new CGFshader(this.scene.gl, "../shaders/terrain.vert", "../shaders/terrain.frag");
-        }
         this.initTransformations();
         this.initMaterials();
         this.initTextures();
@@ -113,10 +110,6 @@ class Component {
      */
     display(material, texture) {
 
-        if (this.id === "lamp2"){
-            this.scene.setActiveShader(this.shader);
-        }
-
         if (this.materials.length > 0) {
             if (this.materials[0] !== "inherit") material = this.materials[0];
             else {
@@ -172,9 +165,6 @@ class Component {
         }
         
         this.scene.popMatrix();
-        if (this.id === "lamp2"){
-            this.scene.setActiveShader(this.scene.defaultShader);
-        }
     }
 
     /**

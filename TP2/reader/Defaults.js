@@ -105,6 +105,9 @@ const defaultAttributes = {
         new Attribute ("npartsU", "int"),
         new Attribute ("npartsV", "int"),
     ],
+    terrainAttr: [
+
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -160,6 +163,7 @@ const defaults = {
         torus: defaultAttributes.torusAttr,
         plane: defaultAttributes.planeAttr,
         patch: defaultAttributes.patchAttr,
+        terrain: defaultAttributes.terrainAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

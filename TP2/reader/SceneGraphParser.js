@@ -649,6 +649,8 @@ class MySceneGraph {
                 let controlPoints = this.parseLinearAnimation(child, parent);
                 console.log(controlPoints);
                 return new Patch(this.scene, res.attr.npointsU, res.attr.npointsV, res.attr.npartsU, res.attr.npartsV, controlPoints);
+            case "terrain":
+                return new Terrain(this.scene);
         }
 
 
