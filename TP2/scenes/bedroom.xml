@@ -511,6 +511,9 @@
         <primitive id="terrain">
             <terrain />
         </primitive>
+        <primitive id="water">
+            <water />
+        </primitive>
     </primitives>
     <components>
         <component id="face1">
@@ -1573,6 +1576,19 @@
                 <primitiveref id="terrain" />
             </children>
         </component>
+        <component id="water">
+            <transformation>
+                <translate x="15" y="7" z="15" />
+                <scale x="13" y="1" z="13" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="water" />
+            </children>
+        </component>
         <component id="bedroom">
             <transformation>
             </transformation>
@@ -1581,6 +1597,7 @@
             </materials>
             <texture id="rug" length_s="1" length_t="1" />
             <children>
+                <componentref id="water"/>
                 <componentref id="terrain"/>
                 <componentref id="bed" />
                 <componentref id="wall1" />

@@ -108,6 +108,9 @@ const defaultAttributes = {
     terrainAttr: [
 
     ],
+    waterAttr: [
+
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -164,6 +167,7 @@ const defaults = {
         plane: defaultAttributes.planeAttr,
         patch: defaultAttributes.patchAttr,
         terrain: defaultAttributes.terrainAttr,
+        water: defaultAttributes.waterAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

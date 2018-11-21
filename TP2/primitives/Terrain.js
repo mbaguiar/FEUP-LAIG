@@ -11,12 +11,9 @@ class Terrain extends Plane {
 		this.heightMap = new CGFtexture(this.scene, "../scenes/images/terrain-height-map.jpg");
 		this.shader.setUniformsValues({textureSampler: 0});
 		this.shader.setUniformsValues({heightMapSampler: 1});
-		
-		console.log(this.shader);
 	}
 
 	display() {
-		//this.texture.apply();
 		this.scene.setActiveShader(this.shader);
 		this.texture.bind(0);
 		this.heightMap.bind(1);

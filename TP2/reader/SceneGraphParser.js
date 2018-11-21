@@ -20,6 +20,7 @@ class MySceneGraph {
         // File reading 
         this.reader = new CGFXMLreader();
 
+        this.animatedObjects = [];
         /*
          * Read the contents of the xml file, and refer to this class for loading and error handlers.
          * After the file is read, the reader calls onXMLReady on this object.
@@ -651,6 +652,10 @@ class MySceneGraph {
                 return new Patch(this.scene, res.attr.npointsU, res.attr.npointsV, res.attr.npartsU, res.attr.npartsV, controlPoints);
             case "terrain":
                 return new Terrain(this.scene);
+            case "water":
+                const water = new Water(this.scene);
+                this.animatedObjects.push(water);
+                return water;
         }
 
 
@@ -662,7 +667,6 @@ class MySceneGraph {
      */
     parseComponents({children}) {
         this.componentValues = {};
-
         for (let i = 0; i < children.length; i++) {
             if (children[i].nodeName === "component") {
                 let res = this.parseAttributes(children[i], defaultAttributes.idAttr);
@@ -683,7 +687,6 @@ class MySceneGraph {
         }
 
         this.components = {};
-
         for (let key in this.componentValues) {
             let currComponent = this.componentValues[key];
             for (let i = currComponent.children.components.length - 1; i >= 0 ; i--) {
@@ -694,6 +697,9 @@ class MySceneGraph {
                 }
             }
             this.components[key] = new Component(this, this.scene, key, currComponent);
+            if(currComponent.hasOwnProperty('animations') && currComponent['animations'].length){
+                this.animatedObjects.push(this.components[key]);
+            }
         }
 
         for (let key in this.components) {
@@ -1029,6 +1035,9 @@ class MySceneGraph {
     }
 
     update(delta){
-        this.components[this.idRoot].update(delta);
+        for (let i = 0; i < this.animatedObjects.length; i++){
+            const animatedObject = this.animatedObjects[i];
+            animatedObject.update(delta);
+        }
     }
 }
