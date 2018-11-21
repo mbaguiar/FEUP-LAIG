@@ -508,6 +508,9 @@
                 <controlpoint x="0.5" y="0" z="-0.5" />
             </patch>
         </primitive>
+        <primitive id="cylinder2">
+            <cylinder2 base="2" top="2" height="3" slices="20" stacks="10" />
+        </primitive>
         <primitive id="terrain">
             <terrain />
         </primitive>
@@ -1563,6 +1566,19 @@
                 <componentref id="mirror2" />
             </children>
         </component>
+         <component id="cylinder2">
+            <transformation>
+                <translate x="10" y="15" z="10"/>
+                <rotate axis="x" angle="90"/>
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="none" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="cylinder2" />
+            </children>
+        </component>
         <component id="terrain">
             <transformation>
                 <translate x="15" y="7" z="15" />
@@ -1623,7 +1639,7 @@
                 <componentref id="puf" />
                 <componentref id="mirrorset" />
                 <componentref id="mirrorset2" />
-                <primitiveref id="patch" />
+                <componentref id="cylinder2" />
             </children>
         </component>
     </components>

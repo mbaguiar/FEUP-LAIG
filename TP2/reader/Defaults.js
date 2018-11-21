@@ -105,6 +105,13 @@ const defaultAttributes = {
         new Attribute ("npartsU", "int"),
         new Attribute ("npartsV", "int"),
     ],
+    cylinder2Attr: [
+        new Attribute ("base", "float"),
+        new Attribute ("top", "float"),
+        new Attribute ("height", "float"),
+        new Attribute ("slices", "float"),
+        new Attribute ("stacks", "float")
+    ],
     terrainAttr: [
 
     ],
@@ -168,6 +175,7 @@ const defaults = {
         patch: defaultAttributes.patchAttr,
         terrain: defaultAttributes.terrainAttr,
         water: defaultAttributes.waterAttr,
+        cylinder2: defaultAttributes.cylinder2Attr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"
