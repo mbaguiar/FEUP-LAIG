@@ -112,6 +112,9 @@ const defaultAttributes = {
         new Attribute ("slices", "float"),
         new Attribute ("stacks", "float")
     ],
+    terrainAttr: [
+
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -167,6 +170,7 @@ const defaults = {
         torus: defaultAttributes.torusAttr,
         plane: defaultAttributes.planeAttr,
         patch: defaultAttributes.patchAttr,
+        terrain: defaultAttributes.terrainAttr,
         cylinder2: defaultAttributes.cylinder2Attr,
 	},
 	componentTags: [

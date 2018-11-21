@@ -651,6 +651,8 @@ class MySceneGraph {
                 return new Patch(this.scene, res.attr.npointsU, res.attr.npointsV, res.attr.npartsU, res.attr.npartsV, controlPoints);
             case "cylinder2":
                 return new Cylinder2(this.scene, res.attr.base, res.attr.top, res.attr.height, res.attr.slices, res.attr.stacks);
+            case "terrain":
+                return new Terrain(this.scene);
         }
 
 

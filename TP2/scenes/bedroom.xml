@@ -432,9 +432,9 @@
     <animations>
         <linear id="mug" span="10">
             <controlpoint x="0" y="0" z="0" />
-            <controlpoint x="0" y="0" z="7" />
+            <controlpoint x="0" y="5" z="7" />
             <controlpoint x="-3" y="0" z="7" />
-            <controlpoint x="-3" y="0" z="0" />
+            <controlpoint x="-3" y="5" z="0" />
             <controlpoint x="0" y="0" z="0" />
         </linear>
         <circular id="mug2" span="5" center="0 0 0" radius="0" startang="0" rotang="360"/>
@@ -510,6 +510,9 @@
         </primitive>
         <primitive id="cylinder2">
             <cylinder2 base="2" top="2" height="3" slices="20" stacks="10" />
+        </primitive>
+        <primitive id="terrain">
+            <terrain />
         </primitive>
     </primitives>
     <components>
@@ -1448,7 +1451,7 @@
             </transformation>
             <animations>
                 <animationref id="mug" />
-                <animationref id="mug2" />
+                <!-- <animationref id="mug2" /> -->
             </animations>
             <materials>
                 <material id="mug1" />
@@ -1573,6 +1576,19 @@
                 <primitiveref id="cylinder2" />
             </children>
         </component>
+        <component id="terrain">
+            <transformation>
+                <translate x="15" y="7" z="15" />
+                <scale x="10" y="1" z="10" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="terrain" />
+            </children>
+        </component>
         <component id="bedroom">
             <transformation>
             </transformation>
@@ -1581,6 +1597,7 @@
             </materials>
             <texture id="rug" length_s="1" length_t="1" />
             <children>
+                <componentref id="terrain"/>
                 <componentref id="bed" />
                 <componentref id="wall1" />
                 <componentref id="wall2" />
