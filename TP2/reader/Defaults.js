@@ -105,6 +105,13 @@ const defaultAttributes = {
         new Attribute ("npartsU", "int"),
         new Attribute ("npartsV", "int"),
     ],
+    cylinder2Attr: [
+        new Attribute ("base", "float"),
+        new Attribute ("top", "float"),
+        new Attribute ("height", "float"),
+        new Attribute ("slices", "float"),
+        new Attribute ("stacks", "float")
+    ],
     rotateAttr: [
         new Attribute ("axis", "string"),
         new Attribute ("angle", "float")
@@ -160,6 +167,7 @@ const defaults = {
         torus: defaultAttributes.torusAttr,
         plane: defaultAttributes.planeAttr,
         patch: defaultAttributes.patchAttr,
+        cylinder2: defaultAttributes.cylinder2Attr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"
