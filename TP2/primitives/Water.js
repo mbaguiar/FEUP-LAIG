@@ -1,16 +1,20 @@
 class Water extends Plane {
-	constructor(scene){
-		super(scene, 50, 50);
-		this.setupShader();
+	constructor(scene, graph, idtexture, idwavemap, parts, heightscale, texscale){
+		super(scene, parts, parts);
+		this.setupShader(graph, idtexture, idwavemap, heightscale, texscale);
 		this.time = 0;
 	}
 
-	setupShader() {
+	setupShader(graph, idtexture, idwavemap, heightscale, texscale) {
 		this.shader = new CGFshader(this.scene.gl, "../shaders/water.vert", "../shaders/water.frag");
-		this.texture = new CGFtexture(this.scene, "../scenes/images/water2.jpg");
-		this.heightMap = new CGFtexture(this.scene, "../scenes/images/wave-height-map.png");
+		this.texture = graph.textures[idtexture];
+		this.heightMap = graph.textures[idwavemap];
+		//this.texture = new CGFtexture(this.scene, "../scenes/images/water2.jpg");
+		//this.heightMap = new CGFtexture(this.scene, "../scenes/images/wave-height-map.png");
 		this.shader.setUniformsValues({textureSampler: 0});
 		this.shader.setUniformsValues({heightMapSampler: 1});
+		this.shader.setUniformsValues({heightScale: heightscale});
+		this.shader.setUniformsValues({texScale: texscale});
 	}
 
 	update(delta){

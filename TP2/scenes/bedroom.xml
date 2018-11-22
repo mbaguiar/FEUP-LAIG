@@ -79,6 +79,10 @@
         <texture id="painting" file="scenes/images/forest.png" />
         <texture id="mirror" file="scenes/images/mirror.jpg" />
         <texture id="pattern" file="scenes/images/pattern.jpg" />
+        <texture id="terrain" file="../scenes/images/terrain.jpg" />
+        <texture id="terrain-map" file="../scenes/images/terrain-height-map.jpg" />
+        <texture id="water" file="../scenes/images/water2.jpg" />
+        <texture id="water-map" file="../scenes/images/wave-height-map.png" />
     </textures>
     <materials>
         <material id="default" shininess = "0">
@@ -512,10 +516,10 @@
             <cylinder2 base="2" top="2" height="3" slices="20" stacks="10" />
         </primitive>
         <primitive id="terrain">
-            <terrain />
+            <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="2"/>
         </primitive>
         <primitive id="water">
-            <water />
+            <water idtexture="water" idwavemap="water-map" parts="100" heightscale="1" texscale="3" />
         </primitive>
     </primitives>
     <components>

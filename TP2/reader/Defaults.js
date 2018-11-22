@@ -113,10 +113,17 @@ const defaultAttributes = {
         new Attribute ("stacks", "float")
     ],
     terrainAttr: [
-
+        new Attribute ("idtexture", "string"),
+        new Attribute ("idheightmap", "string"),
+        new Attribute ("parts", "int"),
+        new Attribute ("heightscale", "float")
     ],
     waterAttr: [
-
+        new Attribute ("idtexture", "string"),
+        new Attribute ("idwavemap", "string"),
+        new Attribute ("parts", "int"),
+        new Attribute ("heightscale", "float"),
+        new Attribute ("texscale", "float")
     ],
     rotateAttr: [
         new Attribute ("axis", "string"),

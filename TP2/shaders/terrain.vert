@@ -11,6 +11,7 @@ varying vec2 vTextureCoord;
 varying vec4 textureColor;
 
 uniform sampler2D heightMapSampler;
+uniform float heightScale;
 
 void main() {
 
@@ -19,7 +20,7 @@ void main() {
 
 	textureColor = texture2D(heightMapSampler, vTextureCoord);
 	float height = (textureColor.r + textureColor.g + textureColor.b)/3.0;
-	offset = aVertexNormal * height * 2.0;
+	offset = aVertexNormal * height * heightScale;
 	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition+offset, 1.0);
 
 
