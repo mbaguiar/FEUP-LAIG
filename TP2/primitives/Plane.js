@@ -7,6 +7,7 @@ class Plane extends CGFobject {
         super(scene);
         this.makeSurface(u, v);
         this.plane = new CGFnurbsObject(scene, u, v, this.surface);
+
     };
 
     makeSurface(u, v) {
@@ -29,5 +30,14 @@ class Plane extends CGFobject {
 
     display() {
         this.plane.display();
+    }
+
+    updateTexCoords(s, t) {
+        this.texCoords = [
+            0, 1/t,
+            0, 0,
+            1/s, 1/t,
+            1/s, 0
+        ]
     }
 }
