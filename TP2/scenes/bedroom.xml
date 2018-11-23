@@ -430,16 +430,16 @@
             <translate x="0.1" y="7" z="15"/>
         </transformation>
         <transformation id="mirrorset2">
-            <translate x="0.1l" y="5" z="9"/>
+            <translate x="0.1" y="5" z="9"/>
         </transformation>
     </transformations>
     <animations>
         <linear id="mug" span="10">
-            <controlpoint x="0" y="0" z="0" />
-            <controlpoint x="0" y="5" z="7" />
-            <controlpoint x="-3" y="0" z="7" />
-            <controlpoint x="-3" y="5" z="0" />
-            <controlpoint x="0" y="0" z="0" />
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="0" yy="5" zz="7" />
+            <controlpoint xx="-3" yy="0" zz="7" />
+            <controlpoint xx="-3" yy="5" zz="0" />
+            <controlpoint xx="0" yy="0" zz="0" />
         </linear>
         <circular id="mug2" span="5" center="0 0 0" radius="0" startang="0" rotang="360"/>
     </animations>
@@ -506,10 +506,10 @@
         </primitive>
         <primitive id="patch">
             <patch npointsU="2" npointsV="2" npartsU="8" npartsV="6">
-                <controlpoint x="-0.5" y="0" z="0.5" />
-                <controlpoint x="-0.5" y="0" z="-0.5" />
-                <controlpoint x="0.5" y="0" z="0.5" />
-                <controlpoint x="0.5" y="0" z="-0.5" />
+                <controlpoint xx="-0.5" yy="0" zz="0.5" />
+                <controlpoint xx="-0.5" yy="0" zz="-0.5" />
+                <controlpoint xx="0.5" yy="0" zz="0.5" />
+                <controlpoint xx="0.5" yy="0" zz="-0.5" />
             </patch>
         </primitive>
         <primitive id="cylinder2">

@@ -20,6 +20,11 @@ const defaultAttributes = {
         new Attribute ("y", "float"),
         new Attribute ("z", "float"),
     ],
+    xxyyzzAttr: [
+        new Attribute ("xx", "float"),
+        new Attribute ("yy", "float"),
+        new Attribute ("zz", "float"),
+    ],
     orthoAttr: [
         new Attribute ("id", "string"),
         new Attribute ("near", "float", 0.1),

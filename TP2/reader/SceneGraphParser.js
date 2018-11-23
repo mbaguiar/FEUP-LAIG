@@ -518,7 +518,7 @@ class MySceneGraph {
                 this.printError(node.nodeName, res);
 
                 if (node.nodeName === "linear") {
-                    let points = this.parseLinearAnimation(node, {tag: node.nodeName, id: res.attr.id});
+                    let points = this.parseControlPoints(node, {tag: node.nodeName, id: res.attr.id});
                     if (points != null){
                         if (points.length < 2) {
                             this.onXMLMinorError("There must be at lesat 2 control points in a linear animation.");
@@ -548,25 +548,25 @@ class MySceneGraph {
         }
     }
     /**
-     * Parses linear animation tag
-     * @param  {linear animation node} {children}
-     * @param  {<linear> node} parent
+     * Parses control points
+     * @param  {control points parent node} {children}
+     * @param  {node} parent
      */
-    parseLinearAnimation({children}, parent) {
+    parseControlPoints({children}, parent) {
         let res = [];
         let discard = false;
         for (let i = 0; i < children.length; i++) {
             const node = children[i];
             if (node.nodeName === "controlpoint"){
-                let point = this.parseAttributes(node, defaultAttributes.xyzAttr);
+                let point = this.parseAttributes(node, defaultAttributes.xxyyzzAttr);
                 this.printError(node.nodeName, point, parent);
                 if (point.errors.length > 0) {
                     discard = true;
                 } else {
-                    res.push([point.attr["x"], point.attr["y"], point.attr["z"]]);
+                    res.push([point.attr["xx"], point.attr["yy"], point.attr["zz"]]);
                 }
             } else {
-                this.onXMLMinorError(`Invalid animation tag <${node.nodeName}>.`);
+                this.onXMLMinorError(`Invalid control point tag <${node.nodeName}>.`);
                 discard = true;
             }
         }
@@ -647,8 +647,7 @@ class MySceneGraph {
             case "plane":
                 return new Plane(this.scene, res.attr.npartsU, res.attr.npartsV);
             case "patch":
-                let controlPoints = this.parseLinearAnimation(child, parent);
-                console.log(controlPoints);
+                let controlPoints = this.parseControlPoints(child, parent);
                 return new Patch(this.scene, res.attr.npointsU, res.attr.npointsV, res.attr.npartsU, res.attr.npartsV, controlPoints);
             case "cylinder2":
                 return new Cylinder2(this.scene, res.attr.base, res.attr.top, res.attr.height, res.attr.slices, res.attr.stacks);
@@ -659,8 +658,6 @@ class MySceneGraph {
                 this.animatedObjects.push(water);
                 return water;
         }
-
-
     }
 
     /**
