@@ -652,11 +652,14 @@ class MySceneGraph {
             case "cylinder2":
                 return new Cylinder2(this.scene, res.attr.base, res.attr.top, res.attr.height, res.attr.slices, res.attr.stacks);
             case "terrain":
-                return new Terrain(this.scene, this, res.attr.idtexture, res.attr.idheightmap, res.attr.parts, res.attr.heightscale);
+                if (this.validTextures([res.attr.idtexture, res.attr.idheightmap]))
+                    return new Terrain(this.scene, this, res.attr.idtexture, res.attr.idheightmap, res.attr.parts, res.attr.heightscale);
             case "water":
-                const water = new Water(this.scene, this, res.attr.idtexture, res.attr.idwavemap, res.attr.parts, res.attr.heightscale, res.attr.texscale);
-                this.animatedObjects.push(water);
-                return water;
+                if (this.validTextures([res.attr.idtexture, res.attr.idwavemap])){
+                    const water = new Water(this.scene, this, res.attr.idtexture, res.attr.idwavemap, res.attr.parts, res.attr.heightscale, res.attr.texscale);
+                    this.animatedObjects.push(water);
+                    return water;
+                }        
         }
     }
 
@@ -1024,6 +1027,14 @@ class MySceneGraph {
         if (message != prefix) this.onXMLMinorError(message);
     }
 
+    validTextures(textures) {
+        for (let texture of textures) {
+            if (!this.textures.hasOwnProperty(texture))
+                return false;
+        }
+        return true;
+    }
+
     /**
      * Calls material iteration on all graph components
      */
@@ -1034,8 +1045,7 @@ class MySceneGraph {
     }
 
     update(delta){
-        for (let i = 0; i < this.animatedObjects.length; i++){
-            const animatedObject = this.animatedObjects[i];
+        for (let animatedObject of this.animatedObjects){
             animatedObject.update(delta);
         }
     }
