@@ -7,7 +7,10 @@ class LinearAnimation extends Animation {
 		this.setupControlPoints(controlPoints);
 		this.reset();
 	}
-
+	/**
+	 * Calculates animation speed
+	 * @param  {} points control points
+	 */
 	setupSpeed(points) {
 		let distance = 0;
 		for (let i = 0; i < points.length - 1; i++) {
@@ -15,7 +18,10 @@ class LinearAnimation extends Animation {
 		}
 		this.speed = distance / this.timespan;
 	}
-
+	/**
+	 * Setup KeyFrams
+	 * @param  {} points control points
+	 */
 	setupControlPoints(points) {
 		this.controlPoints = [];
 		let time = 0;
@@ -27,8 +33,10 @@ class LinearAnimation extends Animation {
 			this.controlPoints.push(keyframe);
 		}
 	}
-
-	getCurrentPoint() {
+	/**
+	 * Get current KeyFrame
+	 */
+	getCurrentKeyFrame() {
 		for (let i = this.currPointIndex; i < this.controlPoints.length; i++) {
 			const keyframe = this.controlPoints[i];
 			if (this.time >= keyframe.startTime && this.time <= keyframe.endTime){
@@ -37,7 +45,11 @@ class LinearAnimation extends Animation {
 			}
 		}
 	}
-
+	
+	/**
+	 * Updates animation to current state based on time passed
+	 * @param  {} delta time since last udpate
+	 */
 	update(delta) {
 		if (this.finished) {
 			this.reset();
@@ -50,7 +62,7 @@ class LinearAnimation extends Animation {
 			const lastKeyFrame = this.controlPoints[this.controlPoints.length - 1];
 			this.position = lastKeyFrame.getPosition(lastKeyFrame.endTime);
 		} else {
-			const keyframe = this.getCurrentPoint();
+			const keyframe = this.getCurrentKeyFrame();
 			this.position = keyframe.getPosition(this.time);
 			let direction = keyframe.direction.slice();
 			direction[1] = 0;
@@ -58,14 +70,20 @@ class LinearAnimation extends Animation {
 		}
 	}
 
+	/**
+	 * Applies animation matrix to scene
+	 */
+	apply() {
+		this.scene.translate(this.position[0], this.position[1], this.position[2]);
+		this.scene.rotate(-this.angle, 0, 1, 0);
+	}
+	
+	/**
+	 * Resets animation state
+	 */
 	reset(){
 		this.finished = false;
 		this.time = 0;
 		this.currPointIndex = 0;
-	}
-
-	apply() {
-		this.scene.translate(this.position[0], this.position[1], this.position[2]);
-		this.scene.rotate(-this.angle, 0, 1, 0);
 	}
 }

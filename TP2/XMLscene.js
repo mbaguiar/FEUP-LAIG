@@ -160,13 +160,16 @@ class XMLscene extends CGFscene {
         this.camera = this.cameras[id];
     }
 
+    /**
+     * Calls scene graph update
+     * @param  {} currTime current Unix time
+     */
     update(currTime) {
         if (this.sceneInited) {
             const delta = currTime - this.lastUpdate;
             this.graph.update(delta);
             this.lastUpdate = currTime;
         }
-
     }
 
     /**

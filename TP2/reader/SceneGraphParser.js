@@ -1028,7 +1028,10 @@ class MySceneGraph {
         if (res.errors.length > 0) message += "Discarding tag.";
         if (message != prefix) this.onXMLMinorError(message);
     }
-
+    /**
+     * Checks if textures in array are all valid in scene graph
+     * @param  {} textures textures array
+     */
     validTextures(textures) {
         for (let texture of textures) {
             if (!this.textures.hasOwnProperty(texture))
@@ -1046,6 +1049,10 @@ class MySceneGraph {
         }
     }
 
+    /**
+     * Calls update on all animated objects
+     * @param  {} delta time since last update
+     */
     update(delta){
         for (let animatedObject of this.animatedObjects){
             animatedObject.update(delta);
