@@ -16,7 +16,7 @@ uniform sampler2D heightMapSampler;
 
 void main() {
 	vec3 heightOffset = vec3(0.0, 0.0, 0.0);
-	vTextureCoord = aTextureCoord;
+	vTextureCoord = aTextureCoord * texScale;
 	vec2 coordsOffset = vec2(0.0, 1.0) * 0.00005 * timeFactor;
 	vec4 color = texture2D(heightMapSampler, aTextureCoord+coordsOffset);
 	float height = (color.r + color.b + color.g)/3.0 * heightScale;

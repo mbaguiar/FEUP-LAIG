@@ -176,7 +176,7 @@
             <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="30"/>
         </primitive>
         <primitive id="water">
-            <water idtexture="water" idwavemap="water-map" parts="100" heightscale="15" texscale="3" />
+            <water idtexture="water" idwavemap="water-map" parts="100" heightscale="15" texscale="6" />
         </primitive>
         <primitive id="vehicle">
             <vehicle />
