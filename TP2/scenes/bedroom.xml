@@ -434,14 +434,24 @@
         </transformation>
     </transformations>
     <animations>
-        <linear id="mug" span="10">
-            <controlpoint xx="0" yy="0" zz="0" />
-            <controlpoint xx="0" yy="5" zz="7" />
-            <controlpoint xx="-3" yy="0" zz="7" />
-            <controlpoint xx="-3" yy="5" zz="0" />
-            <controlpoint xx="0" yy="0" zz="0" />
+        <linear id="lift-off" span="3">
+            <controlpoint xx="0" yy="0" zz="0"/>
+            <controlpoint xx="0" yy="5" zz="0"/>
         </linear>
-        <circular id="mug2" span="5" center="0 0 0" radius="0" startang="0" rotang="360"/>
+        <linear id="up" span="5">
+            <controlpoint xx="0" yy="5" zz="0"/>
+            <controlpoint xx="2" yy="6" zz="0"/>
+            <controlpoint xx="4" yy="7" zz="0"/>
+            <controlpoint xx="6" yy="7" zz="0"/>
+            <controlpoint xx="8" yy="6" zz="0"/>
+            <controlpoint xx="10" yy="5" zz="0"/>
+            <controlpoint xx="12" yy="3" zz="0"/>
+        </linear>
+        <linear id="down" span="3">
+            <controlpoint xx="12" yy="3" zz="0"/>
+            <controlpoint xx="14" yy="0" zz="0"/>
+            <controlpoint xx="14" yy="-8" zz="0"/>
+        </linear>
     </animations>
     <primitives>
         <primitive id="quad">
@@ -1459,10 +1469,6 @@
             <transformation>
                 <transformationref id="mug" />
             </transformation>
-            <animations>
-                <animationref id="mug" />
-                <!-- <animationref id="mug2" /> -->
-            </animations>
             <materials>
                 <material id="mug1" />
                 <material id="mug2" />
@@ -1617,6 +1623,12 @@
                 <translate x="1.5" y="13.25" z="36" />
                 <scale x="0.3" y="0.3" z="0.3" />
             </transformation>
+            <animations>
+                <animationref id="lift-off" />
+                <animationref id="up" />
+                <animationref id="down" />
+                <!-- <animationref id="landing" /> -->
+            </animations>
             <materials>
                 <material id="inherit" />
             </materials>
