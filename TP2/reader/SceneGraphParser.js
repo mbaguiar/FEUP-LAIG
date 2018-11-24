@@ -91,7 +91,7 @@ class MySceneGraph {
                 log = `     ✅ %cParsed ${capitalize(name)}`;
                 console.log(log, "font-weight:bold"); 
 
-            } else this.onXMLMinorError("Ignoring unknow tag <" + name + ">.");
+            } else this.onXMLMinorError("Ignoring unknown tag <" + name + ">.");
         }
 
         console.log("✅ %cParsed XML", "font-weight:bold; font-size:16px");

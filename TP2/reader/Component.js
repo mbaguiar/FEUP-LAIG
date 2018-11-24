@@ -60,7 +60,6 @@ class Component {
      * Associates animation ids with graph animations
      */
     initAninmations() {
-        //FIX
         if (this.componentObject.hasOwnProperty("animations") && this.componentObject.animations.length){
             this.animations = [];
             for (let id of this.componentObject.animations) {
@@ -72,7 +71,7 @@ class Component {
                 }
             }
             this.currAnimationIndex = 0;
-    }
+        }
     }
     /**
      * Updates animations
