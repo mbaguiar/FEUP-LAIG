@@ -86,11 +86,6 @@ class Component {
             }
             currAnimation.update(delta);
         } 
-        for (let child of this.children) {
-            if (child instanceof Component){
-                child.update(delta);
-            }
-        }
     }
 
     /**

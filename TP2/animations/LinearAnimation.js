@@ -47,12 +47,15 @@ class LinearAnimation extends Animation {
 		if (this.time >= this.timespan){
 			this.finished = true;
 			this.time = this.timespan;
+			const lastKeyFrame = this.controlPoints[this.controlPoints.length - 1];
+			this.position = lastKeyFrame.getPosition(lastKeyFrame.endTime);
+		} else {
+			const keyframe = this.getCurrentPoint();
+			this.position = keyframe.getPosition(this.time);
+			let direction = keyframe.direction.slice();
+			direction[1] = 0;
+			this.angle = angle(direction, Zaxis);
 		}
-		const keyframe = this.getCurrentPoint();
-		this.position = keyframe.getPosition(this.time);
-		let direction = keyframe.direction.slice();
-		direction[1] = 0;
-		this.angle = angle(direction, Zaxis);
 	}
 
 	reset(){

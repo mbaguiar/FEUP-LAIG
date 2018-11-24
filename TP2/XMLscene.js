@@ -190,8 +190,10 @@ class XMLscene extends CGFscene {
 
         if (this.sceneInited) {
             this.defaultMaterial.apply();
-            if (this.changeMaterials) this.graph.changeMaterials();
-            this.changeMaterials = 0;
+            if (this.changeMaterials) {
+                this.graph.changeMaterials();
+                this.changeMaterials = 0;
+            }
             // Draw axis
             this.axis.display();
             var i = 0;
