@@ -513,13 +513,16 @@
             </patch>
         </primitive>
         <primitive id="cylinder2">
-            <cylinder2 base="2" top="2" height="3" slices="20" stacks="10" />
+            <cylinder2 base="2" top="0" height="3" slices="20" stacks="10" />
         </primitive>
         <primitive id="terrain">
             <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="2"/>
         </primitive>
         <primitive id="water">
             <water idtexture="water" idwavemap="water-map" parts="100" heightscale="1" texscale="3" />
+        </primitive>
+        <primitive id="vehicle">
+            <vehicle />
         </primitive>
     </primitives>
     <components>
@@ -1609,6 +1612,19 @@
                 <primitiveref id="water" />
             </children>
         </component>
+        <component id="vehicle">
+            <transformation>
+                <translate x="1.5" y="13.25" z="36" />
+                <scale x="0.3" y="0.3" z="0.3" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="vehicle" />
+            </children>
+        </component>
         <component id="bedroom">
             <transformation>
             </transformation>
@@ -1628,7 +1644,6 @@
                 <componentref id="sidetable" />
                 <componentref id="desk" />
                 <componentref id="shelf" />
-                <componentref id="cactus" />
                 <componentref id="book1" />
                 <componentref id="book2" />
                 <componentref id="book3" />
@@ -1644,6 +1659,8 @@
                 <componentref id="mirrorset" />
                 <componentref id="mirrorset2" />
                 <componentref id="cylinder2" />
+                <primitiveref id="patch" />
+                <componentref id="vehicle" />
             </children>
         </component>
     </components>

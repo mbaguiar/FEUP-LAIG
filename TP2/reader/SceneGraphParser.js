@@ -659,7 +659,9 @@ class MySceneGraph {
                     const water = new Water(this.scene, this, res.attr.idtexture, res.attr.idwavemap, res.attr.parts, res.attr.heightscale, res.attr.texscale);
                     this.animatedObjects.push(water);
                     return water;
-                }        
+                }   
+            case "vehicle":
+                return new Vehicle(this.scene);     
         }
     }
 

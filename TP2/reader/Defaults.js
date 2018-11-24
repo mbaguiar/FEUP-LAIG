@@ -151,6 +151,9 @@ const defaultAttributes = {
         new Attribute ("startang", "float"),
         new Attribute ("rotang", "float"),
     ],
+    vehicleAttr: [
+
+    ],
 }
 
 const defaults = {
@@ -188,6 +191,7 @@ const defaults = {
         terrain: defaultAttributes.terrainAttr,
         water: defaultAttributes.waterAttr,
         cylinder2: defaultAttributes.cylinder2Attr,
+        vehicle : defaultAttributes.vehicleAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"
