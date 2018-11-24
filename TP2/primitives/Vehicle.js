@@ -74,16 +74,29 @@ class Vehicle {
         this.patch2 = new Patch(scene, 4, 3, 30, 30, controlpoints2);
         this.patch3 = new Patch(scene, 4, 3, 30, 30, controlpoints3);
         this.patch4 = new Patch(scene, 4, 3, 30, 30, controlpoints4);
+        this.material = new CGFappearance(this.scene);
+        this.material.setEmission(0, 0, 0, 1);
+        this.material.setAmbient(0.1, 0.1, 0.1, 1);
+        this.material.setDiffuse(0.678, 0.678, 0.678, 1);
+        this.material.setSpecular(0.03, 0.03, 0.03, 1);
+        this.basket = new CGFtexture(this.scene, "../scenes/images/basket.jpg");
+        this.stripes = new CGFtexture(this.scene, "../scenes/images/stripes.jpg");
     }
 
     display() {
         this.scene.pushMatrix();
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
+        this.material.setTexture(this.basket);
+        this.material.apply();
         this.cylinder3.display();
+        this.material.setTexture(null);
+        this.material.apply();
         this.scene.popMatrix();
         this.scene.pushMatrix();
         this.scene.translate(0, 4, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
+        this.material.setTexture(this.stripes);
+        this.material.apply();
         this.cylinder1.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
@@ -110,9 +123,13 @@ class Vehicle {
         this.scene.translate(0, 12, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.patch4.display();
+        this.material.setTexture(null);
+        this.material.apply();
         this.scene.popMatrix();
         this.scene.pushMatrix();
         this.scene.translate(0, 2, 1);
+        this.material.setTexture(this.basket);
+        this.material.apply();
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.cylinder4.display();
         this.scene.popMatrix();
@@ -130,6 +147,8 @@ class Vehicle {
         this.scene.translate(-1, 2, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.cylinder4.display();
+        this.material.setTexture(null);
+        this.material.apply();
         this.scene.popMatrix();
     }
 }
