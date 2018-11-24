@@ -76,6 +76,7 @@ class Vehicle {
         this.patch4 = new Patch(scene, 4, 3, 30, 30, controlpoints4);
         this.torus = new Torus(scene, 0.1, 1, 60, 30);
         this.circle = new Cylinder(scene, 0.75, 0.75, 0.01, 60, 60);
+        this.triangle = new Triangle(this.scene, 0, 1, 1, 0.5, 2, 1, -0.5, 2, 1);
         this.material = new CGFappearance(this.scene);
         this.material.setEmission(0, 0, 0, 1);
         this.material.setAmbient(0.1, 0.1, 0.1, 1);
@@ -83,6 +84,7 @@ class Vehicle {
         this.material.setSpecular(0.03, 0.03, 0.03, 1);
         this.basket = new CGFtexture(this.scene, "../scenes/images/basket.jpg");
         this.stripes = new CGFtexture(this.scene, "../scenes/images/stripes.jpg");
+        this.yellow = new CGFtexture(this.scene, "../scenes/images/yellow.jpg");
     }
 
     display() {
@@ -99,8 +101,9 @@ class Vehicle {
         this.torus.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
-        this.material.setTexture(null);
+        this.material.setTexture(this.yellow);
         this.material.apply();
+        this.triangle.display();
         this.scene.translate(0, 4, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.material.setTexture(this.stripes);
@@ -155,8 +158,8 @@ class Vehicle {
         this.scene.translate(-1, 2, 0);
         this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.cylinder4.display();
+        this.scene.popMatrix();
         this.material.setTexture(null);
         this.material.apply();
-        this.scene.popMatrix();
     }
 }
