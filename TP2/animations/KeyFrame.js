@@ -4,7 +4,6 @@ class KeyFrame {
 		this.direction = direction;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		console.log(this.direction);
 	}
 	/**
 	 * Get position in current KeyFrame
