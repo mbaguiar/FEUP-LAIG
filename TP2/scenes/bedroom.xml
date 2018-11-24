@@ -516,7 +516,7 @@
             <cylinder2 base="2" top="0" height="3" slices="20" stacks="10" />
         </primitive>
         <primitive id="terrain">
-            <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="2"/>
+            <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="1.5"/>
         </primitive>
         <primitive id="water">
             <water idtexture="water" idwavemap="water-map" parts="100" heightscale="1" texscale="3" />
@@ -1460,7 +1460,7 @@
                 <transformationref id="mug" />
             </transformation>
             <animations>
-                <animationref id="mug" />
+                <!-- <animationref id="mug" /> -->
                 <!-- <animationref id="mug2" /> -->
             </animations>
             <materials>
@@ -1586,10 +1586,90 @@
                 <primitiveref id="cylinder2" />
             </children>
         </component>
+        <component id="terrainwall1">
+            <transformation>
+                <translate x="2.75" y="0" z="0" />
+                <scale x="0.25" y="1" z="5.75" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="terrainwall2">
+            <transformation>
+                <translate x="-2.75" y="0" z="0" />
+                <scale x="0.25" y="1" z="5.75" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="terrainwall3">
+            <transformation>
+                <translate x="0" y="0" z="-2.75" />
+                <scale x="5.75" y="1" z="0.25" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="terrainwall4">
+            <transformation>
+                <translate x="0" y="0" z="2.75" />
+                <scale x="5.75" y="1" z="0.25" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="terrainbase">
+            <transformation>
+                <scale x="5.5" y="0.5" z="5.5" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="terrain-holder">
+            <transformation>
+                <translate x="3.25" y="6.5" z="34" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="darkwood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="terrainbase" />
+                <componentref id="terrainwall1" />
+                <componentref id="terrainwall2" />
+                <componentref id="terrainwall3" />
+                <componentref id="terrainwall4" />
+            </children>
+        </component>
         <component id="terrain">
             <transformation>
-                <translate x="15" y="7" z="15" />
-                <scale x="10" y="1" z="10" />
+                <translate x="3.25" y="6.5" z="34" />
+                <scale x="4" y="1" z="4" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1601,8 +1681,8 @@
         </component>
         <component id="water">
             <transformation>
-                <translate x="15" y="7" z="15" />
-                <scale x="13" y="1" z="13" />
+                <translate x="3.25" y="6.5" z="34" />
+                <scale x="5" y="1" z="5" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -1652,15 +1732,12 @@
                 <componentref id="book" />
                 <componentref id="book6" />
                 <componentref id="painting" />
-                <componentref id="vanitymirror" />
-                <componentref id="vanitymirrorframe" />
                 <componentref id="mug" />
                 <componentref id="puf" />
                 <componentref id="mirrorset" />
                 <componentref id="mirrorset2" />
-                <componentref id="cylinder2" />
-                <primitiveref id="patch" />
                 <componentref id="vehicle" />
+                <componentref id="terrain-holder" />
             </children>
         </component>
     </components>
