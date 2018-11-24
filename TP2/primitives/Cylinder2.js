@@ -34,7 +34,6 @@ class Cylinder2 extends CGFobject {
             ]
         ];
 
-        console.log(this.controlPoints1);
         this.surface1 = new CGFnurbsSurface(degree1, degree2, this.controlPoints1);
 
         this.controlPoints2 = [
