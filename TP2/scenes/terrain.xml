@@ -47,6 +47,7 @@
         <texture id="terrain-map" file="../scenes/images/terrain-height-map.jpg" />
         <texture id="water" file="../scenes/images/water2.jpg" />
         <texture id="water-map" file="../scenes/images/wave-height-map.png" />
+        <texture id="yellow" file="../scenes/images/yellow.jpg" />
     </textures>
     <materials>
         <material id="default" shininess = "0">
@@ -57,7 +58,25 @@
         </material>
     </materials>
     <transformations>
-		
+		<transformation id="terrain">
+            <scale x="100" y="1" z="100" />
+        </transformation>
+		<transformation id="water">
+            <scale x="250" y="1" z="250" />
+        </transformation>
+		<transformation id="cylinder">
+            <rotate axis="x" angle="-90" />
+        </transformation>
+		<transformation id="cone">
+            <translate x="0" y="6" z="0" />
+            <rotate axis="x" angle="90" />
+        </transformation>
+		<transformation id="light">
+            <translate x="-90" y="8" z="0" />
+        </transformation>
+		<transformation id="vehicle">
+            <scale x="0.8" y="0.8" z="0.8" />
+        </transformation>
     </transformations>
     <animations>
         <linear id="ease-in" span="7">
@@ -80,78 +99,33 @@
             <controlpoint xx="-35" yy="50" zz="0"/>
             <controlpoint xx="-35" yy="50" zz="-75"/>
         </linear>
+        <linear id="float" span="30">
+            <controlpoint xx="0" yy="0" zz="125" />
+            <controlpoint xx="0" yy="0" zz="-125" />
+        </linear>    
     </animations>
     <primitives>
         <primitive id="quad">
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
         </primitive>
-        <primitive id="sphere1">
-            <sphere radius="5" slices="50" stacks="50" />
-        </primitive>
-        <primitive id="rug">
-            <cylinder base="10" top="10" height="0.1" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="lamppilar">
-            <cylinder base="0.25" top="0.25" height="10" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="lampbase">
-            <cylinder base="1.5" top="0.25" height="0.5" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="lampshade">
-            <cylinder base="3" top="2" height="4" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="torus">
-            <torus inner="1" outer="5" slices="20" loops="10" />
-        </primitive>
-        <primitive id="lampsphere">
-            <sphere radius="1" slices="20" stacks="10" />
-        </primitive>
-        <primitive id="drawknob">
-            <cylinder base="0.2" top="0.2" height="0.4" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="pillow1">
-            <cylinder base="1" top="1" height="4" slices="20" stacks="10" />
-        </primitive>
-        <primitive id="cactusbase">
-            <cylinder base="0.5" top="1" height="1" slices="20" stacks="10" />
-        </primitive>
         <primitive id="triangle">
             <triangle x1="0" y1="0" z1="0" x2="0" y2="5" z2="0" x3="0" y3="0" z3="5"/>
         </primitive>
-        <primitive id="cactusplant">
-            <sphere radius="0.75" slices="20" stacks="20" />
-        </primitive>
-        <primitive id="mirrortorus">
-            <torus inner="0.25" outer="2" slices="20" loops="10" />
-        </primitive>
-        <primitive id="mirror">
-            <cylinder base="2" top="2" height="0.1" slices="20" stacks="10" />
-        </primitive>
-        <primitive id="mug">
-            <cylinder base="0.6" top="0.6" height="1.5" slices="20" stacks="10" />
-        </primitive>
-        <primitive id="handle">
-            <torus inner="0.1" outer="0.5" slices="20" loops="10" />
-        </primitive>
-        <primitive id="puf">
-            <cylinder base="2" top="2" height="3" slices="20" stacks="10" />
-        </primitive>
-        <primitive id="puf2">
-            <torus inner="0.2" outer="2" slices="20" loops="10" />
-        </primitive>
-        <primitive id="plane">
-            <plane npartsU="8" npartsV="6" />
+        <primitive id="cylinder2">
+            <cylinder2 base="0.5" top="0.5" height="3" slices="20" stacks="10" />
         </primitive>
         <primitive id="patch">
-            <patch npointsU="2" npointsV="2" npartsU="8" npartsV="6">
-                <controlpoint xx="-0.5" yy="0" zz="0.5" />
-                <controlpoint xx="-0.5" yy="0" zz="-0.5" />
-                <controlpoint xx="0.5" yy="0" zz="0.5" />
-                <controlpoint xx="0.5" yy="0" zz="-0.5" />
+            <patch npointsU="3" npointsV="3" npartsU="20" npartsV="20" >
+                <controlpoint xx="-2.5" yy="0" zz="2.5" />
+                <controlpoint xx="-2.5" yy="0" zz="0" />
+                <controlpoint xx="-2.5" yy="0" zz="-2.5" />
+                <controlpoint xx="0" yy="0" zz="2.5" />
+                <controlpoint xx="0" yy="5" zz="0" />
+                <controlpoint xx="0" yy="0" zz="-2.5" />
+                <controlpoint xx="2.5" yy="0" zz="2.5" />
+                <controlpoint xx="2.5" yy="0" zz="0" />
+                <controlpoint xx="2.5" yy="0" zz="-2.5" />
             </patch>
-        </primitive>
-        <primitive id="cylinder2">
-            <cylinder2 base="2" top="0" height="3" slices="20" stacks="10" />
         </primitive>
         <primitive id="terrain">
             <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="30"/>
@@ -166,7 +140,7 @@
     <components>
         <component id="terrain">
             <transformation>
-                <scale x="100" y="1" z="100" />
+                <transformationref id="terrain" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -178,7 +152,7 @@
         </component>
         <component id="water">
             <transformation>
-                <scale x="250" y="1" z="250" />
+                <transformationref id="water" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -188,9 +162,37 @@
                 <primitiveref id="water" />
             </children>
         </component>
+        <component id="cylinder">
+            <transformation>
+               <transformationref id="cylinder" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="cylinder2" />
+            </children>
+        </component>
+        <component id="light">
+            <transformation>
+                <transformationref id="light" />
+            </transformation>
+            <animations>
+                <animationref id="float" />
+            </animations>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="yellow" length_s="1" length_t="1" />
+            <children>
+               <componentref id="cylinder" />
+               <primitiveref id="patch" />
+            </children>
+        </component>
         <component id="vehicle">
             <transformation>
-                <scale x="0.8" y="0.8" z="0.8" />
+                <transformationref id="vehicle" />
             </transformation>
             <animations>
                 <animationref id="ease-in" />
@@ -217,6 +219,7 @@
 				<componentref id="water"/>
                 <componentref id="terrain"/>
                 <componentref id="vehicle" />
+                <componentref id="light" />
             </children>
         </component>
     </components>
