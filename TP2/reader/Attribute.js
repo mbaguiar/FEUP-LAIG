@@ -1,8 +1,9 @@
 class Attribute {
-	constructor(name, type, def) {
+	constructor(name, type, def, opt) {
 		this.name = name;
 		this.type = type;
 		this.default = def;
+		this.optional = opt;
 	}
 	
 	/**

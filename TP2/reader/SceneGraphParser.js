@@ -993,7 +993,7 @@ class MySceneGraph {
             } else if (attr.type === "string")
                 if (value == "") err = true;
             
-            if (err){
+            if (err && !attr.optional){
                 if (attr.default) {
                     res.defaults[attr.name] = attr.default;
                     value = attr.default;
