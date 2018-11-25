@@ -25,6 +25,7 @@ class XMLscene extends CGFscene {
         this.changeMaterials = 0;
         this.sceneInited = false;
         this.selectedCamera;
+        this.Animations = true;
 
         this.enableTextures(true);
 
@@ -99,6 +100,8 @@ class XMLscene extends CGFscene {
 
         this.interface.addViewsGroup(this.cameras);
 
+        this.interface.addAnimationsGroup();
+
         this.axis = new CGFaxis(this, this.graph.axisLength);
 
         if (this.graph.ambient.background != null) {
@@ -167,7 +170,7 @@ class XMLscene extends CGFscene {
     update(currTime) {
         if (this.sceneInited) {
             const delta = currTime - this.lastUpdate;
-            this.graph.update(delta);
+            this.graph.update(this.Animations? delta: 0);
             this.lastUpdate = currTime;
         }
     }

@@ -57,4 +57,10 @@ class MyInterface extends CGFinterface {
             this.setActiveCamera(this.scene.cameras[value]);
         });
     }
+
+    addAnimationsGroup() {
+        let group = this.gui.addFolder("Animations");
+        group.open();
+        group.add(this.scene, "Animations");
+    }
 }
