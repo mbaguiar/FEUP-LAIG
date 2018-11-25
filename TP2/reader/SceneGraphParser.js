@@ -1054,6 +1054,7 @@ class MySceneGraph {
      * @param  {} delta time since last update
      */
     update(delta){
+        if (delta === 0) return;
         for (let animatedObject of this.animatedObjects){
             animatedObject.update(delta);
         }
