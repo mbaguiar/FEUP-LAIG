@@ -136,6 +136,9 @@
         <primitive id="vehicle">
             <vehicle />
         </primitive>
+        <primitive id="light">
+            <light />
+        </primitive>
     </primitives>
     <components>
         <component id="terrain">
@@ -174,6 +177,18 @@
                 <primitiveref id="cylinder2" />
             </children>
         </component>
+        <component id="light-sphere">
+            <transformation>
+                <translate x="0" y="3" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="light" />
+            </children>
+        </component>
         <component id="light">
             <transformation>
                 <transformationref id="light" />
@@ -186,6 +201,7 @@
             </materials>
             <texture id="yellow" length_s="1" length_t="1" />
             <children>
+                <componentref id="light-sphere" />
                <componentref id="cylinder" />
                <primitiveref id="patch" />
             </children>

@@ -9,8 +9,6 @@ class Water extends Plane {
 		this.shader = new CGFshader(this.scene.gl, "../shaders/water.vert", "../shaders/water.frag");
 		this.texture = graph.textures[idtexture];
 		this.heightMap = graph.textures[idwavemap];
-		//this.texture = new CGFtexture(this.scene, "../scenes/images/water2.jpg");
-		//this.heightMap = new CGFtexture(this.scene, "../scenes/images/wave-height-map.png");
 		this.shader.setUniformsValues({textureSampler: 0});
 		this.shader.setUniformsValues({heightMapSampler: 1});
 		this.shader.setUniformsValues({heightScale: heightscale});

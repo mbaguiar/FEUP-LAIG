@@ -661,7 +661,11 @@ class MySceneGraph {
                     return water;
                 }   
             case "vehicle":
-                return new Vehicle(this.scene);     
+                return new Vehicle(this.scene);
+            case "light":
+                const light = new Light(this.scene);
+                this.animatedObjects.push(light);
+                return light;
         }
     }
 
