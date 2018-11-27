@@ -1,0 +1,248 @@
+<yas>
+    <scene root="root" axis_length="15" />
+    <views default="default">
+        <perspective id="default" near="20" far="500" angle="40">
+            <from x="90" y="75" z="90" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+    </views>
+    <ambient>
+        <ambient r="0" g="0" b="0" a="1" />
+        <background r="0" g="0" b="0" a="1" />
+    </ambient>
+    <lights>
+        <omni id="light1" enabled="1">
+            <location x="-50" y="60" z="5" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+        <omni id="light2" enabled="1">
+            <location x="5" y="60" z="50" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+        <omni id="light3" enabled="1">
+            <location x="50" y="60" z="5" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+        <omni id="light4" enabled="1">
+            <location x="50" y="60" z="50" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+        <omni id="light5" enabled="1">
+            <location x="-50" y="60" z="-50" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="1" b="1" a="1" />
+            <specular r="1" g="1" b="1" a="1" />
+        </omni>
+    </lights>
+    <textures>
+        <texture id="terrain" file="../scenes/images/terrain.jpg" />
+        <texture id="terrain-map" file="../scenes/images/terrain-height-map.jpg" />
+        <texture id="water" file="../scenes/images/water2.jpg" />
+        <texture id="water-map" file="../scenes/images/wave-height-map.png" />
+        <texture id="yellow" file="../scenes/images/yellow.jpg" />
+    </textures>
+    <materials>
+        <material id="default" shininess = "0">
+            <emission r="0" g="0" b="0" a="1" />
+            <ambient r="0.1" g="0.1" b="0.1" a="1" />
+            <diffuse r="0.678" g="0.698" b="0.741" a="1" />
+            <specular r="0.03" g="0.03" b="0.03" a="1" />
+        </material>
+    </materials>
+    <transformations>
+		<transformation id="terrain">
+            <scale x="100" y="1" z="100" />
+        </transformation>
+		<transformation id="water">
+            <scale x="250" y="1" z="250" />
+        </transformation>
+		<transformation id="cylinder">
+            <rotate axis="x" angle="-90" />
+        </transformation>
+		<transformation id="cone">
+            <translate x="0" y="6" z="0" />
+            <rotate axis="x" angle="90" />
+        </transformation>
+		<transformation id="light">
+            <translate x="-90" y="8" z="0" />
+        </transformation>
+		<transformation id="vehicle">
+            <scale x="0.8" y="0.8" z="0.8" />
+        </transformation>
+    </transformations>
+    <animations>
+        <linear id="up" span="5">
+            <controlpoint xx="-35" yy="50" zz="75"/>
+            <controlpoint xx="-35" yy="50" zz="0"/>
+        </linear>
+		<circular id="hover" span="5" center="0 0 0" radius="0"
+                    startang="0" rotang="720" />
+        <linear id="up2" span="5">
+            <controlpoint xx="-35" yy="50" zz="0"/>
+            <controlpoint xx="-35" yy="100" zz="0"/>
+        </linear>
+		<circular id="hover2" span="5" center="0 0 0" radius="10"
+                    startang="0" rotang="720" />
+        <linear id="float" span="30">
+            <controlpoint xx="0" yy="0" zz="125" />
+            <controlpoint xx="0" yy="0" zz="-125" />
+        </linear>  
+    </animations>
+    <primitives>
+        <primitive id="quad">
+            <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
+        </primitive>
+        <primitive id="triangle">
+            <triangle x1="0" y1="0" z1="0" x2="0" y2="5" z2="0" x3="0" y3="0" z3="5"/>
+        </primitive>
+        <primitive id="cylinder2">
+            <cylinder2 base="0.5" top="0.5" height="3" slices="20" stacks="10" />
+        </primitive>
+        <primitive id="patch">
+            <patch npointsU="3" npointsV="3" npartsU="20" npartsV="20" >
+                <controlpoint xx="-2.5" yy="0" zz="2.5" />
+                <controlpoint xx="-2.5" yy="0" zz="0" />
+                <controlpoint xx="-2.5" yy="0" zz="-2.5" />
+                <controlpoint xx="0" yy="0" zz="2.5" />
+                <controlpoint xx="0" yy="5" zz="0" />
+                <controlpoint xx="0" yy="0" zz="-2.5" />
+                <controlpoint xx="2.5" yy="0" zz="2.5" />
+                <controlpoint xx="2.5" yy="0" zz="0" />
+                <controlpoint xx="2.5" yy="0" zz="-2.5" /> 
+            </patch>
+        </primitive>
+        <primitive id="terrain">
+            <terrain idtexture="terrain" idheightmap="terrain-map" parts="100" heightscale="30"/>
+        </primitive>
+        <primitive id="water">
+            <water idtexture="water" idwavemap="water-map" parts="100" heightscale="15" texscale="3" />
+        </primitive>
+        <primitive id="vehicle">
+            <vehicle />
+        </primitive>
+        <primitive id="light">
+            <light />
+        </primitive>
+    </primitives>
+    <components>
+        <component id="terrain">
+            <transformation>
+                <transformationref id="terrain" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="terrain" />
+            </children>
+        </component>
+        <component id="water">
+            <transformation>
+                <transformationref id="water" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="water" />
+            </children>
+        </component>
+        <component id="cylinder">
+            <transformation>
+               <transformationref id="cylinder" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="cylinder2" />
+            </children>
+        </component>
+        <component id="light-sphere">
+            <transformation>
+                <translate x="0" y="3" z="0"/>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="light" />
+            </children>
+        </component>
+        <component id="light">
+            <transformation>
+                <transformationref id="light" />
+            </transformation>
+            <animations>
+                <animationref id="float" />
+            </animations>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="yellow" length_s="1" length_t="1" />
+            <children>
+                <componentref id="light-sphere" />
+               <componentref id="cylinder" />
+               <primitiveref id="patch" />
+            </children>
+        </component>
+        <component id="vehicle">
+            <transformation>
+            </transformation>
+            <animations>
+                <animationref id="hover" />
+                <animationref id="hover2" />
+            </animations>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <primitiveref id="vehicle" />
+            </children>
+        </component>
+        <component id="vehicle2">
+            <transformation>
+                <transformationref id="vehicle" />
+            </transformation>
+            <animations>
+                <animationref id="up" />
+                <animationref id="up2" />
+            </animations>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none" />
+            <children>
+                <componentref id="vehicle" />
+            </children>
+        </component>
+        <component id="root">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+				<componentref id="water"/>
+                <componentref id="terrain"/>
+                <componentref id="vehicle2" />
+                <componentref id="light" />
+            </children>
+        </component>
+    </components>
+</yas>
+
