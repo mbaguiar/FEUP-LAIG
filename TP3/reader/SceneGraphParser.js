@@ -666,6 +666,8 @@ class MySceneGraph {
                 const light = new Light(this.scene);
                 this.animatedObjects.push(light);
                 return light;
+            case "board":
+                return new Board(this.scene);
         }
     }
 

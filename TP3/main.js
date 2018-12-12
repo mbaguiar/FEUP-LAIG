@@ -47,9 +47,12 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
     'primitives/Torus.js', 'reader/Attribute.js', 'reader/Defaults.js', 'animations/Animation.js', 'animations/LinearAnimation.js',
     'animations/CircularAnimation.js', 'animations/KeyFrame.js', 'animations/vec3utils.js', 'primitives/Plane.js', 'primitives/Patch.js',
     'primitives/Terrain.js', 'primitives/Water.js', 'primitives/Cylinder2.js', 'primitives/Vehicle.js', 'primitives/Light.js',
+    'primitives/Board.js',
+    'Prolog.js',
 
     main = function () {
         // Standard application, scene and interface setup
+
         var app = new CGFapplication(document.body);
         var myInterface = new MyInterface();
         var myScene = new XMLscene(myInterface);
@@ -64,7 +67,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
 
-        var filename = getUrlVars()['file'] || "terrain.xml";
+        var filename = getUrlVars()['file'] || "flume.xml";
 
         // create and load graph, and associate it to scene. 
         // Check console for loading errors

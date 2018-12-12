@@ -27,6 +27,8 @@ class XMLscene extends CGFscene {
         this.selectedCamera;
         this.Animations = true;
 
+        this.setPickEnabled(true);
+
         this.enableTextures(true);
 
         this.gl.clearDepth(100.0);
@@ -179,8 +181,7 @@ class XMLscene extends CGFscene {
      * Displays the scene.
      */
     display() {
-        // ---- BEGIN Background, camera and axis setup
-
+        this.handlePicking();
         // Clear image and depth buffer everytime we update the scene
         this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -226,5 +227,25 @@ class XMLscene extends CGFscene {
 
         this.popMatrix();
         // ---- END Background, camera and axis setup
+    }
+
+    handlePicking() {
+        if (this.pickMode === false) {
+            if (this.pickResults != null && this.pickResults.length > 0) {
+                for (var i=0; i< this.pickResults.length; i++) {
+                    const obj = this.pickResults[i][0];
+                    if (obj) {
+                        const id = this.pickResults[i][1];
+                        if (id >= 0 && id <= 169) {
+                            const col = id % 13;
+                            const row = Math.floor(id/13);
+                            console.log(`Clicked cell ${row}:${col}`);
+                        }
+                    }
+                }
+                this.pickResults.splice(0,this.pickResults.length);
+            }		
+        }
+        this.clearPickRegistration();
     }
 }

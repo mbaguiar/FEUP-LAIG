@@ -103,7 +103,7 @@ class Component {
      * @param  {parent texture} texture
      */
     display(material, texture) {
-
+        
         if (this.materials.length > 0) {
             if (this.materials[0] !== "inherit") material = this.materials[0];
             else {
