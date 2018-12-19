@@ -160,6 +160,9 @@ const defaultAttributes = {
     boardAttr: [
 
     ],
+    pieceAttr: [
+
+    ],
 }
 
 const defaults = {
@@ -200,6 +203,7 @@ const defaults = {
         vehicle : defaultAttributes.vehicleAttr,
         light: defaultAttributes.lightAttr,
         board: defaultAttributes.boardAttr,
+        piece: defaultAttributes.pieceAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

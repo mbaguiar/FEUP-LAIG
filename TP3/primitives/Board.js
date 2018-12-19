@@ -3,6 +3,9 @@ class Board {
 		this.scene = scene;
 		this.square = new Rectangle(this.scene, -0.5, -0.5, 0.5, 0.5);
 		this.pickSquare = new Rectangle(this.scene, -2.5, -2.5, 2.5, 2.5);
+		this.noTexture = new CGFappearance(this.scene);
+		this.testTexture = new CGFappearance(this.scene);
+		this.testTexture.loadTexture('../scenes/images/grid.jpg');
 	}
 
 	displayBoard() {
@@ -42,7 +45,7 @@ class Board {
 
 	setupPicking() {
 		this.scene.pushMatrix();
-		this.scene.translate(-25, 5, -25);
+		this.scene.translate(-30, 1.05, -30);
 		for (let i = 0; i < 13; i++) {
 			for (let j = 0; j < 13; j++) {
 				const id = 13*i+j;
@@ -61,7 +64,9 @@ class Board {
 	display() {
 		/* if (this.scene.pickMode)
 		else */
+			this.testTexture.apply();
 			this.setupPicking();
+			this.noTexture.apply();
 			this.displayBoard();
 	}
 }

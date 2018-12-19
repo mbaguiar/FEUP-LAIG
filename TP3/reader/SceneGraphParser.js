@@ -668,6 +668,8 @@ class MySceneGraph {
                 return light;
             case "board":
                 return new Board(this.scene);
+            case "piece":
+                return new Piece(this.scene);
         }
     }
 
