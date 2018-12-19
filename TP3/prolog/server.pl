@@ -102,10 +102,16 @@ print_header_line(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Require your Prolog Files here
+:-ensure_loaded('flume.pl').
 
 parse_input(handshake, handshake).
 parse_input(test(C,N), Res) :- test(C,Res,N).
 parse_input(quit, goodbye).
+
+parse_input(create_state, State) :- create_state(13, State), now(Seed), setrand(Seed).
+parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
+parse_input(move(Move, State), NewState):- move(Move, State, NewState).
+parse_input(game_over(State), Winner):- game_over(State, Winner, _, _).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).

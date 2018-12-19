@@ -6,6 +6,7 @@
 :-ensure_loaded('board.pl').
 :-ensure_loaded('input.pl').
 :-ensure_loaded('menu.pl').
+:-ensure_loaded('server.pl').
 
 % Entry point
 play :- main_menu.

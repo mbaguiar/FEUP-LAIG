@@ -43,13 +43,13 @@ class Board {
 	setupPicking() {
 		this.scene.pushMatrix();
 		this.scene.translate(-25, 5, -25);
-		this.scene.rotate(-Math.PI/2, 1, 0, 0);
 		for (let i = 0; i < 13; i++) {
 			for (let j = 0; j < 13; j++) {
 				const id = 13*i+j;
 				this.scene.registerForPick(id, this.pickSquare);
 				this.scene.pushMatrix();
 				this.scene.translate(5*j, 0, 5*i);
+				this.scene.rotate(-Math.PI/2, 1, 0, 0);
 				this.pickSquare.display();
 				this.scene.popMatrix();
 			}
