@@ -25,8 +25,8 @@ class PrologAPI {
 		return res;
 	}
 
-	async createState(o) {
-		const query = `create_state(${o.size})`;
+	async createState() {
+		const query = `create_state`;
 		const res = await this.sendRequest(query);
 		return res;
 	}
