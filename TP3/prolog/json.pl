@@ -2,8 +2,8 @@ json(List, Output):-
     is_list(List),
     list_to_json(List, Output).
 
-json(Number, Number):-
-    number(Number).
+json(Element, Number):-
+    number_codes(Element, X), atom_codes(Number, X).
 
 json(Element, JSONElem):-
   surround(Element, '"', '"', JSONElem).
