@@ -123,7 +123,7 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(1 / 60 * 1000);
         this.lastUpdate = (new Date()).getTime();
-
+        this.game = new Game();
         this.sceneInited = true;
     }
 
