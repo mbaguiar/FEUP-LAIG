@@ -108,7 +108,7 @@ parse_input(handshake, handshake).
 parse_input(test(C,N), Res) :- test(C,Res,N).
 parse_input(quit, goodbye).
 
-parse_input(create_state, State) :- create_state(13, State), now(Seed), setrand(Seed).
+parse_input(create_state, Output) :- create_state(13, State), now(Seed), setrand(Seed), matrix_to_json(State, Output).
 parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
 parse_input(move(Move, State), NewState):- move(Move, State, NewState).
 parse_input(game_over(State), Winner):- game_over(State, Winner, _, _).
