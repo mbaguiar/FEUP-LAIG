@@ -18,15 +18,15 @@ class PrologAPI {
 			.catch(err => reject(err)); 
 		});
 	}
-
-	async move(o) {
-		const query = `move(${o.move}, ${o.state})`;
+	
+	async createState() {
+		const query = 'create_state';
 		const res = await this.sendRequest(query);
 		return res;
 	}
-
-	async createState(o) {
-		const query = `create_state(${o.size})`;
+	
+	async move(o) {
+		const query = `move(${o.move}, ${o.state})`;
 		const res = await this.sendRequest(query);
 		return res;
 	}
@@ -60,5 +60,5 @@ function makeRequest() {
 
 //Handle the Reply
 function handleReply(data) {
-	document.querySelector("#query_result").innerHTML = data.target.response;
+	document.	("#query_result").innerHTML = data.target.response;
 } */

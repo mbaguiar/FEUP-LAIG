@@ -39,7 +39,6 @@ class MyInterface extends CGFinterface {
     addLightsGroup(lights) {
 
         var group = this.gui.addFolder("Lights");
-        group.open();
 
         for (var key in lights) {
             if (lights.hasOwnProperty(key)) {
@@ -50,7 +49,6 @@ class MyInterface extends CGFinterface {
 
     addViewsGroup(views) {
         let group = this.gui.addFolder("Views");
-        group.open();
         let controller = group.add(this.scene, 'selectedCamera', Object.keys(views));
         controller.onChange(value => {
             this.scene.setActiveCamera(value);
@@ -60,7 +58,15 @@ class MyInterface extends CGFinterface {
 
     addAnimationsGroup() {
         let group = this.gui.addFolder("Animations");
-        group.open();
         group.add(this.scene, "Animations");
+    }
+
+    addGameGroup() {
+        const group = this.gui.addFolder('Game');
+        group.open();
+        const options = Game.getGameOptions();
+        for (let key in options) {
+            group.add(options, key);
+        }
     }
 }
