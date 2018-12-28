@@ -26,7 +26,11 @@ class PrologAPI {
 	}
 	
 	async move(o) {
-		const query = `move(${o.move}, ${o.state})`;
+		let state = JSON.stringify(o.state);
+		let move = JSON.stringify(o.move);
+		console.log(state);
+		console.log(move);
+		const query = `move(${move},${state})`;
 		const res = await this.sendRequest(query);
 		return res;
 	}

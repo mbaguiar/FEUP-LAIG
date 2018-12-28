@@ -29,10 +29,12 @@ class Game {
 		alert('Good try bro');
 	}
 
-	move(move) {
-		const newState = this.api.move({move, state: this.state});
+	async move(row, col) {
+		let state = [this.state.board, this.state.player, this.state.score];
+		const newState = await this.api.move({move: [row, col], state: state});
 		this.playHistory.unshift(this.playHistory);
-		console.log(JSON.parse(newState));
+		this.state = {...Game.parseState(JSON.parse(newState))};
+		console.log(this.state);
 	}
 
 	static parseState(o) {
