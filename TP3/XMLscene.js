@@ -242,7 +242,7 @@ class XMLscene extends CGFscene {
                             const col = id % 13;
                             const row = Math.floor(id/13);
                             console.log(`Clicked cell ${row}:${col}`);
-                            if (Game.getInstance.state) {
+                            if (Game.getInstance().state) {
                                 Game.getInstance().move(row+1, col+1);
                             }
                         }
