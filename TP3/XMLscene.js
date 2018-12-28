@@ -41,13 +41,6 @@ class XMLscene extends CGFscene {
         this.axis = new CGFaxis(this);
 
         this.api = new PrologAPI();
-        let res = this.api.createState();
-        res.then(function(result) {
-            let state = JSON.parse(result);
-            
-            console.log(state);
-
-        });
     }
 
     /**

@@ -122,7 +122,6 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="piece" />
                 <componentref id="board" />
             </children>
         </component>
