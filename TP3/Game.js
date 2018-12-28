@@ -1,6 +1,7 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
+		this.allowPlay = false;
 	}
 
 	static getGameOptions() {
@@ -26,6 +27,7 @@ class Game {
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.initPieces(this.state);
 		this.playHistory = [];
+		this.allowPlay = true;
 		console.log(this.state);
 	}
 
@@ -47,6 +49,8 @@ class Game {
 	}
 
 	async move(row, col) {
+		if (!this.allowPlay) return;
+		this.allowPlay = false;
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: state});
 		this.pieces.push(new Piece(this.scene, row, col, this.state.player));
@@ -61,5 +65,12 @@ class Game {
 			player: o[1],
 			score: [...o[2]]
 		};
+	}
+
+	update(delta) {
+		if (!this.pieces) return;
+		for (const p of this.pieces) {
+			p.update(delta);
+		}
 	}
 }

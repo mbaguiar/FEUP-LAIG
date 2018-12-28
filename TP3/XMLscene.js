@@ -175,6 +175,7 @@ class XMLscene extends CGFscene {
         if (this.sceneInited) {
             const delta = currTime - this.lastUpdate;
             this.graph.update(this.Animations? delta: 0);
+            Game.getInstance().update(this.Animations? delta: 0);
             this.lastUpdate = currTime;
         }
     }

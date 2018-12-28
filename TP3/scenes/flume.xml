@@ -2,11 +2,11 @@
     <scene root="root" axis_length="15" />
     <views default="p1">
         <perspective id="p1" near="0.1" far="500" angle="40">
-            <from x="0" y="60" z="60" />
+            <from x="0" y="120" z="40" />
             <to x="0" y="0" z="0" />
         </perspective>
         <perspective id="p2" near="0.1" far="500" angle="40">
-            <from x="0" y="60" z="-60" />
+            <from x="0" y="120" z="-40" />
             <to x="0" y="0" z="0" />
         </perspective>
     </views>

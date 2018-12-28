@@ -1,5 +1,4 @@
 class Component {
-
     constructor(graph, scene, id, component) {
         this.graph = graph;
         this.scene = scene;
