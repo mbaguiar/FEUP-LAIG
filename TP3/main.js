@@ -57,6 +57,8 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
         var myInterface = new MyInterface();
         var myScene = new XMLscene(myInterface);
 
+        Game.getInstance().setScene(myScene);
+
         app.init();
 
         app.setScene(myScene);

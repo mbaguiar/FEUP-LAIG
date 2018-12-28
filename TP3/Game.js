@@ -17,11 +17,28 @@ class Game {
 		return Game.self;
 	}
 
+	setScene(scene) {
+		this.scene = scene;
+	}
+
 	async startNewGame() {
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
+		this.initPieces(this.state);
 		this.playHistory = [];
 		console.log(this.state);
+	}
+
+	initPieces({board}) {
+		this.pieces = [];
+		for (let i = 0; i < board.length; i++) {
+			for (let j = 0; j < board.length; j++) {
+				const piece = board[i][j];
+				if (piece) {
+					this.pieces.push(new Piece(this.scene, i+1, j+1, piece));
+				}
+			}
+		}
 	}
 
 	undoMove() {
@@ -32,6 +49,7 @@ class Game {
 	async move(row, col) {
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: state});
+		this.pieces.push(new Piece(this.scene, row, col, this.state.player));
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		console.log(this.state);

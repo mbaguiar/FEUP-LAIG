@@ -81,7 +81,11 @@ class Component {
         if (this.hasOwnProperty("animations")) {
             let currAnimation = this.animations[this.currAnimationIndex];
             if (currAnimation.isFinished()){
-                this.currAnimationIndex = (this.currAnimationIndex + 1) % this.animations.length;
+                this.currAnimationIndex = this.currAnimationIndex + 1;
+                if (this.currAnimationIndex >= this.animations.length) {
+                    this.currAnimationIndex = -1;
+                    return;
+                }
                 currAnimation = this.animations[this.currAnimationIndex];
             }
             currAnimation.update(delta);
@@ -145,7 +149,8 @@ class Component {
         this.scene.multMatrix(this.transformations);
 
         if (this.animations) {
-            this.animations[this.currAnimationIndex].apply();
+            if (this.currAnimationIndex !== -1)
+                this.animations[this.currAnimationIndex].apply();
         }
         
         for (let i = 0; i < this.children.length; i++) {
