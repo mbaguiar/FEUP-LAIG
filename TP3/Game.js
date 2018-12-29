@@ -40,7 +40,7 @@ class Game {
 			for (let j = 0; j < board.length; j++) {
 				const piece = board[i][j];
 				if (piece) {
-					this.pieces.push(new Piece(this.scene, i+1, j+1, piece));
+					this.pieces.push(new Piece(this.scene, piece, i+1, j+1));
 				}
 			}
 		}
@@ -58,7 +58,9 @@ class Game {
 		this.allowPlay = false;
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: state});
-		this.pieces.push(new Piece(this.scene, row, col, this.state.player));
+		const newPiece = new Piece(this.scene, this.state.player);
+		newPiece.moveTo(row, col);
+		this.pieces.push(newPiece);
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		console.log(this.state);

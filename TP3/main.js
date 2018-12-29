@@ -47,7 +47,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
     'primitives/Torus.js', 'reader/Attribute.js', 'reader/Defaults.js', 'animations/Animation.js', 'animations/LinearAnimation.js',
     'animations/CircularAnimation.js', 'animations/KeyFrame.js', 'animations/vec3utils.js', 'primitives/Plane.js', 'primitives/Patch.js',
     'primitives/Terrain.js', 'primitives/Water.js', 'primitives/Cylinder2.js', 'primitives/Vehicle.js', 'primitives/Light.js',
-    'primitives/Board.js', 'primitives/Piece.js', 'Game.js',
+    'primitives/Board.js', 'primitives/Piece.js', 'Game.js', 'animations/BezierAnimation.js',
     'Prolog.js',
 
     main = function () {

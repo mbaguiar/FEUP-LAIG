@@ -86,23 +86,8 @@
         <primitive id="board">
             <board />
         </primitive>
-        <primitive id="piece">
-            <piece />
-        </primitive>
     </primitives>
     <components>
-        <component id="piece">
-            <transformation>
-                <translate x="0" y="3" z="0" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="piece" />
-            </children>
-        </component>
         <component id="board">
             <transformation>
             </transformation>
