@@ -50,9 +50,12 @@ class Game {
 
 	async move(row, col) {
 		if (!this.allowPlay) return;
+		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
+		if (!parseInt(valid)) return;
 		this.allowPlay = false;
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: state});
+		console.log(newState);
 		this.pieces.push(new Piece(this.scene, row, col, this.state.player));
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};

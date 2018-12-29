@@ -111,7 +111,12 @@ parse_input(quit, goodbye).
 parse_input(create_state, State) :- create_state(13, State), now(Seed), setrand(Seed).
 parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
 parse_input(move(Move, State), NewState):- move(Move, State, NewState).
-parse_input(game_over(State), Winner):- game_over(State, Winner, _, _).
+parse_input(game_over(State), Winner):- game_over(State, Winner, P1Pieces, P2Pieces).
+parse_input(valid_move(Move, Board), Valid):-
+	(valid_move(Move, Board),
+	Valid = 1);
+	Valid = 0.
+
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).

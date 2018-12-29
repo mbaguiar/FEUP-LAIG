@@ -35,6 +35,21 @@ class PrologAPI {
 		return res;
 	}
 
+	async gameOver(o) {
+		let state = JSON.stringify(o.state);
+		const query = `game_over(${state})`;
+		const res = await this.sendRequest(query);
+		return res;
+	}
+
+	async validMove(o) {
+		let board = JSON.stringify(o.board);
+		let move = JSON.stringify(o.move);
+		const query = `valid_move(${move},${board})`;
+		const res = await this.sendRequest(query);
+		return res;
+	}
+
 }
 
 
