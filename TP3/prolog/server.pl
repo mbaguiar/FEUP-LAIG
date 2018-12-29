@@ -117,6 +117,8 @@ parse_input(valid_move(Move, Board), Valid):-
 	Valid = 1);
 	Valid = 0.
 
+parse_input(choose_move(Board, Player), Move):- choose_move(Board, Player).
+
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 	

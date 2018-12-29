@@ -68,5 +68,7 @@ class MyInterface extends CGFinterface {
         for (let key in options) {
             group.add(options, key);
         }
+        let controller1 = group.add(Game.getInstance(), 'player1', ['Human', 'AI1', 'AI2']);
+        let controller2 = group.add(Game.getInstance(), 'player2', ['Human', 'AI1', 'AI2']);
     }
 }

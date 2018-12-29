@@ -2,6 +2,9 @@ class Game {
 	constructor() {
 		this.api = new PrologAPI();
 		this.allowPlay = false;
+		this['player1'] = 'Human';
+		this['player2'] = 'Human';
+		this.playerOptions = {'Human': 0, 'AI1': 1, 'AI2': 2};
 	}
 
 	static getGameOptions() {
@@ -25,8 +28,8 @@ class Game {
 	async startNewGame() {
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
-		this.player1 = 0;
-		this.player2 = 0;
+		this.player1 = this.playerOptions[this['player1']];
+		this.player2 = this.playerOptions[this['player2']];
 		this.winner = 0;
 		this.initPieces(this.state);
 		this.playHistory = [];

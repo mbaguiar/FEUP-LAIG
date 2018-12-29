@@ -51,6 +51,13 @@ class PrologAPI {
 		return res;
 	}
 
+	async getMove(o) {
+		let board = JSON.stringify(o.board);
+		const query = `choose_move(${board},${o.player})`;
+		const res = await this.sendRequest(query);
+		return res;
+	}
+
 }
 
 
