@@ -108,7 +108,9 @@ parse_input(create_state, State) :- create_state(13, State), now(Seed), setrand(
 parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
 parse_input(move(Move, State), NewState):- move(Move, State, NewState).
 
-parse_input(game_over(State), Winner):- game_over(State, Winner, _, _).
+parse_input(game_over(State), Winner):- 
+	(game_over(State, W, _, _), Winner is W);
+	Winner is 0.
 
 parse_input(valid_move(Move, Board), Valid):-
 	(valid_move(Move, Board),

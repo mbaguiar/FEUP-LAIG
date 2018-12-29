@@ -52,10 +52,6 @@ class Game {
 	}
 
 	async move(row, col) {
-		if (this.winner !== 0) {
-			alert("game over, todo fazer cenas bonitas com isto");
-			return;
-		}
 		if (!this.allowPlay) return;
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
 		if (!parseInt(valid)) return;
@@ -72,7 +68,10 @@ class Game {
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newWinner = await this.api.gameOver({state: state});
 		this.winner = parseInt(newWinner);
-		console.log(newWinner);
+		if (this.winner !== 0) {
+			alert("game over, todo fazer cenas bonitas com isto");
+			return;
+		}
 	}
 
 	static parseState(o) {
