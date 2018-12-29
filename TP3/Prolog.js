@@ -38,6 +38,7 @@ class PrologAPI {
 	async gameOver(o) {
 		let state = JSON.stringify(o.state);
 		const query = `game_over(${state})`;
+		console.log(query);
 		const res = await this.sendRequest(query);
 		return res;
 	}

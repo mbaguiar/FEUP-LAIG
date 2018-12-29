@@ -25,6 +25,9 @@ class Game {
 	async startNewGame() {
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
+		this.player1 = 0;
+		this.player2 = 0;
+		this.winner = 0;
 		this.initPieces(this.state);
 		this.playHistory = [];
 		this.allowPlay = true;
@@ -49,17 +52,27 @@ class Game {
 	}
 
 	async move(row, col) {
+		if (this.winner !== 0) {
+			alert("game over, todo fazer cenas bonitas com isto");
+			return;
+		}
 		if (!this.allowPlay) return;
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
 		if (!parseInt(valid)) return;
 		this.allowPlay = false;
 		let state = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: state});
-		console.log(newState);
 		this.pieces.push(new Piece(this.scene, row, col, this.state.player));
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		console.log(this.state);
+	}
+
+	async gameOver() {
+		let state = [this.state.board, this.state.player, this.state.score];
+		const newWinner = await this.api.gameOver({state: state});
+		this.winner = parseInt(newWinner);
+		console.log(newWinner);
 	}
 
 	static parseState(o) {
