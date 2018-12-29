@@ -40,7 +40,7 @@ class Piece {
 		const dispVec = vec3.create();
 		vec3.sub(dispVec, this.placementCoords, this.coords);
 		const length = vec3.length(dispVec);
-		this.placementAnim = new BezierAnimation(this.scene, length*0.05, [[0, 0, 0], [0, 5, 0], [dispVec[0], 10, dispVec[2]], dispVec]);
+		this.placementAnim = new BezierAnimation(this.scene, length*0.05, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0], 15 * length/20, dispVec[2]], dispVec]);
 	}
 
 	update(delta) {
