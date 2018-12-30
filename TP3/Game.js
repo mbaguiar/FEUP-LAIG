@@ -83,7 +83,7 @@ class Game {
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
 		this.eventEnded();
 		if (!parseInt(valid)) return;
-		let state = [this.state.board, this.state.player, this.state.score];
+		const state = [this.state.board, this.state.player, this.state.score];
 		this.eventStarted();
 		const newState = await this.api.move({move: [row, col], state: state});
 		this.eventEnded();
@@ -95,7 +95,7 @@ class Game {
 	}
 
 	async gameOver() {
-		let state = [this.state.board, this.state.player, this.state.score];
+		const state = [this.state.board, this.state.player, this.state.score];
 		const newWinner = await this.api.gameOver({state: state});
 		this.winner = parseInt(newWinner);
 		if (this.winner !== 0) {
