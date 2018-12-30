@@ -1,7 +1,19 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
-		this.allowPlay = false;
+		this.eventCounter = 0;
+	}
+
+	eventStarted() {
+		this.eventCounter++;
+	}
+
+	eventEnded() {
+		this.eventCounter--;
+	}
+
+	allowPlay() {
+		return this.eventCounter === 0;
 	}
 
 	static getGameOptions() {
@@ -23,14 +35,15 @@ class Game {
 	}
 
 	async startNewGame() {
+		this.eventStarted();
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.player1 = 0;
 		this.player2 = 0;
 		this.winner = 0;
-		this.initPieces(this.state);
 		this.playHistory = [];
-		this.allowPlay = true;
+		this.initPieces(this.state);
+		this.eventEnded();
 		console.log(this.state);
 	}
 
@@ -44,6 +57,19 @@ class Game {
 				}
 			}
 		}
+		this.renewPiece(1);
+		this.renewPiece(2);
+	}
+
+	renewPiece(color) {
+		const pieceColor = color === 1? 'redPiece': 'bluePiece';
+		this[pieceColor] = new Piece(this.scene, color);
+		this[pieceColor].dispense();
+		this.pieces.push(this[pieceColor]);
+	}
+
+	getPiece(color) {
+		return color === 1 ? this.redPiece: this.bluePiece;
 	}
 
 	undoMove() {
@@ -52,18 +78,20 @@ class Game {
 	}
 
 	async move(row, col) {
-		if (!this.allowPlay) return;
+		if (!this.allowPlay()) return;
+		this.eventStarted();
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
+		this.eventEnded();
 		if (!parseInt(valid)) return;
-		this.allowPlay = false;
 		let state = [this.state.board, this.state.player, this.state.score];
+		this.eventStarted();
 		const newState = await this.api.move({move: [row, col], state: state});
-		const newPiece = new Piece(this.scene, this.state.player);
-		newPiece.moveTo(row, col);
-		this.pieces.push(newPiece);
+		this.eventEnded();
+		this.getPiece(this.state.player).moveTo(row, col);
+		this.renewPiece(this.state.player);
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
-		console.log(this.state);
+		console.log(this.state);	
 	}
 
 	async gameOver() {
@@ -87,7 +115,8 @@ class Game {
 	update(delta) {
 		if (!this.pieces) return;
 		for (const p of this.pieces) {
-			p.update(delta);
+			p.update(delta)
 		}
+
 	}
 }

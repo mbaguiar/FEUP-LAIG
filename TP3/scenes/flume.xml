@@ -86,8 +86,35 @@
         <primitive id="board">
             <board />
         </primitive>
+        <primitive id="dispenser">
+            <dispenser />
+        </primitive>
     </primitives>
     <components>
+        <component id="dispenser_red">
+            <transformation>
+                <translate x="0" y="0" z="40" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="dispenser" />
+            </children>
+        </component>
+        <component id="dispenser_blue">
+            <transformation>
+                <translate x="0" y="0" z="-40" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="dispenser" />
+            </children>
+        </component>
         <component id="board">
             <transformation>
             </transformation>
@@ -108,6 +135,8 @@
             <texture id="none"/>
             <children>
                 <componentref id="board" />
+                <componentref id="dispenser_red" />
+                <componentref id="dispenser_blue" />
             </children>
         </component>
     </components>

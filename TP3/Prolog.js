@@ -6,49 +6,41 @@ class PrologAPI {
 
 	sendRequest(query) {
 		const endpoint = this.address + query;
-		return new Promise( (resolve, reject) => {
-			fetch(endpoint, {
+		return fetch(endpoint, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
 				}
 			})
-			.then(data => data.text())
-			.then(data => resolve(data))
-			.catch(err => reject(err)); 
-		});
+			.then(data => data.text());
 	}
 	
-	async createState() {
+	createState() {
 		const query = 'create_state';
-		const res = await this.sendRequest(query);
-		return res;
+		return this.sendRequest(query);
 	}
 	
-	async move(o) {
+	move(o) {
 		let state = JSON.stringify(o.state);
 		let move = JSON.stringify(o.move);
 		console.log(state);
 		console.log(move);
 		const query = `move(${move},${state})`;
-		const res = await this.sendRequest(query);
-		return res;
+		return this.sendRequest(query);
 	}
 
-	async gameOver(o) {
+	gameOver(o) {
 		let state = JSON.stringify(o.state);
 		const query = `game_over(${state})`;
 		console.log(query);
-		const res = await this.sendRequest(query);
-		return res;
+		return this.sendRequest(query);
 	}
 
-	async validMove(o) {
+	validMove(o) {
 		let board = JSON.stringify(o.board);
 		let move = JSON.stringify(o.move);
 		const query = `valid_move(${move},${board})`;
-		const res = await this.sendRequest(query);
-		return res;
+		return this.sendRequest(query);
 	}
 
 }

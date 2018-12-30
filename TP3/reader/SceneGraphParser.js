@@ -670,6 +670,8 @@ class MySceneGraph {
                 return new Board(this.scene);
             case "piece":
                 return new Piece(this.scene);
+            case 'dispenser':
+                return new Dispenser(this.scene);
         }
     }
 
