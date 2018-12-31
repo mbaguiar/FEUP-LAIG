@@ -1,7 +1,6 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
-		this.allowPlay = false;
 		this['player1'] = 'Human';
 		this['player2'] = 'Human';
 		this.playerOptions = {'Human': 0, 'AI1': 1, 'AI2': 2};
@@ -95,7 +94,17 @@ class Game {
 		this.renewPiece(this.state.player);
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
+		this.gameOver();
 		console.log(this.state);	
+	}
+
+	async moveAI(player) {
+		this.eventStarted();
+		const move = await this.api.getMove({board: this.state.board, player: player});
+		this.eventEnded();
+		let player_move = JSON.parse(move);
+		this.move(player_move[0], player_move[1]);
+		console.log(player_move);
 	}
 
 	async gameOver() {
@@ -117,6 +126,15 @@ class Game {
 	}
 
 	update(delta) {
+		if (this.allowPlay() && this.state) {
+			if (this.winner <= 0) {
+				if (this.state.player === 1 && this.player1 > 0) {
+					this.moveAI(this.player1);
+				} else if (this.state.player === 2 && this.player2 > 0) {
+					this.moveAI(this.player2);
+				}
+			}
+		}
 		if (!this.pieces) return;
 		for (const p of this.pieces) {
 			p.update(delta)

@@ -32,7 +32,6 @@ class PrologAPI {
 	gameOver(o) {
 		let state = JSON.stringify(o.state);
 		const query = `game_over(${state})`;
-		console.log(query);
 		return this.sendRequest(query);
 	}
 

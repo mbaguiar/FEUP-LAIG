@@ -105,19 +105,18 @@ print_header_line(_).
 :-ensure_loaded('flume.pl').
 
 parse_input(create_state, State) :- create_state(13, State), now(Seed), setrand(Seed).
-parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
 parse_input(move(Move, State), NewState):- move(Move, State, NewState).
 
 parse_input(game_over(State), Winner):- 
 	game_over(State, W, _, _), 
-	Winner is W).
+	Winner is W.
 parse_input(game_over(_), 0).
 
 parse_input(valid_move(Move, Board), Valid):-
 	valid_move(Move, Board), Valid = 1.
 parse_input(valid_move(_, _), 0).
 
-parse_input(choose_move(Board, Player), Move):- choose_move(Board, Player).
+parse_input(choose_move(Board, Player), [Row, Column]):- choose_move(Board, Player, [Row, Column|_]).
 
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
