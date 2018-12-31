@@ -93,7 +93,7 @@
     <components>
         <component id="dispenser_red">
             <transformation>
-                <translate x="0" y="0" z="40" />
+                <translate x="0" y="0" z="41" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -105,7 +105,8 @@
         </component>
         <component id="dispenser_blue">
             <transformation>
-                <translate x="0" y="0" z="-40" />
+                <translate x="0" y="0" z="-41" />
+                <rotate angle="180" axis="y" />
             </transformation>
             <materials>
                 <material id="inherit" />
