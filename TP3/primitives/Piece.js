@@ -1,7 +1,7 @@
 const BOARD_OFFSET = vec3.fromValues(-30, 4, -30);
 const DISPENSER = [];
-DISPENSER[1] = vec3.fromValues(0, -4, 40);
-DISPENSER[2] = vec3.fromValues(0, -4, -40);
+DISPENSER[1] = vec3.fromValues(-2.5, 2.5, 41);
+DISPENSER[2] = vec3.fromValues(-2.5, 2.5, -41);
 
 class Piece {
 	constructor(scene, color, row, col) {
@@ -47,13 +47,12 @@ class Piece {
 
 	dispense() {
 		this.dispenseCoords = [...this.coords];
-		this.dispenseCoords[1] += 8;
 		this.addDispenserAnimation();
 	}
 
 	addDispenserAnimation() {
 		Game.getInstance().eventStarted();
-		this.dispenseAnim = new LinearAnimation(this.scene, 1, [[0, 0, 0], [0, 8, 0]]);
+		this.dispenseAnim = new LinearAnimation(this.scene, 1, [[5, 0, 0], [0, 0, 0]]);
 	}
 
 	update(delta) {
