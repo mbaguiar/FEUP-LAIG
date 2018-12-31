@@ -109,13 +109,13 @@ parse_input(choose_move(Board, AI), Move):- choose_move(Board, AI, Move).
 parse_input(move(Move, State), NewState):- move(Move, State, NewState).
 
 parse_input(game_over(State), Winner):- 
-	(game_over(State, W, _, _), Winner is W);
-	Winner is 0.
+	game_over(State, W, _, _), 
+	Winner is W).
+parse_input(game_over(_), 0).
 
 parse_input(valid_move(Move, Board), Valid):-
-	(valid_move(Move, Board),
-	Valid = 1);
-	Valid = 0.
+	valid_move(Move, Board), Valid = 1.
+parse_input(valid_move(_, _), 0).
 
 parse_input(choose_move(Board, Player), Move):- choose_move(Board, Player).
 
