@@ -164,7 +164,6 @@ class XMLscene extends CGFscene {
      * @param  {camera id} id
      */
     setActiveCamera(id) {
-        console.log(id);
         this.camera = this.cameras[id];
     }
 
@@ -254,20 +253,21 @@ class XMLscene extends CGFscene {
                     }
                 }
                 this.pickResults.splice(0,this.pickResults.length);
-            }		
+            }
         }
         this.clearPickRegistration();
     }
 
     rotateCamera(player) {
         Game.getInstance().eventStarted();
+        this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
         this.cameraAnimation = {
-            speed: Math.PI,
+            speed: Math.PI/1.5,
             time: 0,
             update: (delta) => {
                 const deltaSecs = delta * MILIS_TO_SECS;
                 this.cameraAnimation.time += deltaSecs
-                if (this.cameraAnimation.time >= 1) {
+                if (this.cameraAnimation.time >= 1.5) {
                     this.changeCamera(player);
                     Game.getInstance().eventEnded();
                     this.cameraAnimation = null;
