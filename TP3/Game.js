@@ -5,6 +5,7 @@ class Game {
 		this['player2'] = 'Human';
 		this.playerOptions = {'Human': 0, 'AI1': 1, 'AI2': 2};
 		this.eventCounter = 0;
+		this.animationQueue = [];
 	}
 
 	eventStarted() {
@@ -86,15 +87,18 @@ class Game {
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
 		this.eventEnded();
 		if (!parseInt(valid)) return;
-		const state = [this.state.board, this.state.player, this.state.score];
+		const oldState = [this.state.board, this.state.player, this.state.score];
 		this.eventStarted();
-		const newState = await this.api.move({move: [row, col], state: state});
+		const newState = await this.api.move({move: [row, col], state: oldState});
 		this.eventEnded();
 		this.getPiece(this.state.player).moveTo(row, col);
 		this.renewPiece(this.state.player);
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		this.gameOver();
+		if (oldState.player !== this.state.player) {
+			this.animationQueue.push(() => this.scene.rotateCamera(this.state.player));
+		}
 		console.log(this.state);	
 	}
 
@@ -138,6 +142,10 @@ class Game {
 		if (!this.pieces) return;
 		for (const p of this.pieces) {
 			p.update(delta)
+		}
+		if (this.allowPlay() && this.animationQueue[0]){
+			this.animationQueue[0].call();
+			this.animationQueue.splice(0, 1);
 		}
 
 	}

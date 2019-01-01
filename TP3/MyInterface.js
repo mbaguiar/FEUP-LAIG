@@ -52,7 +52,6 @@ class MyInterface extends CGFinterface {
         let controller = group.add(this.scene, 'selectedCamera', Object.keys(views));
         controller.onChange(value => {
             this.scene.setActiveCamera(value);
-            this.setActiveCamera(this.scene.cameras[value]);
         });
     }
 

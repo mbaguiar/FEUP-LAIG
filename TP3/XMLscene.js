@@ -133,6 +133,7 @@ class XMLscene extends CGFscene {
      * Initializes scene cameras from graph views
      */
     initCameras() {
+        this.interface.setActiveCamera(null);
         this.cameras = {};
         if ((Object.keys(this.graph.views)).length == 0) {
             this.cameras["default"] = this.camera;
@@ -154,7 +155,6 @@ class XMLscene extends CGFscene {
             this.cameras[cam.id] = newCam;
             if (cam.id === this.graph.defaultViewId) {
                 this.camera = newCam;
-                this.interface.setActiveCamera(this.camera);
                 this.selectedCamera = key;
             }
         }
@@ -164,6 +164,7 @@ class XMLscene extends CGFscene {
      * @param  {camera id} id
      */
     setActiveCamera(id) {
+        console.log(id);
         this.camera = this.cameras[id];
     }
 
@@ -177,6 +178,8 @@ class XMLscene extends CGFscene {
             this.graph.update(this.Animations? delta: 0);
             Game.getInstance().update(this.Animations? delta: 0);
             this.lastUpdate = currTime;
+            if (this.cameraAnimation)
+                this.cameraAnimation.update(this.Animations? delta: 0)
         }
     }
 
@@ -254,5 +257,29 @@ class XMLscene extends CGFscene {
             }		
         }
         this.clearPickRegistration();
+    }
+
+    rotateCamera(player) {
+        Game.getInstance().eventStarted();
+        this.cameraAnimation = {
+            speed: Math.PI,
+            time: 0,
+            update: (delta) => {
+                const deltaSecs = delta * MILIS_TO_SECS;
+                this.cameraAnimation.time += deltaSecs
+                if (this.cameraAnimation.time >= 1) {
+                    this.changeCamera(player);
+                    Game.getInstance().eventEnded();
+                    this.cameraAnimation = null;
+                    return;
+                } else {
+                    this.camera.orbit([0, 1, 0], deltaSecs * this.cameraAnimation.speed);
+                }
+            }
+        }; 
+    }
+
+    changeCamera(player) {
+        this.setActiveCamera(`p${player}`);
     }
 }
