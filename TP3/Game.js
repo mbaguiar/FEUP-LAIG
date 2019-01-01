@@ -3,6 +3,7 @@ class Game {
 		this.api = new PrologAPI();
 		this['Player 1'] = 'Human';
 		this['Player 2'] = 'Human';
+		this['Camera animation'] = true;
 		this.eventCounter = 0;
 		this.animationQueue = [];
 	}
@@ -34,6 +35,16 @@ class Game {
 		};
 	}
 
+	static getGameInterface() {
+		return [
+			[Game.getInstance(), 'Camera animation'],
+			[Game.getInstance(), 'Player 1', Object.keys(Game.getPlayerOptions())],
+			[Game.getInstance(), 'Player 2', Object.keys(Game.getPlayerOptions())],
+			[Game.getGameOptions(), 'Start new game'],
+			[Game.getGameOptions(), 'Undo move'],
+		];
+	}
+
 	static getInstance() {
 		if (!Game.self) {
 			Game.self = new Game();
@@ -55,7 +66,6 @@ class Game {
 		this.playHistory = [];
 		this.initPieces(this.state);
 		this.eventEnded();
-		console.log(this.player1, this.player2);
 		console.log(this.state);
 	}
 
@@ -93,10 +103,11 @@ class Game {
 		if (!this.allowPlay()) return;
 		this.eventStarted();
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
-		this.eventEnded();
-		if (!parseInt(valid)) return;
+		if (!parseInt(valid)) {
+			this.eventEnded();
+			return;
+		}
 		const oldState = [this.state.board, this.state.player, this.state.score];
-		this.eventStarted();
 		const newState = await this.api.move({move: [row, col], state: oldState});
 		this.eventEnded();
 		this.getPiece(this.state.player).moveTo(row, col);
@@ -107,7 +118,7 @@ class Game {
 		if (oldState[1] !== this.state.player) {
 			this.animationQueue.push(() => this.scene.rotateCamera(this.state.player));
 		}
-		console.log(this.state);	
+		console.log(this.state);
 	}
 
 	async moveAI(player) {
