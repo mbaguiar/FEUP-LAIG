@@ -63,11 +63,12 @@ class MyInterface extends CGFinterface {
     addGameGroup() {
         const group = this.gui.addFolder('Game');
         group.open();
-        const options = Game.getGameOptions();
-        for (let key in options) {
-            group.add(options, key);
+        const playerOptions = Game.getPlayerOptions();
+        group.add(Game.getInstance(), 'Player 1', Object.keys(playerOptions));
+        group.add(Game.getInstance(), 'Player 2', Object.keys(playerOptions));
+        const gameOptions = Game.getGameOptions();
+        for (let key in gameOptions) {
+            group.add(gameOptions, key);
         }
-        let controller1 = group.add(Game.getInstance(), 'player1', ['Human', 'AI1', 'AI2']);
-        let controller2 = group.add(Game.getInstance(), 'player2', ['Human', 'AI1', 'AI2']);
     }
 }

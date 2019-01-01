@@ -1,9 +1,8 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
-		this['player1'] = 'Human';
-		this['player2'] = 'Human';
-		this.playerOptions = {'Human': 0, 'AI1': 1, 'AI2': 2};
+		this['Player 1'] = 'Human';
+		this['Player 2'] = 'Human';
 		this.eventCounter = 0;
 		this.animationQueue = [];
 	}
@@ -27,6 +26,14 @@ class Game {
 		};
 	}
 
+	static getPlayerOptions() {
+		return {
+			'Human': 0,
+			'AI1': 1,
+			'AI2': 2
+		};
+	}
+
 	static getInstance() {
 		if (!Game.self) {
 			Game.self = new Game();
@@ -42,12 +49,13 @@ class Game {
 		this.eventStarted();
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
-		this.player1 = this.playerOptions[this['player1']];
-		this.player2 = this.playerOptions[this['player2']];
+		this.player1 = Game.getPlayerOptions()[this['Player 1']];
+		this.player2 = Game.getPlayerOptions()[this['Player 2']];
 		this.winner = 0;
 		this.playHistory = [];
 		this.initPieces(this.state);
 		this.eventEnded();
+		console.log(this.player1, this.player2);
 		console.log(this.state);
 	}
 
