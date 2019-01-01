@@ -96,7 +96,7 @@ class Game {
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		this.gameOver();
-		if (oldState.player !== this.state.player) {
+		if (oldState[1] !== this.state.player) {
 			this.animationQueue.push(() => this.scene.rotateCamera(this.state.player));
 		}
 		console.log(this.state);	
