@@ -58,6 +58,7 @@ class Game {
 
 	async startNewGame() {
 		this.eventStarted();
+		this.scene.rotateCamera(1);
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.player1 = Game.getPlayerOptions()[this['Player 1 (Red)']];

@@ -259,6 +259,8 @@ class XMLscene extends CGFscene {
     }
 
     rotateCamera(player) {
+        if (this.camera === this.cameras[`p${player}`])
+            return; 
         Game.getInstance().eventStarted();
         this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
         this.cameraAnimation = {
