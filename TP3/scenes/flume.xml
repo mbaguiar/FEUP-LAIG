@@ -89,6 +89,9 @@
         <primitive id="dispenser">
             <dispenser />
         </primitive>
+        <primitive id="counter">
+            <counter />
+        </primitive>
     </primitives>
     <components>
         <component id="dispenser_red">
@@ -106,6 +109,7 @@
         <component id="dispenser_blue">
             <transformation>
                 <translate x="0" y="0" z="-41" />
+                <rotate angle="180" axis="y" />
             </transformation>
             <materials>
                 <material id="inherit" />
@@ -126,6 +130,18 @@
                 <primitiveref id="board" />
             </children>
         </component>
+        <component id="counter">
+            <transformation>
+                <translate x="40" y="7" z="0" /> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="counter" />
+            </children>
+        </component>
         <component id="root">
             <transformation>
             </transformation>
@@ -137,6 +153,7 @@
                 <componentref id="board" />
                 <componentref id="dispenser_red" />
                 <componentref id="dispenser_blue" />
+                <componentref id="counter" />
             </children>
         </component>
     </components>

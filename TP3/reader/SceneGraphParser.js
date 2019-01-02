@@ -672,6 +672,8 @@ class MySceneGraph {
                 return new Piece(this.scene);
             case 'dispenser':
                 return new Dispenser(this.scene);
+            case 'counter':
+                return new Counter(this.scene);
         }
     }
 
