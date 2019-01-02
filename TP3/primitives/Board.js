@@ -4,14 +4,18 @@ class Board {
 		this.cube = new Cube(this.scene);
 		this.pickSquare = new Rectangle(this.scene, -2.5, -2.5, 2.5, 2.5);
 		this.noTexture = new CGFappearance(this.scene);
-		this.testTexture = new CGFappearance(this.scene);
-		this.testTexture.loadTexture('../scenes/images/grid.jpg');
-		this.redMaterial = new CGFappearance(this.scene);
-		this.redMaterial.setDiffuse(1, 0, 0, 1);
-		this.blueMaterial = new CGFappearance(this.scene);
-		this.blueMaterial.setDiffuse(0, 0, 1, 1);
-		this.greenMaterial = new CGFappearance(this.scene);
-		this.greenMaterial.setDiffuse(0, 1, 0, 1);
+		this.tileTexture = new CGFappearance(this.scene);
+		this.tileTexture.loadTexture('../scenes/images/tile.jpg');
+		this.boardTexture = new CGFappearance(this.scene);
+		this.boardTexture.loadTexture('../scenes/images/light_wood.jpg');
+		this.redMaterial = new CGFtexture(this.scene, '../scenes/images/red_marble2.jpg');
+		this.blueMaterial = new CGFtexture(this.scene, '../scenes/images/blue_marble2.jpg');
+		this.greenMaterial = new CGFtexture(this.scene, '../scenes/images/green_marble2.jpg');
+		this.material = new CGFappearance(this.scene);
+        this.material.setEmission(0, 0, 0, 1);
+        this.material.setAmbient(0.1, 0.1, 0.1, 1);
+        this.material.setDiffuse(1, 1, 1, 1);
+		this.material.setSpecular(0.03, 0.03, 0.03, 1);
 	}
 
 	displayBoard() {
@@ -42,10 +46,11 @@ class Board {
 	display() {
 		/* if (this.scene.pickMode)
 		else */
-			this.testTexture.apply();
+			this.tileTexture.apply();
 			this.setupPicking();
-			this.noTexture.apply();
+			this.boardTexture.apply();
 			this.displayBoard();
+			this.noTexture.apply();
 			this.displayGame();
 	}
 
@@ -54,6 +59,7 @@ class Board {
 			const pieces = Game.getInstance().pieces;
 			pieces.forEach(p => {
 				this.setMaterial(p.color);
+				this.material.apply();
 				p.display();
 			});
 		}
@@ -61,11 +67,11 @@ class Board {
 
 	setMaterial(color) {
 		if (color === 1) {
-			this.redMaterial.apply();
+			this.material.setTexture(this.redMaterial);
 		} else if (color === 2) {
-			this.blueMaterial.apply();
+			this.material.setTexture(this.blueMaterial);
 		} else if (color === 3) {
-			this.greenMaterial.apply();
+			this.material.setTexture(this.greenMaterial);
 		}
 	}
 }
