@@ -169,6 +169,9 @@ const defaultAttributes = {
     counterAttr: [
 
     ],
+    timerAttr: [
+
+    ],
 }
 
 const defaults = {
@@ -212,6 +215,7 @@ const defaults = {
         piece: defaultAttributes.pieceAttr,
         dispenser: defaultAttributes.dispenserAttr,
         counter: defaultAttributes.counterAttr,
+        timer: defaultAttributes.timerAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"

@@ -15,7 +15,7 @@ class Counter {
     }
 
     display() {
-        if (Game.getInstance().state) {
+        if (Game.getInstance().state && Game.getInstance().allowPlay()) {
             this.counter.player1 = Game.getInstance().state.score[0];
             this.counter.player2 = Game.getInstance().state.score[1];
         }
@@ -27,7 +27,6 @@ class Counter {
             this.scene.translate(-1.1, 0, -8);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
             this.scene.scale(4, 5.2, 0.001);
-            this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.material.setTexture(this.numbers[Math.floor(this.counter.player2/10)]);
             this.material.apply();
             this.cube.display();
@@ -36,7 +35,6 @@ class Counter {
             this.scene.translate(-1.1, 0, -3.5);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
             this.scene.scale(4, 5.2, 0.001);
-            this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.material.setTexture(this.numbers[this.counter.player2 % 10]);
             this.material.apply();
             this.cube.display();
@@ -45,7 +43,6 @@ class Counter {
             this.scene.translate(-1.1, 0, 3.5);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
             this.scene.scale(4, 5.2, 0.001);
-            this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.material.setTexture(this.numbers[Math.floor(this.counter.player1/10)]);
             this.material.apply();
             this.cube.display();
@@ -54,7 +51,6 @@ class Counter {
             this.scene.translate(-1.1, 0, 8);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
             this.scene.scale(4, 5.2, 0.001);
-            this.scene.rotate(Math.PI/2, 1, 0, 0);
             this.material.setTexture(this.numbers[this.counter.player1 % 10]);
             this.material.apply();
             this.cube.display();

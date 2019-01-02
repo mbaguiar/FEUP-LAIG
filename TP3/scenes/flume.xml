@@ -92,6 +92,9 @@
         <primitive id="counter">
             <counter />
         </primitive>
+        <primitive id="timer">
+            <timer />
+        </primitive>
     </primitives>
     <components>
         <component id="dispenser_red">
@@ -142,6 +145,18 @@
                 <primitiveref id="counter" />
             </children>
         </component>
+        <component id="timer">
+            <transformation>
+                <translate x="-40" y="7" z="0" /> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="none"/>
+            <children>
+                <primitiveref id="timer" />
+            </children>
+        </component>
         <component id="root">
             <transformation>
             </transformation>
@@ -154,6 +169,7 @@
                 <componentref id="dispenser_red" />
                 <componentref id="dispenser_blue" />
                 <componentref id="counter" />
+                <componentref id="timer" />
             </children>
         </component>
     </components>
