@@ -123,6 +123,7 @@ class Game {
 			delete this.pieces[id];
 			this.playHistory.splice(0, 1);
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+			this.eventQueue.push(() => this.startTurnTimer());
 		}
 	}
 
