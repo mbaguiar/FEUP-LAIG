@@ -98,7 +98,7 @@ class Game {
 		this.pieces.push(this[pieceColor]);
 	}
 
-	getPiece(color) {
+	getDispenserPiece(color) {
 		return color === 1 ? this.redPiece: this.bluePiece;
 	}
 
@@ -119,7 +119,7 @@ class Game {
 		const oldState = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: oldState});
 		this.eventEnded();
-		this.getPiece(this.state.player).moveTo(row, col);
+		this.getDispenserPiece(this.state.player).moveTo(row, col);
 		this.renewPiece(this.state.player);
 		this.playHistory.unshift(this.playHistory);
 		this.state = {...Game.parseState(JSON.parse(newState))};
@@ -136,9 +136,9 @@ class Game {
 		this.eventStarted();
 		const move = await this.api.getMove({board: this.state.board, player: player});
 		this.eventEnded();
-		let player_move = JSON.parse(move);
-		this.move(player_move[0], player_move[1]);
-		console.log(player_move);
+		const playerMove = JSON.parse(move);
+		this.move(playerMove[0], playerMove[1]);
+		console.log(playerMove);
 	}
 
 	async gameOver() {
@@ -165,12 +165,10 @@ class Game {
 	}
 
 	changeTurn() {
-		this.eventStarted();
 		this.timerStopped = true;
 		this.state.player = this.state.player === 1? 2: 1;
 		this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 		this.eventQueue.push(() => this.startTurnTimer());
-		this.eventEnded();
 	}
 
 	update(delta) {
@@ -190,14 +188,13 @@ class Game {
 				}
 			}
 		}
-		if (!this.pieces) return;
-		for (const p of this.pieces) {
-			p.update(delta)
-		}
 		if (this.allowPlay() && this.eventQueue[0]){
 			this.eventQueue[0].call();
 			this.eventQueue.splice(0, 1);
 		}
-
+		if (this.pieces)
+			for (const p of this.pieces) {
+				p.update(delta)
+			}
 	}
 }
