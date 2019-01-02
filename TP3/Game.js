@@ -136,9 +136,8 @@ class Game {
 		this.eventStarted();
 		const move = await this.api.getMove({board: this.state.board, player: player});
 		this.eventEnded();
-		const playerMove = JSON.parse(move);
-		this.move(playerMove[0], playerMove[1]);
-		console.log(playerMove);
+		const AIMove = JSON.parse(move);
+		this.move(AIMove[0], AIMove[1]);
 	}
 
 	async gameOver() {
@@ -179,6 +178,12 @@ class Game {
 				this.changeTurn();
 			}
 		}
+
+		if (this.allowPlay() && this.eventQueue[0]){
+			this.eventQueue[0].call();
+			this.eventQueue.splice(0, 1);
+		}
+
 		if (this.allowPlay() && this.state) {
 			if (this.winner <= 0) {
 				if (this.state.player === 1 && this.player1 > 0) {
@@ -188,10 +193,7 @@ class Game {
 				}
 			}
 		}
-		if (this.allowPlay() && this.eventQueue[0]){
-			this.eventQueue[0].call();
-			this.eventQueue.splice(0, 1);
-		}
+
 		if (this.pieces)
 			for (const p of this.pieces) {
 				p.update(delta)
