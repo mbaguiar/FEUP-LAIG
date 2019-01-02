@@ -50,6 +50,10 @@ class Game {
 		];
 	}
 
+	static calculateId(row, col) {
+		return row*13 + col;
+	}
+
 	static getInstance() {
 		if (!Game.self) {
 			Game.self = new Game();
@@ -92,7 +96,9 @@ class Game {
 			for (let j = 0; j < board.length; j++) {
 				const piece = board[i][j];
 				if (piece) {
-					this.pieces.push(new Piece(this.scene, piece, i+1, j+1));
+					const pos = [i+1, j+1];
+					const id = Game.calculateId(pos[0], pos[1]);
+					this.pieces[id] = new Piece(this.scene, piece, pos[0], pos[1]);
 				}
 			}
 		}
@@ -101,19 +107,29 @@ class Game {
 	}
 
 	renewPiece(color) {
-		const pieceColor = color === 1? 'redPiece': 'bluePiece';
-		this[pieceColor] = new Piece(this.scene, color);
-		this[pieceColor].dispense();
-		this.pieces.push(this[pieceColor]);
+		this.pieces[color] = new Piece(this.scene, color);
+		this.pieces[color].dispense();
 	}
 
 	getDispenserPiece(color) {
-		return color === 1 ? this.redPiece: this.bluePiece;
+		return this.pieces[color];
 	}
 
 	undoMove() {
-		//this.state = this.playHistory[0]? this.playHistory[0]: this.state;
-		alert('Good try bro');
+		if (this.playHistory[0]){
+			this.state = this.playHistory[0].state;
+			const move = this.playHistory[0].move;
+			const id = Game.calculateId(move[0], move[1]);
+			delete this.pieces[id];
+			this.playHistory.splice(0, 1);
+			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+		}
+	}
+
+	movePiece(piece, row, col) {
+		const id = row*13 + col;
+		this.pieces[id] = piece;
+		piece.moveTo(row, col);
 	}
 
 	async move(row, col) {
@@ -128,9 +144,9 @@ class Game {
 		const oldState = [this.state.board, this.state.player, this.state.score];
 		const newState = await this.api.move({move: [row, col], state: oldState});
 		this.eventEnded();
-		this.getDispenserPiece(this.state.player).moveTo(row, col);
+		this.movePiece(this.getDispenserPiece(this.state.player), row, col);
 		this.renewPiece(this.state.player);
-		this.playHistory.unshift(this.playHistory);
+		this.playHistory.unshift({state: this.state, move: [row, col]});
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		this.gameOver();
 		if (oldState[1] !== this.state.player) {
@@ -204,7 +220,8 @@ class Game {
 		}
 
 		if (this.pieces)
-			for (const p of this.pieces) {
+			for (const k in this.pieces) {
+				const p = this.pieces[k];
 				p.update(delta)
 			}
 	}
