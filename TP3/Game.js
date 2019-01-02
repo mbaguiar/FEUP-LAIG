@@ -4,8 +4,10 @@ class Game {
 		this['Player 1 (Red)'] = 'Human';
 		this['Player 2 (Blue)'] = 'Human';
 		this['Camera animation'] = true;
+		this['Turn timer'] = 15;
+		this.timerStopped = true;
 		this.eventCounter = 0;
-		this.animationQueue = [];
+		this.eventQueue = [];
 	}
 
 	eventStarted() {
@@ -23,7 +25,8 @@ class Game {
 	static getGameOptions() {
 		return {
 			'Start new game': () => Game.getInstance().startNewGame(),
-			'Undo move': () => Game.getInstance().undoMove()
+			'Undo move': () => Game.getInstance().undoMove(),
+			'Pause/Resume timer': () => {Game.getInstance().timerStopped = !Game.getInstance().timerStopped}
 		};
 	}
 
@@ -38,10 +41,12 @@ class Game {
 	static getGameInterface() {
 		return [
 			[Game.getInstance(), 'Camera animation'],
+			[Game.getInstance(), 'Turn timer', 5, 60],
 			[Game.getInstance(), 'Player 1 (Red)', Object.keys(Game.getPlayerOptions())],
 			[Game.getInstance(), 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions())],
 			[Game.getGameOptions(), 'Start new game'],
 			[Game.getGameOptions(), 'Undo move'],
+			[Game.getGameOptions(), 'Pause/Resume timer'],
 		];
 	}
 
@@ -63,10 +68,12 @@ class Game {
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.player1 = Game.getPlayerOptions()[this['Player 1 (Red)']];
 		this.player2 = Game.getPlayerOptions()[this['Player 2 (Blue)']];
+		this.turnTimer = this['Turn timer'];
 		this.winner = 0;
 		this.playHistory = [];
 		this.initPieces(this.state);
 		this.eventEnded();
+		this.startTurnTimer();
 		console.log(this.state);
 	}
 
@@ -102,6 +109,7 @@ class Game {
 
 	async move(row, col) {
 		if (!this.allowPlay()) return;
+		this.timerStopped = true;
 		this.eventStarted();
 		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
 		if (!parseInt(valid)) {
@@ -117,12 +125,14 @@ class Game {
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		this.gameOver();
 		if (oldState[1] !== this.state.player) {
-			this.animationQueue.push(() => this.scene.rotateCamera(this.state.player));
+			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 		}
+		this.eventQueue.push(() => this.startTurnTimer());
 		console.log(this.state);
 	}
 
 	async moveAI(player) {
+		this.timerStopped = true;
 		this.eventStarted();
 		const move = await this.api.getMove({board: this.state.board, player: player});
 		this.eventEnded();
@@ -149,7 +159,28 @@ class Game {
 		};
 	}
 
+	startTurnTimer() {
+		this.timerStopped = false;
+		this.currTimer = this.turnTimer;
+	}
+
+	changeTurn() {
+		this.eventStarted();
+		this.timerStopped = true;
+		this.state.player = this.state.player === 1? 2: 1;
+		this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+		this.eventQueue.push(() => this.startTurnTimer());
+		this.eventEnded();
+	}
+
 	update(delta) {
+		if (!this.timerStopped) {
+			this.currTimer -= delta * MILIS_TO_SECS;
+			console.log('not stopped');
+			if (this.currTimer <= 0) {
+				this.changeTurn();
+			}
+		}
 		if (this.allowPlay() && this.state) {
 			if (this.winner <= 0) {
 				if (this.state.player === 1 && this.player1 > 0) {
@@ -163,9 +194,9 @@ class Game {
 		for (const p of this.pieces) {
 			p.update(delta)
 		}
-		if (this.allowPlay() && this.animationQueue[0]){
-			this.animationQueue[0].call();
-			this.animationQueue.splice(0, 1);
+		if (this.allowPlay() && this.eventQueue[0]){
+			this.eventQueue[0].call();
+			this.eventQueue.splice(0, 1);
 		}
 
 	}
