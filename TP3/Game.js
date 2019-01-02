@@ -189,11 +189,8 @@ class Game {
 		this.currTimer = this.turnTimer;
 	}
 
-	changeTurn() {
-		this.timerStopped = true;
-		this.state.player = this.state.player === 1? 2: 1;
-		this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
-		this.eventQueue.push(() => this.startTurnTimer());
+	expireTurn() {
+		this.moveAI(1);
 	}
 
 	update(delta) {
@@ -206,7 +203,7 @@ class Game {
 			this.currTimer -= delta * MILIS_TO_SECS;
 			console.log('not stopped');
 			if (this.currTimer <= 0) {
-				this.changeTurn();
+				this.expireTurn();
 			}
 		}
 
