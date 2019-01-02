@@ -81,7 +81,7 @@ class Game {
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.player1 = Game.getPlayerOptions()[this['Player 1 (Red)']];
 		this.player2 = Game.getPlayerOptions()[this['Player 2 (Blue)']];
-		this.turnTimer = this['Turn timer'];
+		this.turnTimer = Math.trunc(this['Turn timer']);
 		this.winner = 0;
 		this.playHistory = [];
 		this.initPieces(this.state);
@@ -122,7 +122,8 @@ class Game {
 			const id = Game.calculateId(move[0], move[1]);
 			delete this.pieces[id];
 			this.playHistory.splice(0, 1);
-			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+			//this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+			this.scene.rotateCamera(this.state.player);
 			this.eventQueue.push(() => this.startTurnTimer());
 		}
 	}
