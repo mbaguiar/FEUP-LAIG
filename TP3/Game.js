@@ -24,8 +24,8 @@ class Game {
 
 	static getGameOptions() {
 		return {
-			'Start new game': () => Game.getInstance().startNewGame(),
-			'Undo move': () => Game.getInstance().undoMove(),
+			'Start new game': () => Game.getInstance().newGameEvent(),
+			'Undo move': () => Game.getInstance().undoMoveEvent(),
 			'Pause/Resume timer': () => {Game.getInstance().timerStopped = !Game.getInstance().timerStopped}
 		};
 	}
@@ -57,12 +57,21 @@ class Game {
 		return Game.self;
 	}
 
+	newGameEvent() {
+		this.eventQueue = [() => this.startNewGame()];
+	}
+
+	undoMoveEvent() {
+		this.eventQueue = [() => this.undoMove()];
+	}
+
 	setScene(scene) {
 		this.scene = scene;
 	}
 
 	async startNewGame() {
 		this.eventStarted();
+		this.eventQueue = [];
 		this.scene.rotateCamera(1);
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
@@ -171,17 +180,17 @@ class Game {
 	}
 
 	update(delta) {
+		if (this.allowPlay() && this.eventQueue[0]){
+			this.eventQueue[0].call();
+			this.eventQueue.splice(0, 1);
+		}
+
 		if (!this.timerStopped) {
 			this.currTimer -= delta * MILIS_TO_SECS;
 			console.log('not stopped');
 			if (this.currTimer <= 0) {
 				this.changeTurn();
 			}
-		}
-
-		if (this.allowPlay() && this.eventQueue[0]){
-			this.eventQueue[0].call();
-			this.eventQueue.splice(0, 1);
 		}
 
 		if (this.allowPlay() && this.state) {
