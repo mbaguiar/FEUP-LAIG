@@ -120,12 +120,15 @@ class Game {
 			this.state = this.playHistory[0].state;
 			const move = this.playHistory[0].move;
 			const id = Game.calculateId(move[0], move[1]);
-			delete this.pieces[id];
-			this.playHistory.splice(0, 1);
-			//this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
-			this.scene.rotateCamera(this.state.player);
+			this.eventQueue.push(() => this.removePiece(this.pieces[id]));
+			this.eventQueue.push(() => {delete this.pieces[id],this.playHistory.splice(0, 1)});
+			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 			this.eventQueue.push(() => this.startTurnTimer());
 		}
+	}
+
+	removePiece(piece) {
+		piece.remove();
 	}
 
 	movePiece(piece, row, col) {

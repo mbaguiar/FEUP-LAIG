@@ -24,7 +24,7 @@ class Piece {
 		this.scene.pushMatrix();
 			this.scene.scale(1, 0.5, 1);
 			this.scene.translate.apply(this.scene, this.coords);
-			const anim = this.placementAnim || this.dispenseAnim;
+			const anim = this.placementAnim || this.dispenseAnim || this.removeAnim;
 			if (anim) {
 				anim.apply();
 			}
@@ -56,6 +56,20 @@ class Piece {
 		this.dispenseAnim = new LinearAnimation(this.scene, 1, [[sign*5, 0, 0], [0, 0, 0]]);
 	}
 
+	remove() {
+		this.addRemoveAnimation();
+	}
+
+	addRemoveAnimation() {
+		Game.getInstance().eventStarted();
+		let dispEntrance = [...DISPENSER[this.color]];
+		const sign = this.color === 1? 1: -1;
+		dispEntrance[0] += sign * 5;
+		const dispVec = vec3.sub(vec3.create(), dispEntrance, this.coords);
+		const length = vec3.length(dispVec);
+		this.removeAnim = new BezierAnimation(this.scene, length*0.04, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 30, 15 * length/20, dispVec[2]], dispVec]);
+	}
+
 	update(delta) {
 		if (this.placementAnim) {
 			if (this.placementAnim.isFinished()) {
@@ -73,6 +87,13 @@ class Piece {
 				return;
 			}
 			this.dispenseAnim.update(delta);
+		} else if (this.removeAnim) {
+			if (this.removeAnim.isFinished()) {
+				this.removeAnim = null;
+				Game.getInstance().eventEnded();
+				return;
+			}
+			this.removeAnim.update(delta);
 		}
 	}
 }
