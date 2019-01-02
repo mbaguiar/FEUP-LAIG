@@ -166,6 +166,9 @@ const defaultAttributes = {
     dispenserAttr: [
 
     ],
+    counterAttr: [
+
+    ],
 }
 
 const defaults = {
@@ -208,6 +211,7 @@ const defaults = {
         board: defaultAttributes.boardAttr,
         piece: defaultAttributes.pieceAttr,
         dispenser: defaultAttributes.dispenserAttr,
+        counter: defaultAttributes.counterAttr,
 	},
 	componentTags: [
 		"transformation", "animations", "materials", "texture", "children"
