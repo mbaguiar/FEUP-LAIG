@@ -18,12 +18,16 @@ class Game {
 		return Game.self;
 	}
 
-	static parseState(o) {
+	static toJsState(state) {
 		return {
-			board: [...o[0]],
-			player: o[1],
-			score: [...o[2]]
+			board: [...state[0]],
+			player: state[1],
+			score: [...state[2]]
 		};
+	}
+
+	static toPrologState(state) {
+		return [state.board, state.player, state.score];
 	}
 
 	static getGameOptions() {
@@ -107,7 +111,7 @@ class Game {
 		this.getCurrentGameOptions();
 		this.reset();
 		const startState = await this.api.createState();
-		this.state = { ...Game.parseState(JSON.parse(startState)) };
+		this.state = { ...Game.toJsState(JSON.parse(startState)) };
 		this.eventEnded();
 		this.eventQueue.push(() => this.startTurnTimer());
 		console.log(this.state);
@@ -149,7 +153,7 @@ class Game {
 	undoMove() {
 		if (this.lastPlayIndex >= 0 && this.playHistory[this.lastPlayIndex]) {
 			const play = this.playHistory[this.lastPlayIndex];
-			this.state = play.state;
+			this.state = play.oldState;
 			const move = play.move;
 			const id = Game.calculateId(move[0], move[1]);
 			this.pieces[id].remove();
@@ -199,26 +203,28 @@ class Game {
 
 	async move(row, col) {
 		if (!this.allowPlay()) return;
-		this.timerStopped = true;
 		this.eventStarted();
+		this.timerStopped = true;
 		const valid = await this.api.validMove({ move: [row, col], board: this.state.board });
 		if (!parseInt(valid)) {
 			this.eventEnded();
 			return;
 		}
-		const oldState = [this.state.board, this.state.player, this.state.score];
-		const newState = await this.api.move({ move: [row, col], state: oldState });
-		this.eventEnded();
+
 		this.movePiece(this.getDispenserPiece(this.state.player), row, col);
 		this.renewPiece(this.state.player);
-		this.playHistory.push({ state: this.state, move: [row, col] });
+		const oldPrologState = Game.toPrologState(this.state);
+		const newPrologState = await this.api.move({ move: [row, col], state: oldPrologState });
+		const newState = { ...Game.toJsState(JSON.parse(newPrologState)) };
+		this.playHistory.push({ oldState: this.state, newState: newState, move: [row, col] });
 		this.lastPlayIndex++;
-		this.state = { ...Game.parseState(JSON.parse(newState)) };
+		this.state = newState;
 		this.gameOver();
-		if (oldState[1] !== this.state.player) {
+		if (oldPrologState[1] !== this.state.player) {
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 		}
 		this.eventQueue.push(() => this.startTurnTimer());
+		this.eventEnded();
 		console.log(this.state);
 	}
 
@@ -254,6 +260,7 @@ class Game {
 		if (this.playHistory.length){
 			this.replay = true;
 			this.timerStopped = true;
+			this.state.score = [0, 0];
 			this.initPieces();
 			this.setStartPieces();
 			this.eventQueue.push(() => this.replayMove());
@@ -264,10 +271,11 @@ class Game {
 		if (this.replay && this.playHistory[0]) {
 			this.eventStarted();
 			const play = this.playHistory[0];
-			this.state = play.state;
+			this.state = play.oldState;
 			const move = play.move;
 			this.movePiece(this.getDispenserPiece(this.state.player), move[0], move[1]);
 			this.renewPiece(this.state.player);
+			this.state = play.newState;
 			this.playHistory.splice(0, 1);
 			this.eventQueue.push(() => this.replayMove());
 			this.eventEnded();
