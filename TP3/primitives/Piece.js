@@ -33,6 +33,8 @@ class Piece {
 	}
 
 	moveTo(row, col) {
+		this.row = row;
+		this.col = col;
 		this.placementCoords = this.calculateCoords(row, col);
 		this.addPlacementAnimation();
 	}
@@ -91,6 +93,7 @@ class Piece {
 			if (this.removeAnim.isFinished()) {
 				this.removeAnim = null;
 				Game.getInstance().eventEnded();
+				Game.getInstance().setDispenserReady(this.color, this.row, this.col);
 				return;
 			}
 			this.removeAnim.update(delta);

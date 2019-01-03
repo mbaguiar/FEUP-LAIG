@@ -6,6 +6,7 @@ class Game {
 		this['Camera animation'] = true;
 		this['Turn timer'] = 15;
 		this.timerStopped = true;
+		this.firstTime = true;
 		this.eventCounter = 0;
 		this.eventQueue = [];
 	}
@@ -77,6 +78,9 @@ class Game {
 		this.eventStarted();
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
+		if (this.firstTime) 
+			this.initPieces();
+		this.setStartPieces();
 		const startState = await this.api.createState();
 		this.state = {...Game.parseState(JSON.parse(startState))};
 		this.player1 = Game.getPlayerOptions()[this['Player 1 (Red)']];
@@ -84,26 +88,21 @@ class Game {
 		this.turnTimer = Math.trunc(this['Turn timer']);
 		this.winner = 0;
 		this.playHistory = [];
-		this.initPieces(this.state);
 		this.eventEnded();
 		this.startTurnTimer();
 		console.log(this.state);
 	}
 
-	initPieces({board}) {
+	initPieces() {
 		this.pieces = [];
-		for (let i = 0; i < board.length; i++) {
-			for (let j = 0; j < board.length; j++) {
-				const piece = board[i][j];
-				if (piece) {
-					const pos = [i+1, j+1];
-					const id = Game.calculateId(pos[0], pos[1]);
-					this.pieces[id] = new Piece(this.scene, piece, pos[0], pos[1]);
+		for (let i = 1; i <= 13; i++) {
+			for (let j = 1; j <= 13; j++) {
+				if (j === 1 || j === 13 || i === 1 || i === 13) {
+					this.pieces[Game.calculateId(i, j)] = new Piece(this.scene, 3, i, j);	
 				}
 			}
 		}
-		this.renewPiece(1);
-		this.renewPiece(2);
+		this.firstTime = false;
 	}
 
 	renewPiece(color) {
@@ -120,15 +119,43 @@ class Game {
 			this.state = this.playHistory[0].state;
 			const move = this.playHistory[0].move;
 			const id = Game.calculateId(move[0], move[1]);
-			this.eventQueue.push(() => this.removePiece(this.pieces[id]));
-			this.eventQueue.push(() => {delete this.pieces[id],this.playHistory.splice(0, 1)});
+			this.pieces[id].remove();
+			this.playHistory.splice(0, 1);
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 			this.eventQueue.push(() => this.startTurnTimer());
 		}
 	}
 
-	removePiece(piece) {
-		piece.remove();
+	setStartPieces() {
+		this.renewPiece(1);
+		this.renewPiece(2);
+		this.dispensers = [[], []];
+		for (const key in this.pieces) {
+			if (key == 1 || key == 2) { //Dispenser pieces
+				continue;
+			} 
+			const piece = this.pieces[key];
+			if (!piece) continue;
+			if (piece.color === 1) { 
+				this.dispensers[0].push(piece);
+			} else if (piece.color === 2) {
+				this.dispensers[1].unshift(piece);
+			}
+		}
+		this.removePieceToDispenser(1);
+		this.removePieceToDispenser(2);
+	}
+
+	removePieceToDispenser(color) {
+		if (this.dispensers[color-1][0]){
+			this.dispensers[color-1][0].remove();
+			this.dispensers[color-1].splice(0, 1);
+		}
+	}
+
+	setDispenserReady(color, lastPieceRow, lastPieceCol) {
+		this.removePieceToDispenser(color);
+		this.pieces[Game.calculateId(lastPieceRow, lastPieceCol)] = undefined;
 	}
 
 	movePiece(piece, row, col) {
@@ -224,7 +251,8 @@ class Game {
 		if (this.pieces)
 			for (const k in this.pieces) {
 				const p = this.pieces[k];
-				p.update(delta)
+				if (p)
+					p.update(delta)
 			}
 	}
 }

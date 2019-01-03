@@ -58,6 +58,7 @@ class Board {
 		if (Game.getInstance().state) {
 			const pieces = Game.getInstance().pieces;
 			pieces.forEach(p => {
+				if (!p) return;
 				this.setMaterial(p.color);
 				this.material.apply();
 				p.display();
