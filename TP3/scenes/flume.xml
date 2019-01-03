@@ -147,7 +147,7 @@
         </component>
         <component id="timer">
             <transformation>
-                <translate x="-40" y="7" z="0" /> 
+                <translate x="-45" y="3" z="0" /> 
             </transformation>
             <materials>
                 <material id="inherit" />
