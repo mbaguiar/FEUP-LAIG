@@ -11,8 +11,17 @@ class Piece {
 		} else {
 			this.coords = DISPENSER[color];
 		}
+		this.shader = new CGFshader(this.scene.gl, '../shaders/connection.vert', '../shaders/connection.frag');
+		this.shader.setUniformsValues({uSampler2: 1});
 		this.color = color;
 		this.sphere = new Sphere(this.scene, 1.5, 30, 30);
+	}
+
+	static getGlowTexture() {
+		if (!Piece.glowTexture) {
+			Piece.glowTexture = new CGFtexture(Game.getInstance().scene, '../scenes/images/yellow_marble.jpg');
+		}
+		return Piece.glowTexture;
 	}
 
 	calculateCoords(row, col) {
@@ -22,6 +31,10 @@ class Piece {
 
 	display() {
 		this.scene.pushMatrix();
+			if (this.glowAnim){
+				this.scene.setActiveShader(this.shader);
+				Piece.getGlowTexture().bind(1);	
+			} 
 			this.scene.scale(1, 0.5, 1);
 			this.scene.translate.apply(this.scene, this.coords);
 			const anim = this.placementAnim || this.dispenseAnim || this.removeAnim;
@@ -29,6 +42,10 @@ class Piece {
 				anim.apply();
 			}
 			this.sphere.display();
+			if (this.glowAnim) {
+				Piece.getGlowTexture().unbind(1);	
+				this.scene.setActiveShader(this.scene.defaultShader);
+			}
 		this.scene.popMatrix();
 	}
 
@@ -74,6 +91,12 @@ class Piece {
 		this.removeAnim = new BezierAnimation(this.scene, speed, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 30, 15 * length/20, dispVec[2]], dispVec]);
 	}
 
+	addGlowAnimation() {
+		Game.getInstance().eventStarted();
+		this.time = 0;
+		this.glowAnim = true;
+	}
+
 	update(delta) {
 		if (this.placementAnim) {
 			if (this.placementAnim.isFinished()) {
@@ -99,6 +122,15 @@ class Piece {
 				return;
 			}
 			this.removeAnim.update(delta);
+		} else if (this.glowAnim) {
+			this.time += delta*MILIS_TO_SECS;
+			if (this.time >= 0.5) {
+				Game.getInstance().eventEnded();
+				this.glowAnim = false;
+				return;
+			} 
+			const factor = Math.sin(this.time * Math.PI/0.5)
+			this.shader.setUniformsValues({factor: factor});
 		}
 	}
 }

@@ -222,6 +222,8 @@ class Game {
 		this.gameOver();
 		if (oldPrologState[1] !== this.state.player) {
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
+		} else {
+			this.checkConnections(row, col);
 		}
 		this.eventQueue.push(() => this.startTurnTimer());
 		this.eventEnded();
@@ -279,6 +281,19 @@ class Game {
 			this.playHistory.splice(0, 1);
 			this.eventQueue.push(() => this.replayMove());
 			this.eventEnded();
+		}
+	}
+
+	checkConnections(row, col) {
+		const id = Game.calculateId(row, col);
+		const adj = [-13, 1, 13, -1];
+		for (const offset of adj) {
+			const newId = id + offset;
+			if (this.pieces.hasOwnProperty(newId)) {
+				const piece = this.pieces[newId];
+				if (piece)
+					this.eventQueue.push(() => piece.addGlowAnimation());
+			}
 		}
 	}
 
