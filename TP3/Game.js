@@ -76,6 +76,7 @@ class Game {
 
 	async startNewGame() {
 		this.eventStarted();
+		this.timerStopped = true;
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
 		if (this.firstTime) 
@@ -89,7 +90,7 @@ class Game {
 		this.winner = 0;
 		this.playHistory = [];
 		this.eventEnded();
-		this.startTurnTimer();
+		this.eventQueue.push(() => this.startTurnTimer());
 		console.log(this.state);
 	}
 
@@ -148,7 +149,7 @@ class Game {
 
 	removePieceToDispenser(color) {
 		if (this.dispensers[color-1][0]){
-			this.dispensers[color-1][0].remove();
+			this.dispensers[color-1][0].remove(true);
 			this.dispensers[color-1].splice(0, 1);
 		}
 	}

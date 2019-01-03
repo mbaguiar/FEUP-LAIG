@@ -58,18 +58,20 @@ class Piece {
 		this.dispenseAnim = new LinearAnimation(this.scene, 1, [[sign*5, 0, 0], [0, 0, 0]]);
 	}
 
-	remove() {
-		this.addRemoveAnimation();
+	remove(fast) {
+		const fastAnim = fast || false;
+		this.addRemoveAnimation(fastAnim);
 	}
 
-	addRemoveAnimation() {
+	addRemoveAnimation(fastAnim) {
 		Game.getInstance().eventStarted();
 		let dispEntrance = [...DISPENSER[this.color]];
 		const sign = this.color === 1? 1: -1;
 		dispEntrance[0] += sign * 5;
 		const dispVec = vec3.sub(vec3.create(), dispEntrance, this.coords);
 		const length = vec3.length(dispVec);
-		this.removeAnim = new BezierAnimation(this.scene, length*0.04, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 30, 15 * length/20, dispVec[2]], dispVec]);
+		const speed = fastAnim? length*0.01: length*0.04;
+		this.removeAnim = new BezierAnimation(this.scene, speed, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 30, 15 * length/20, dispVec[2]], dispVec]);
 	}
 
 	update(delta) {
