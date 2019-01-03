@@ -21,8 +21,9 @@ class Cylinder extends CGFobject {
 
         this.noBaseCylinder.display();
         this.scene.pushMatrix();
-        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.rotate(Math.PI, 0, 0, 1);
         this.scene.scale(this.base, this.base, 1);
+        this.scene.rotate(Math.PI, 0, 1, 0);
         this.baseCircle.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();

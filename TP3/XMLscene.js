@@ -155,6 +155,7 @@ class XMLscene extends CGFscene {
             this.cameras[cam.id] = newCam;
             if (cam.id === this.graph.defaultViewId) {
                 this.camera = newCam;
+                this.interface.setActiveCamera(this.camera);
                 this.selectedCamera = key;
             }
         }
