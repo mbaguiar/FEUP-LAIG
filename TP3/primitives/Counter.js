@@ -19,7 +19,7 @@ class Counter {
     }
 
     display() {
-        if (Game.getInstance().state && Game.getInstance().allowPlay()) {
+        if (Game.getInstance().state && Game.getInstance().allowEvent()) {
             this.counter.player1 = Game.getInstance().state.score[0];
             this.counter.player2 = Game.getInstance().state.score[1];
         }

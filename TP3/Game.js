@@ -30,7 +30,8 @@ class Game {
 		return {
 			'Start new game': () => Game.getInstance().newGameEvent(),
 			'Undo move': () => Game.getInstance().undoMoveEvent(),
-			'Pause/Resume timer': () => {Game.getInstance().timerStopped = !Game.getInstance().timerStopped}
+			'Pause/Resume timer': () => { Game.getInstance().timerStopped = !Game.getInstance().timerStopped },
+			'Replay game': () => Game.getInstance().replayGameEvent(),
 		};
 	}
 
@@ -51,13 +52,13 @@ class Game {
 			[Game.getGameOptions(), 'Start new game'],
 			[Game.getGameOptions(), 'Undo move'],
 			[Game.getGameOptions(), 'Pause/Resume timer'],
+			[Game.getGameOptions(), 'Replay game'],
 		];
 	}
 
 	static calculateId(row, col) {
-		return row*13 + col;
+		return row * 13 + col;
 	}
-
 
 	eventStarted() {
 		this.eventCounter++;
@@ -68,14 +69,18 @@ class Game {
 	}
 
 	allowPlay() {
+		return this.allowEvent() && this.eventQueue.length === 0;
+	}
+
+	allowEvent() {
 		return this.eventCounter === 0;
 	}
 
 	getCurrentGameOptions() {
 		this.currGameOptions = {
-			player1 : Game.getPlayerOptions()[this['Player 1 (Red)']],
-			player2 : Game.getPlayerOptions()[this['Player 2 (Blue)']],
-			turnTimer : Math.trunc(this['Turn timer']),
+			player1: Game.getPlayerOptions()[this['Player 1 (Red)']],
+			player2: Game.getPlayerOptions()[this['Player 2 (Blue)']],
+			turnTimer: Math.trunc(this['Turn timer']),
 			cameraAnimation: this['Camera animation']
 		};
 	}
@@ -85,7 +90,12 @@ class Game {
 	}
 
 	undoMoveEvent() {
+		if (this.replay) return;
 		this.eventQueue = [() => this.undoMove()];
+	}
+
+	replayGameEvent() {
+		this.eventQueue = [() => this.startGameReplay()];
 	}
 
 	setScene(scene) {
@@ -97,7 +107,7 @@ class Game {
 		this.getCurrentGameOptions();
 		this.reset();
 		const startState = await this.api.createState();
-		this.state = {...Game.parseState(JSON.parse(startState))};
+		this.state = { ...Game.parseState(JSON.parse(startState)) };
 		this.eventEnded();
 		this.eventQueue.push(() => this.startTurnTimer());
 		console.log(this.state);
@@ -107,7 +117,7 @@ class Game {
 		this.timerStopped = true;
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
-		if (this.firstTime) 
+		if (this.firstTime)
 			this.initPieces();
 		this.setStartPieces();
 		this.winner = 0;
@@ -120,7 +130,7 @@ class Game {
 		for (let i = 1; i <= 13; i++) {
 			for (let j = 1; j <= 13; j++) {
 				if (j === 1 || j === 13 || i === 1 || i === 13) {
-					this.pieces[Game.calculateId(i, j)] = new Piece(this.scene, 3, i, j);	
+					this.pieces[Game.calculateId(i, j)] = new Piece(this.scene, 3, i, j);
 				}
 			}
 		}
@@ -156,10 +166,10 @@ class Game {
 		for (const key in this.pieces) {
 			if (key == 1 || key == 2) { //Dispenser pieces
 				continue;
-			} 
+			}
 			const piece = this.pieces[key];
 			if (!piece) continue;
-			if (piece.color === 1) { 
+			if (piece.color === 1) {
 				this.dispensers[0].push(piece);
 			} else if (piece.color === 2) {
 				this.dispensers[1].unshift(piece);
@@ -170,9 +180,9 @@ class Game {
 	}
 
 	removePieceToDispenser(color) {
-		if (this.dispensers[color-1][0]){
-			this.dispensers[color-1][0].remove(true);
-			this.dispensers[color-1].splice(0, 1);
+		if (this.dispensers[color - 1][0]) {
+			this.dispensers[color - 1][0].remove(true);
+			this.dispensers[color - 1].splice(0, 1);
 		}
 	}
 
@@ -182,7 +192,7 @@ class Game {
 	}
 
 	movePiece(piece, row, col) {
-		const id = row*13 + col;
+		const id = row * 13 + col;
 		this.pieces[id] = piece;
 		piece.moveTo(row, col);
 	}
@@ -191,19 +201,19 @@ class Game {
 		if (!this.allowPlay()) return;
 		this.timerStopped = true;
 		this.eventStarted();
-		const valid = await this.api.validMove({move: [row, col], board:this.state.board});
+		const valid = await this.api.validMove({ move: [row, col], board: this.state.board });
 		if (!parseInt(valid)) {
 			this.eventEnded();
 			return;
 		}
 		const oldState = [this.state.board, this.state.player, this.state.score];
-		const newState = await this.api.move({move: [row, col], state: oldState});
+		const newState = await this.api.move({ move: [row, col], state: oldState });
 		this.eventEnded();
 		this.movePiece(this.getDispenserPiece(this.state.player), row, col);
 		this.renewPiece(this.state.player);
-		this.playHistory.push({state: this.state, move: [row, col]});
+		this.playHistory.push({ state: this.state, move: [row, col] });
 		this.lastPlayIndex++;
-		this.state = {...Game.parseState(JSON.parse(newState))};
+		this.state = { ...Game.parseState(JSON.parse(newState)) };
 		this.gameOver();
 		if (oldState[1] !== this.state.player) {
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
@@ -215,7 +225,7 @@ class Game {
 	async moveAI(player) {
 		this.timerStopped = true;
 		this.eventStarted();
-		const move = await this.api.getMove({board: this.state.board, player: player});
+		const move = await this.api.getMove({ board: this.state.board, player: player });
 		this.eventEnded();
 		const AIMove = JSON.parse(move);
 		this.move(AIMove[0], AIMove[1]);
@@ -223,15 +233,13 @@ class Game {
 
 	async gameOver() {
 		const state = [this.state.board, this.state.player, this.state.score];
-		const newWinner = await this.api.gameOver({state: state});
+		const newWinner = await this.api.gameOver({ state: state });
 		this.winner = parseInt(newWinner);
 		if (this.winner !== 0) {
 			alert("game over, todo fazer cenas bonitas com isto");
 			return;
 		}
 	}
-
-	
 
 	startTurnTimer() {
 		this.timerStopped = false;
@@ -242,8 +250,32 @@ class Game {
 		this.moveAI(1);
 	}
 
+	startGameReplay() {
+		if (this.playHistory.length){
+			this.replay = true;
+			this.timerStopped = true;
+			this.initPieces();
+			this.setStartPieces();
+			this.eventQueue.push(() => this.replayMove());
+		}
+	}
+
+	replayMove() {
+		if (this.replay && this.playHistory[0]) {
+			this.eventStarted();
+			const play = this.playHistory[0];
+			this.state = play.state;
+			const move = play.move;
+			this.movePiece(this.getDispenserPiece(this.state.player), move[0], move[1]);
+			this.renewPiece(this.state.player);
+			this.playHistory.splice(0, 1);
+			this.eventQueue.push(() => this.replayMove());
+			this.eventEnded();
+		}
+	}
+
 	update(delta) {
-		if (this.allowPlay() && this.eventQueue[0]){
+		if (this.allowEvent() && this.eventQueue[0]) {
 			this.eventQueue[0].call();
 			this.eventQueue.splice(0, 1);
 		}
