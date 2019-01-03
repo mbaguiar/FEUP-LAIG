@@ -1,8 +1,21 @@
 class Board {
 	constructor(scene) {
 		this.scene = scene;
+		this.initAuxComponents();
+		this.setupVisuals();
+	}
+
+	initAuxComponents() {
+		this.counter = new Counter(this.scene);
+		this.timer = new Timer(this.scene);
+		this.redDispenser = new Dispenser(this.scene, 1);
+		this.blueDispenser = new Dispenser(this.scene, 2);
+		this.box = new Box(this.scene);
 		this.cube = new Cube(this.scene);
 		this.pickSquare = new Rectangle(this.scene, -2.5, -2.5, 2.5, 2.5);
+	}
+
+	setupVisuals() {
 		this.noTexture = new CGFappearance(this.scene);
 		this.tileTexture = new CGFappearance(this.scene);
 		this.tileTexture.loadTexture('../scenes/images/tile.jpg');
@@ -43,9 +56,12 @@ class Board {
 		this.scene.popMatrix();
 	}
 
+	addStartAnimation() {
+
+	}
+
 	display() {
-		/* if (this.scene.pickMode)
-		else */
+			this.displayAuxComponents();
 			this.tileTexture.apply();
 			this.setupPicking();
 			this.boardTexture.apply();
@@ -55,7 +71,7 @@ class Board {
 	}
 
 	displayGame() {
-		if (Game.getInstance().state) {
+		if (Game.getInstance().hasOwnProperty('pieces')) {
 			const pieces = Game.getInstance().pieces;
 			pieces.forEach(p => {
 				if (!p) return;
@@ -74,5 +90,41 @@ class Board {
 		} else if (color === 3) {
 			this.material.setTexture(this.greenMaterial);
 		}
+	}
+
+	displayAuxComponents() {
+		this.scene.pushMatrix();
+			this.counter.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.timer.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.redDispenser.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.blueDispenser.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.box.display();
+		this.scene.popMatrix();
+	}
+
+	update(delta) {
+		this.counter.update(delta);
+		this.timer.update(delta);
+		this.redDispenser.update(delta);
+		this.blueDispenser.update(delta);
+		this.box.update(delta);
+	}
+
+	openBox() {
+		this.box.addPlacementAnimation();
+		Game.getInstance().eventQueue.push(() => {
+			this.counter.addPlacementAnimation(), 
+			this.timer.addPlacementAnimation(),
+			this.redDispenser.addPlacementAnimation(),
+			this.blueDispenser.addPlacementAnimation()
+		});
 	}
 }

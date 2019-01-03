@@ -60,11 +60,19 @@ class MyInterface extends CGFinterface {
     }
 
     addGameGroup() {
-        const group = this.gui.addFolder('Game');
-        group.open();
         const gameInterface = Game.getGameInterface();
         for (let item of gameInterface) {
-            group.add(...item);
+            this.gameGroup.add(...item);
         }
+    }
+
+    addBoxOption() {
+        this.gameGroup = this.gui.addFolder('Game');
+        this.gameGroup.open();
+        this.boxController = this.gameGroup.add(Game.getGameOptions(), 'Open box');
+    }
+
+    removeBox() {
+        this.boxController.remove();
     }
 }

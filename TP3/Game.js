@@ -36,6 +36,7 @@ class Game {
 			'Undo move': () => Game.getInstance().undoMoveEvent(),
 			'Pause/Resume timer': () => { Game.getInstance().timerStopped = !Game.getInstance().timerStopped },
 			'Replay game': () => Game.getInstance().replayGameEvent(),
+			'Open box': () => Game.getInstance().openBoxEvent()
 		};
 	}
 
@@ -102,8 +103,16 @@ class Game {
 		this.eventQueue = [() => this.startGameReplay()];
 	}
 
+	openBoxEvent() {
+		this.scene.interface.removeBox();
+		this.board.openBox();
+		this.eventQueue.push(() => this.scene.interface.addGameGroup());
+	}
+
 	setScene(scene) {
 		this.scene = scene;
+		this.board = new Board(this.scene);
+		this.initPieces();
 	}
 
 	async startNewGame() {
@@ -326,5 +335,12 @@ class Game {
 				if (p)
 					p.update(delta)
 			}
+		if (this.board)
+			this.board.update(delta);
+	}
+
+	display() {
+		if (this.board)
+			this.board.display();
 	}
 }

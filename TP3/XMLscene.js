@@ -125,7 +125,7 @@ class XMLscene extends CGFscene {
 
         this.setUpdatePeriod(1 / 60 * 1000);
         this.lastUpdate = (new Date()).getTime();
-        this.interface.addGameGroup();
+        this.interface.addBoxOption();
         this.sceneInited = true;
     }
 
@@ -226,6 +226,7 @@ class XMLscene extends CGFscene {
 
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
+            Game.getInstance().display();
         } else {
             // Draw axis
             this.axis.display();
@@ -271,7 +272,7 @@ class XMLscene extends CGFscene {
                 const deltaSecs = delta * MILIS_TO_SECS;
                 this.cameraAnimation.time += deltaSecs
                 if (this.cameraAnimation.time >= 1.5) {
-                    this.changeCamera(player);
+                    this.changeCamera(`p${player}`);
                     Game.getInstance().eventEnded();
                     this.cameraAnimation = null;
                     return;
@@ -282,7 +283,7 @@ class XMLscene extends CGFscene {
         }; 
     }
 
-    changeCamera(player) {
-        this.setActiveCamera(`p${player}`);
+    changeCamera(cam) {
+        this.setActiveCamera(cam);
     }
 }

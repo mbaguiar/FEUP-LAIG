@@ -1,12 +1,16 @@
 <yas>
     <scene root="root" axis_length="0" />
-    <views default="p1">
+    <views default="box">
         <perspective id="p1" near="0.1" far="500" angle="40">
             <from x="0" y="120" z="40" />
             <to x="0" y="0" z="0" />
         </perspective>
         <perspective id="p2" near="0.1" far="500" angle="40">
             <from x="0" y="120" z="-40" />
+            <to x="0" y="0" z="0" />
+        </perspective>
+        <perspective id="box" near="0.1" far="500" angle="40">
+            <from x="0" y="150" z="0.1" />
             <to x="0" y="0" z="0" />
         </perspective>
     </views>
@@ -97,66 +101,6 @@
         </primitive>
     </primitives>
     <components>
-        <component id="dispenser_red">
-            <transformation>
-                <translate x="0" y="0" z="41" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="dispenser" />
-            </children>
-        </component>
-        <component id="dispenser_blue">
-            <transformation>
-                <translate x="0" y="0" z="-41" />
-                <rotate angle="180" axis="y" />
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="dispenser" />
-            </children>
-        </component>
-        <component id="board">
-            <transformation>
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="board" />
-            </children>
-        </component>
-        <component id="counter">
-            <transformation>
-                <translate x="45" y="3" z="0" /> 
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="counter" />
-            </children>
-        </component>
-        <component id="timer">
-            <transformation>
-                <translate x="-45" y="3" z="0" /> 
-            </transformation>
-            <materials>
-                <material id="inherit" />
-            </materials>
-            <texture id="none"/>
-            <children>
-                <primitiveref id="timer" />
-            </children>
-        </component>
         <component id="root">
             <transformation>
             </transformation>
@@ -165,11 +109,6 @@
             </materials>
             <texture id="none"/>
             <children>
-                <componentref id="board" />
-                <componentref id="dispenser_red" />
-                <componentref id="dispenser_blue" />
-                <componentref id="counter" />
-                <componentref id="timer" />
             </children>
         </component>
     </components>

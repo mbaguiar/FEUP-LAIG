@@ -48,7 +48,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
     'animations/CircularAnimation.js', 'animations/KeyFrame.js', 'animations/vec3utils.js', 'primitives/Plane.js', 'primitives/Patch.js',
     'primitives/Terrain.js', 'primitives/Water.js', 'primitives/Cylinder2.js', 'primitives/Vehicle.js', 'primitives/Light.js',
     'primitives/Board.js', 'primitives/Piece.js', 'Game.js', 'animations/BezierAnimation.js', 'primitives/Cube.js', 'primitives/Dispenser.js',
-    'Prolog.js', 'primitives/Counter.js', 'primitives/Timer.js',
+    'Prolog.js', 'primitives/Counter.js', 'primitives/Timer.js', 'primitives/Box.js',
 
     main = function () {
         // Standard application, scene and interface setup
@@ -57,14 +57,15 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
         var myInterface = new MyInterface();
         var myScene = new XMLscene(myInterface);
 
-        Game.getInstance().setScene(myScene);
-
+        
         app.init();
-
+        
         app.setScene(myScene);
         app.setInterface(myInterface);
-
+        
         myInterface.setActiveCamera(myScene.camera);
+        
+        Game.getInstance().setScene(myScene);
 
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
