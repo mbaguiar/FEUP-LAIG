@@ -8,6 +8,7 @@ class Counter {
         this.woodTexture = new CGFappearance(this.scene);
 		this.woodTexture.loadTexture('../scenes/images/light_wood.jpg');
         this.material = new CGFappearance(this.scene);
+        this.shader = new CGFshader(this.scene.gl, '../shaders/number.vert', '../shaders/number.frag');
         this.material.setEmission(0, 0, 0, 1);
         this.material.setAmbient(0.1, 0.1, 0.1, 1);
         this.material.setDiffuse(0.678, 0.678, 0.678, 1);
@@ -31,6 +32,8 @@ class Counter {
             this.cube.display();
         this.scene.popMatrix();
         this.scene.pushMatrix();
+            this.scene.setActiveShader(this.shader);
+            this.shader.setUniformsValues({color: [0.037, 0.112, 0.294]});
             this.scene.translate(-0.1, 0, -8);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
             this.scene.scale(4, 5.2, 0.001);
@@ -46,6 +49,7 @@ class Counter {
             this.material.apply();
             this.cube.display();
         this.scene.popMatrix();
+        this.shader.setUniformsValues({color: [0.277, 0.048, 0.031]});
         this.scene.pushMatrix();
             this.scene.translate(-0.1, 0, 3.5);
             this.scene.rotate(-Math.PI/2, 0, 1, 0);
@@ -61,6 +65,7 @@ class Counter {
             this.material.setTexture(this.numbers[this.counter.player1 % 10]);
             this.material.apply();
             this.cube.display();
+            this.scene.setActiveShader(this.scene.defaultShader);
         this.scene.popMatrix();
         this.scene.popMatrix();
         this.material.setTexture(null);
