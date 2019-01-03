@@ -42,7 +42,7 @@ class Game {
 	static getGameInterface() {
 		return [
 			[Game.getInstance(), 'Camera animation'],
-			[Game.getInstance(), 'Turn timer', 5, 60],
+			[Game.getInstance(), 'Turn timer', 0, 60, 5],
 			[Game.getInstance(), 'Player 1 (Red)', Object.keys(Game.getPlayerOptions())],
 			[Game.getInstance(), 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions())],
 			[Game.getGameOptions(), 'Start new game'],
