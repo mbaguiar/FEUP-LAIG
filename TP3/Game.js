@@ -11,16 +11,19 @@ class Game {
 		this.eventQueue = [];
 	}
 
-	eventStarted() {
-		this.eventCounter++;
+	static getInstance() {
+		if (!Game.self) {
+			Game.self = new Game();
+		}
+		return Game.self;
 	}
 
-	eventEnded() {
-		this.eventCounter--;
-	}
-
-	allowPlay() {
-		return this.eventCounter === 0;
+	static parseState(o) {
+		return {
+			board: [...o[0]],
+			player: o[1],
+			score: [...o[2]]
+		};
 	}
 
 	static getGameOptions() {
@@ -55,11 +58,26 @@ class Game {
 		return row*13 + col;
 	}
 
-	static getInstance() {
-		if (!Game.self) {
-			Game.self = new Game();
-		}
-		return Game.self;
+
+	eventStarted() {
+		this.eventCounter++;
+	}
+
+	eventEnded() {
+		this.eventCounter--;
+	}
+
+	allowPlay() {
+		return this.eventCounter === 0;
+	}
+
+	getCurrentGameOptions() {
+		this.currGameOptions = {
+			player1 : Game.getPlayerOptions()[this['Player 1 (Red)']],
+			player2 : Game.getPlayerOptions()[this['Player 2 (Blue)']],
+			turnTimer : Math.trunc(this['Turn timer']),
+			cameraAnimation: this['Camera animation']
+		};
 	}
 
 	newGameEvent() {
@@ -76,22 +94,25 @@ class Game {
 
 	async startNewGame() {
 		this.eventStarted();
+		this.getCurrentGameOptions();
+		this.reset();
+		const startState = await this.api.createState();
+		this.state = {...Game.parseState(JSON.parse(startState))};
+		this.eventEnded();
+		this.eventQueue.push(() => this.startTurnTimer());
+		console.log(this.state);
+	}
+
+	reset() {
 		this.timerStopped = true;
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
 		if (this.firstTime) 
 			this.initPieces();
 		this.setStartPieces();
-		const startState = await this.api.createState();
-		this.state = {...Game.parseState(JSON.parse(startState))};
-		this.player1 = Game.getPlayerOptions()[this['Player 1 (Red)']];
-		this.player2 = Game.getPlayerOptions()[this['Player 2 (Blue)']];
-		this.turnTimer = Math.trunc(this['Turn timer']);
 		this.winner = 0;
+		this.lastPlayIndex = -1;
 		this.playHistory = [];
-		this.eventEnded();
-		this.eventQueue.push(() => this.startTurnTimer());
-		console.log(this.state);
 	}
 
 	initPieces() {
@@ -116,12 +137,13 @@ class Game {
 	}
 
 	undoMove() {
-		if (this.playHistory[0]){
-			this.state = this.playHistory[0].state;
-			const move = this.playHistory[0].move;
+		if (this.lastPlayIndex >= 0 && this.playHistory[this.lastPlayIndex]) {
+			const play = this.playHistory[this.lastPlayIndex];
+			this.state = play.state;
+			const move = play.move;
 			const id = Game.calculateId(move[0], move[1]);
 			this.pieces[id].remove();
-			this.playHistory.splice(0, 1);
+			this.playHistory.splice(this.lastPlayIndex--, 1);
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
 			this.eventQueue.push(() => this.startTurnTimer());
 		}
@@ -179,7 +201,8 @@ class Game {
 		this.eventEnded();
 		this.movePiece(this.getDispenserPiece(this.state.player), row, col);
 		this.renewPiece(this.state.player);
-		this.playHistory.unshift({state: this.state, move: [row, col]});
+		this.playHistory.push({state: this.state, move: [row, col]});
+		this.lastPlayIndex++;
 		this.state = {...Game.parseState(JSON.parse(newState))};
 		this.gameOver();
 		if (oldState[1] !== this.state.player) {
@@ -208,17 +231,11 @@ class Game {
 		}
 	}
 
-	static parseState(o) {
-		return {
-			board: [...o[0]],
-			player: o[1],
-			score: [...o[2]]
-		};
-	}
+	
 
 	startTurnTimer() {
 		this.timerStopped = false;
-		this.currTimer = this.turnTimer;
+		this.currTimer = this.currGameOptions.turnTimer;
 	}
 
 	expireTurn() {
@@ -233,7 +250,6 @@ class Game {
 
 		if (!this.timerStopped) {
 			this.currTimer -= delta * MILIS_TO_SECS;
-			console.log('not stopped');
 			if (this.currTimer <= 0) {
 				this.expireTurn();
 			}
@@ -241,10 +257,10 @@ class Game {
 
 		if (this.allowPlay() && this.state) {
 			if (this.winner <= 0) {
-				if (this.state.player === 1 && this.player1 > 0) {
-					this.moveAI(this.player1);
-				} else if (this.state.player === 2 && this.player2 > 0) {
-					this.moveAI(this.player2);
+				if (this.state.player === 1 && this.currGameOptions.player1 > 0) {
+					this.moveAI(this.currGameOptions.player1);
+				} else if (this.state.player === 2 && this.currGameOptions.player2 > 0) {
+					this.moveAI(this.currGameOptions.player2);
 				}
 			}
 		}
