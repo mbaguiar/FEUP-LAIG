@@ -41,6 +41,11 @@
         </omni>
     </lights>
     <textures>
+        <texture id="dark_wood" file="scenes/images/dark_wood.jpg" />
+        <texture id="light_wood" file="scenes/images/floor.jpg" />
+        <texture id="blue" file="scenes/images/box_blue.jpg" />
+        <texture id="red" file="scenes/images/box_red.jpg" />
+        <texture id="wall" file="scenes/images/white_wall.jpg" />
     </textures>
     <materials>
         <material id="default" shininess = "0">
@@ -51,6 +56,29 @@
         </material>
     </materials>
     <transformations>
+    <transformation id="face1">
+            <translate x="0.5" y="0" z="0" />
+            <rotate axis="y" angle="90" />
+        </transformation>
+        <transformation id="face2">
+            <translate x="0" y="0" z="0.5" />
+        </transformation>
+        <transformation id="face3">
+            <translate x="0" y="0" z="-0.5" />
+            <rotate axis="y" angle="-180" />
+        </transformation>
+        <transformation id="face4">
+            <translate x="-0.5" y="0" z="0" />
+            <rotate axis="y" angle="-90" />
+        </transformation>
+        <transformation id="face5">
+            <translate x="0" y="0.5" z="0" />
+            <rotate axis="x" angle="-90" />
+        </transformation>
+        <transformation id="face6">
+            <translate x="0" y="-0.5" z="0" />
+            <rotate axis="x" angle="90" />
+        </transformation>
     </transformations>
     <animations> 
     </animations>
@@ -58,8 +86,102 @@
         <primitive id="quad">
             <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
         </primitive>
+        <primitive id="cylinder">
+            <cylinder base="20" top="20" height="25" slices="20" stacks="20" />
+        </primitive>
+        <primitive id="torus">
+            <torus inner="2" outer="20" slices="20" loops="20" />
+        </primitive>
     </primitives>
     <components>
+    <component id="face1">
+            <transformation>
+                <transformationref id="face1" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad" />
+            </children>
+        </component>
+        <component id="face2">
+            <transformation>
+                <transformationref id="face2" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad" />
+            </children>
+        </component>
+        <component id="face3">
+            <transformation>
+                <transformationref id="face3" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad" />
+            </children>
+        </component>
+        <component id="face4">
+            <transformation>
+                <transformationref id="face4" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="face5">
+            <transformation>
+                <transformationref id="face5" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="face6">
+            <transformation>
+                <transformationref id="face6" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <primitiveref id="quad"/>
+            </children>
+        </component>
+        <component id="cube">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit" />
+            <children>
+                <componentref id="face1" />
+                <componentref id="face2" />
+                <componentref id="face3" />
+                <componentref id="face4" />
+                <componentref id="face5" />
+                <componentref id="face6" />
+            </children>
+        </component>
      <component id="wall1">
             <transformation>
                 <translate x="50" y="0" z="-150" />
@@ -68,7 +190,7 @@
             <materials>
                 <material id="default" />
             </materials>
-            <texture id="inherit"/>
+            <texture id="wall" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -82,7 +204,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="wall" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="quad" />
             </children>
@@ -96,9 +218,176 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="light_wood" length_s="0.2" length_t="0.2"/>
             <children>
                 <primitiveref id="quad" />
+            </children>
+        </component>
+        <component id="table-top">
+            <transformation>
+                <scale x="220" y="5" z="100"/> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="table-leg1">
+            <transformation>
+                <translate x="-107.5" y="-25" z="-47.5" />
+                <scale x="5" y="50" z="5"/> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="table-leg2">
+            <transformation>
+                <translate x="-107.5" y="-25" z="47.5" />
+                <scale x="5" y="50" z="5"/> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="table-leg3">
+            <transformation>
+                <translate x="107.5" y="-25" z="47.5" />
+                <scale x="5" y="50" z="5"/> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="table-leg4">
+            <transformation>
+                <translate x="107.5" y="-25" z="-47.5" />
+                <scale x="5" y="50" z="5"/> 
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <componentref id="cube" />
+            </children>
+        </component>
+        <component id="table">
+            <transformation>
+                <translate x="50" y="-25" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="dark_wood" length_s="1" length_t="1"/>
+            <children>
+                <componentref id="table-top" />
+                <componentref id="table-leg1" />
+                <componentref id="table-leg2" />
+                <componentref id="table-leg3" />
+                <componentref id="table-leg4" />
+            </children>
+        </component>
+        <component id="stool-torus1">
+            <transformation>
+                <translate x="0" y="0" z="25" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="torus" />
+            </children>
+        </component>
+        <component id="stool-torus2">
+            <transformation>
+                <translate x="0" y="0" z="0" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="torus" />
+            </children>
+        </component>
+        <component id="stool">
+            <transformation>
+                <translate x="0" y="-47" z="0" />
+                <rotate angle="90" axis="x" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="inherit"/>
+            <children>
+                <primitiveref id="cylinder" />
+                <componentref id="stool-torus1" />
+                <componentref id="stool-torus2" />
+            </children>
+        </component>
+        <component id="stool1">
+            <transformation>
+                <translate x="0" y="0" z="80" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="red" length_s="1" length_t="1" />
+            <children>
+                <componentref id="stool" />
+            </children>
+        </component>
+        <component id="stool2">
+            <transformation>
+                <translate x="0" y="0" z="-80" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="blue" length_s="1" length_t="1" />
+            <children>
+                <componentref id="stool" />
+            </children>
+        </component>
+        <component id="stool3">
+            <transformation>
+                <translate x="100" y="0" z="80" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="red" length_s="1" length_t="1" />
+            <children>
+                <componentref id="stool" />
+            </children>
+        </component>
+        <component id="stool4">
+            <transformation>
+                <translate x="100" y="0" z="-80" />
+            </transformation>
+            <materials>
+                <material id="inherit" />
+            </materials>
+            <texture id="blue" length_s="1" length_t="1" />
+            <children>
+                <componentref id="stool" />
             </children>
         </component>
         <component id="root">
@@ -107,11 +396,16 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none"/>
+            <texture id="dark_wood" length_s="1" length_t="1" />
             <children>
                 <componentref id="wall1" />
                 <componentref id="wall2" />
                 <componentref id="floor" />
+                <componentref id="table" />
+                <componentref id="stool1" />
+                <componentref id="stool2" />
+                <componentref id="stool3" />
+                <componentref id="stool4" />
             </children>
         </component>
     </components>

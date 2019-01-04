@@ -32,6 +32,7 @@ class Counter {
                 this.scene.rotate(-30*Math.PI/180, 0, 0, 1);
             this.scene.pushMatrix();
                 this.scene.scale(0.1, 10, 25);
+                this.noTexture.apply();
                 this.cube.display();
             this.scene.popMatrix();
             this.scene.pushMatrix();
