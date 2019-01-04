@@ -12,9 +12,9 @@ varying vec2 vTextureCoord;
 void main() {
 	vTextureCoord = aTextureCoord;
 	vec4 color = texture2D(uSampler, aTextureCoord);
-	vec3 offset = aVertexNormal;
+	vec3 offset = aVertexNormal*0.1;
 	if (color.r > 0.1){
-		offset = vec3(0.0, 0.0, 0.0);
+		offset = aVertexNormal*-0.1;
 	}
-	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition+offset, 1.0);
 }
