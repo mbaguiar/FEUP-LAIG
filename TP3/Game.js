@@ -76,7 +76,7 @@ class Game {
 	}
 
 	allowPlay() {
-		return this.allowEvent() && this.eventQueue.length === 0;
+		return this.allowEvent() && this.eventQueue.length === 0 && !this.winner;
 	}
 
 	allowEvent() {
@@ -251,7 +251,6 @@ class Game {
 		}
 		this.eventQueue.push(() => this.startTurnTimer());
 		this.eventEnded();
-		console.log(this.state);
 	}
 
 	async moveAI(player) {
@@ -267,10 +266,7 @@ class Game {
 		const state = [this.state.board, this.state.player, this.state.score];
 		const newWinner = await this.api.gameOver({ state: state });
 		this.winner = parseInt(newWinner);
-		if (this.winner !== 0) {
-			this.showGameOverPanel();
-			return;
-		}
+		if (this.winner > 0) this.showGameOverPanel(); 
 	}
 
 	startTurnTimer() {
@@ -279,7 +275,7 @@ class Game {
 	}
 
 	expireTurn() {
-		this.moveAI(1);
+		if (!this.winner) this.moveAI(1);
 	}
 
 	startGameReplay() {
@@ -336,7 +332,7 @@ class Game {
 		}
 
 		if (this.allowPlay() && this.state) {
-			if (this.winner <= 0) {
+			if (!this.winner) {
 				if (this.state.player === 1 && this.currGameOptions.player1 > 0) {
 					this.moveAI(this.currGameOptions.player1);
 				} else if (this.state.player === 2 && this.currGameOptions.player2 > 0) {
