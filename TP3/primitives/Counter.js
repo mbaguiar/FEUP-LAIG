@@ -11,6 +11,7 @@ class Counter {
         this.woodTexture = new CGFappearance(this.scene);
 		this.woodTexture.loadTexture('../scenes/images/light_wood.jpg');
         this.shader = new CGFshader(this.scene.gl, '../shaders/number.vert', '../shaders/number.frag');
+        this.turnTex = [, new CGFtexture(this.scene, '../scenes/images/turn_red.jpg'), new CGFtexture(this.scene, '../scenes/images/turn_blue.jpg')];
         this.material = new CGFappearance(this.scene);
         this.material.setEmission(0, 0, 0, 1);
         this.material.setAmbient(0.1, 0.1, 0.1, 1);
@@ -32,6 +33,8 @@ class Counter {
                 this.scene.rotate(-30*Math.PI/180, 0, 0, 1);
             this.scene.pushMatrix();
                 this.scene.scale(0.1, 10, 25);
+                this.material.setTexture(this.turnTex[this.turn]);
+                this.material.apply();
                 this.cube.display();
             this.scene.popMatrix();
             this.scene.pushMatrix();
@@ -99,6 +102,8 @@ class Counter {
         if (Game.getInstance().state && Game.getInstance().allowEvent()) {
             this.counter.player1 = Game.getInstance().state.score[0];
             this.counter.player2 = Game.getInstance().state.score[1];
+            if (Game.getInstance().state.hasOwnProperty('player'))
+                this.turn = Game.getInstance().state.player;
         }
 
         if (this.placementAnim) {
