@@ -67,7 +67,7 @@ class MyInterface extends CGFinterface {
         this.gameGroup.add(Game.getGameOptions(), 'Start new game');
         this.gameGroup.add(Game.getGameOptions(), 'Undo move');
         this.pauseController = this.gameGroup.add(Game.getGameOptions(), 'Pause game');
-        this.gameGroup.add(Game.getGameOptions(), 'Replay game');
+        this.replayController = this.gameGroup.add(Game.getGameOptions(), 'Replay game');
         this.viewController = this.gameGroup.add(Game.getGameOptions(), 'View instructions');
     }
 
@@ -97,5 +97,9 @@ class MyInterface extends CGFinterface {
         } else {
             this.addGameGroup();
         }
+    }
+
+    updateReplay(bool) {
+        this.replayController.__li.innerText = bool? 'Replaying game...': 'Replay game';
     }
 }

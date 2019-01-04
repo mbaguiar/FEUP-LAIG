@@ -94,6 +94,8 @@ class Game {
 	}
 
 	replayGameEvent() {
+		if (this.replay)
+			return;
 		this.stopped = false;
 		this.eventQueue = [() => this.startGameReplay()];
 	}
@@ -250,7 +252,7 @@ class Game {
 		const newState = { ...Game.toJsState(JSON.parse(newPrologState)) };
 		this.playHistory.push({ oldState: this.state, newState: newState, move: [row, col] });
 		this.lastPlayIndex++;
-		this.state = newState;
+		this.state = {...newState};
 		this.gameOver();
 		if (oldPrologState[1] !== this.state.player) {
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
@@ -294,27 +296,33 @@ class Game {
 
 	startGameReplay() {
 		if (this.playHistory.length){
+			this.currReplayIndex = 0;
 			this.replay = true;
+			this.stopped = false;
 			this.timerStopped = true;
 			this.state.score = [0, 0];
-			this.initPieces();
+			this.scene.interface.updateReplay(true);
 			this.setStartPieces();
 			this.eventQueue.push(() => this.replayMove());
 		}
 	}
 
 	replayMove() {
-		if (this.replay && this.playHistory[0]) {
+		if (this.replay && this.playHistory[this.currReplayIndex]) {
 			this.eventStarted();
-			const play = this.playHistory[0];
+			const play = this.playHistory[this.currReplayIndex];
 			this.state = play.oldState;
 			const move = play.move;
 			this.movePiece(this.getDispenserPiece(this.state.player), move[0], move[1]);
 			this.renewPiece(this.state.player);
 			this.state = play.newState;
-			this.playHistory.splice(0, 1);
+			this.currReplayIndex++;
 			this.eventQueue.push(() => this.replayMove());
 			this.eventEnded();
+		} else {
+			this.replay = false;
+			this.scene.interface.updateReplay(false);
+			this.startTurnTimer();
 		}
 	}
 
