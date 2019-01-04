@@ -1,14 +1,11 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
-		this['Player 1 (Red)'] = 'Human';
-		this['Player 2 (Blue)'] = 'Human';
-		this['Camera animation'] = true;
-		this['Turn timer'] = 15;
+		this.initInterfaceValues();
 		this.timerStopped = true;
-		this.firstTime = true;
 		this.eventCounter = 0;
 		this.eventQueue = [];
+		this.stopped = false;
 	}
 
 	static getInstance() {
@@ -34,7 +31,7 @@ class Game {
 		return {
 			'Start new game': () => Game.getInstance().newGameEvent(),
 			'Undo move': () => Game.getInstance().undoMoveEvent(),
-			'Pause/Resume timer': () => { Game.getInstance().timerStopped = !Game.getInstance().timerStopped },
+			'Pause game': () => Game.getInstance().pauseGameEvent(),
 			'Replay game': () => Game.getInstance().replayGameEvent(),
 			'Open box': () => Game.getInstance().openBoxEvent(),
 			'View instructions': () => Game.getInstance().changeCameraEvent(),
@@ -49,22 +46,16 @@ class Game {
 		};
 	}
 
-	static getGameInterface() {
-		return [
-			[Game.getInstance(), 'Camera animation'],
-			[Game.getInstance(), 'Turn timer', 0, 60, 5],
-			[Game.getInstance(), 'Player 1 (Red)', Object.keys(Game.getPlayerOptions())],
-			[Game.getInstance(), 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions())],
-			[Game.getGameOptions(), 'Start new game'],
-			[Game.getGameOptions(), 'Undo move'],
-			[Game.getGameOptions(), 'Pause/Resume timer'],
-			[Game.getGameOptions(), 'Replay game'],
-			[Game.getGameOptions(), 'View instructions'],
-		];
-	}
-
 	static calculateId(row, col) {
 		return row * 13 + col;
+	}
+
+	initInterfaceValues() {
+		this.interface = {};
+		this.interface['Player 1 (Red)'] = 'Human';
+		this.interface['Player 2 (Blue)'] = 'Human';
+		this.interface['Camera rotation'] = true;
+		this.interface['Turn timer'] = 15;
 	}
 
 	eventStarted() {
@@ -76,7 +67,7 @@ class Game {
 	}
 
 	allowPlay() {
-		return this.allowEvent() && this.eventQueue.length === 0 && !this.winner;
+		return this.allowEvent() && this.eventQueue.length === 0 && !this.stopped;
 	}
 
 	allowEvent() {
@@ -85,23 +76,27 @@ class Game {
 
 	getCurrentGameOptions() {
 		this.currGameOptions = {
-			player1: Game.getPlayerOptions()[this['Player 1 (Red)']],
-			player2: Game.getPlayerOptions()[this['Player 2 (Blue)']],
-			turnTimer: Math.trunc(this['Turn timer']),
-			cameraAnimation: this['Camera animation']
+			player1: Game.getPlayerOptions()[this.interface['Player 1 (Red)']],
+			player2: Game.getPlayerOptions()[this.interface['Player 2 (Blue)']],
+			turnTimer: Math.trunc(this.interface['Turn timer']),
+			cameraAnimation: this.interface['Camera rotation']
 		};
 	}
 
 	newGameEvent() {
+		this.stopped = false;
 		this.eventQueue = [() => this.startNewGame()];
 	}
 
 	undoMoveEvent() {
-		if (this.replay) return;
+		if (this.replay || this.stopped) return;
 		this.eventQueue = [() => this.undoMove()];
 	}
 
 	replayGameEvent() {
+		if (this.replay)
+			return;
+		this.stopped = false;
 		this.eventQueue = [() => this.startGameReplay()];
 	}
 
@@ -113,13 +108,31 @@ class Game {
 	}
 
 	changeCameraEvent() {
+		this.eventQueue.push(() => this.changeCamera());
+	}
+
+	changeCamera() {
 		if (this.camera === 'player'){
+			this.pauseGameEvent();
 			this.scene.panToInstructions();
 			this.camera = 'instructions';
 		} else {
 			this.camera = 'player';
 			this.scene.panToGame();
+			this.eventQueue.push(() => this.pauseGameEvent());
 		}
+		this.scene.interface.updateView(this.camera !== 'player');
+	}
+
+	pauseGameEvent() {
+		if (!this.stopped){
+			this.timerStopped = true;
+			this.stopped = true;
+		} else {
+			this.timerStopped = false;
+			this.stopped = false;
+		}
+		this.scene.interface.updatePause(this.stopped);
 	}
  
 	setScene(scene) {
@@ -143,10 +156,9 @@ class Game {
 
 	reset() {
 		this.timerStopped = true;
+		this.stopped = false;
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
-		if (this.firstTime)
-			this.initPieces();
 		this.setStartPieces();
 		this.winner = 0;
 		this.lastPlayIndex = -1;
@@ -162,7 +174,6 @@ class Game {
 				}
 			}
 		}
-		this.firstTime = false;
 	}
 
 	renewPiece(color) {
@@ -242,7 +253,7 @@ class Game {
 		const newState = { ...Game.toJsState(JSON.parse(newPrologState)) };
 		this.playHistory.push({ oldState: this.state, newState: newState, move: [row, col] });
 		this.lastPlayIndex++;
-		this.state = newState;
+		this.state = {...newState};
 		this.gameOver();
 		if (oldPrologState[1] !== this.state.player) {
 			this.eventQueue.push(() => this.scene.rotateCamera(this.state.player));
@@ -270,6 +281,8 @@ class Game {
 	}
 
 	startTurnTimer() {
+		if (this.currGameOptions.turnTimer === 0)
+			return;
 		this.timerStopped = false;
 		this.currTimer = this.currGameOptions.turnTimer;
 	}
@@ -281,27 +294,33 @@ class Game {
 	startGameReplay() {
 		this.hideGameOverPanel();
 		if (this.playHistory.length){
+			this.currReplayIndex = 0;
 			this.replay = true;
+			this.stopped = false;
 			this.timerStopped = true;
 			this.state.score = [0, 0];
-			this.initPieces();
+			this.scene.interface.updateReplay(true);
 			this.setStartPieces();
 			this.eventQueue.push(() => this.replayMove());
 		}
 	}
 
 	replayMove() {
-		if (this.replay && this.playHistory[0]) {
+		if (this.replay && this.playHistory[this.currReplayIndex]) {
 			this.eventStarted();
-			const play = this.playHistory[0];
+			const play = this.playHistory[this.currReplayIndex];
 			this.state = play.oldState;
 			const move = play.move;
 			this.movePiece(this.getDispenserPiece(this.state.player), move[0], move[1]);
 			this.renewPiece(this.state.player);
 			this.state = play.newState;
-			this.playHistory.splice(0, 1);
+			this.currReplayIndex++;
 			this.eventQueue.push(() => this.replayMove());
 			this.eventEnded();
+		} else {
+			this.replay = false;
+			this.scene.interface.updateReplay(false);
+			this.startTurnTimer();
 		}
 	}
 
@@ -324,7 +343,10 @@ class Game {
 			this.eventQueue.splice(0, 1);
 		}
 
-		if (!this.timerStopped) {
+		if (this.stopped)
+			return;
+
+		if (!this.timerStopped && this.currGameOptions.turnTimer !== 0) {
 			this.currTimer -= delta * MILIS_TO_SECS;
 			if (this.currTimer <= 0) {
 				this.expireTurn();

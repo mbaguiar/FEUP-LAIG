@@ -264,17 +264,19 @@ class XMLscene extends CGFscene {
 
     rotateCamera(player) {
         if (this.lockedCam || this.camera === this.cameras[`p${player}`])
-            return; 
+            return;
+        if (!this.cameraAnimation)
         Game.getInstance().eventStarted();
         this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
         this.cameraAnimation = {
             speed: Math.PI/1.5,
             time: 0,
+            finalCam: `p${player}`,
             update: (delta) => {
                 const deltaSecs = delta * MILIS_TO_SECS;
                 this.cameraAnimation.time += deltaSecs;
                 if (this.cameraAnimation.time >= 1.5) {
-                    this.changeCamera(`p${player}`);
+                    this.setActiveCamera(`p${player}`);
                     Game.getInstance().eventEnded();
                     this.cameraAnimation = null;
                     return;
@@ -287,6 +289,8 @@ class XMLscene extends CGFscene {
 
     panToInstructions() {
         this.gameCam = this.camera;
+        if (this.cameraAnimation)
+            this.gameCam = this.cameras[this.cameraAnimation.finalCam];
         if (this.camera === this.cameras['p2']) {
             this.rotateCamera(1);
             Game.getInstance().eventQueue.push(() => this.panCamera('instructions'));
@@ -306,7 +310,8 @@ class XMLscene extends CGFscene {
     }
 
     panCamera(to) {
-        Game.getInstance().eventStarted();
+        if (!this.cameraAnimation)
+            Game.getInstance().eventStarted();
         let pos, tgt;
         if (to === 'game') {
             pos = [...this.cameras['p1'].position];
@@ -334,7 +339,7 @@ class XMLscene extends CGFscene {
                 const length = vec3.length(auxVec);
                 this.camera.target = scaleAndAdd(intialTarget, diffVec, length*Math.cos(ang));
                 if (this.cameraAnimation.anim.isFinished()) {
-                    this.changeCamera(cam);
+                    this.setActiveCamera(cam);
                     Game.getInstance().eventEnded();
                     this.cameraAnimation = null;
                     return;
@@ -344,7 +349,4 @@ class XMLscene extends CGFscene {
         }; 
     }
 
-    changeCamera(cam) {
-        this.setActiveCamera(cam);
-    }
 }
