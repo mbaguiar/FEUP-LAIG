@@ -126,5 +126,6 @@ class Board {
 			this.redDispenser.addPlacementAnimation(),
 			this.blueDispenser.addPlacementAnimation()
 		});
+		Game.getInstance().eventQueue.push(() => this.scene.panToGame());
 	}
 }

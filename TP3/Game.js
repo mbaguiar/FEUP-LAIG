@@ -36,7 +36,8 @@ class Game {
 			'Undo move': () => Game.getInstance().undoMoveEvent(),
 			'Pause/Resume timer': () => { Game.getInstance().timerStopped = !Game.getInstance().timerStopped },
 			'Replay game': () => Game.getInstance().replayGameEvent(),
-			'Open box': () => Game.getInstance().openBoxEvent()
+			'Open box': () => Game.getInstance().openBoxEvent(),
+			'View instructions': () => Game.getInstance().changeCameraEvent(),
 		};
 	}
 
@@ -58,6 +59,7 @@ class Game {
 			[Game.getGameOptions(), 'Undo move'],
 			[Game.getGameOptions(), 'Pause/Resume timer'],
 			[Game.getGameOptions(), 'Replay game'],
+			[Game.getGameOptions(), 'View instructions'],
 		];
 	}
 
@@ -107,8 +109,19 @@ class Game {
 		this.scene.interface.removeBox();
 		this.board.openBox();
 		this.eventQueue.push(() => this.scene.interface.addGameGroup());
+		this.camera = 'player';
 	}
 
+	changeCameraEvent() {
+		if (this.camera === 'player'){
+			this.scene.panToInstructions();
+			this.camera = 'instructions';
+		} else {
+			this.camera = 'player';
+			this.scene.panToGame();
+		}
+	}
+ 
 	setScene(scene) {
 		this.scene = scene;
 		this.board = new Board(this.scene);
@@ -118,6 +131,7 @@ class Game {
 	async startNewGame() {
 		this.eventStarted();
 		this.getCurrentGameOptions();
+		this.scene.lockedCam = this.currGameOptions['Camera animation'];
 		this.reset();
 		const startState = await this.api.createState();
 		this.state = { ...Game.toJsState(JSON.parse(startState)) };

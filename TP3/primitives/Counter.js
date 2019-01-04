@@ -105,6 +105,5 @@ class Counter {
 			}
 			this.placementAnim.update(delta);
 		}
-
     }
 }

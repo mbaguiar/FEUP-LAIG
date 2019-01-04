@@ -13,6 +13,10 @@
             <from x="0" y="150" z="0.1" />
             <to x="0" y="0" z="0" />
         </perspective>
+        <perspective id="instructions" near="0.1" far="500" angle="40">
+            <from x="100" y="140" z="0.1" />
+            <to x="100" y="0" z="0" />
+        </perspective>
     </views>
     <ambient>
         <ambient r="0" g="0" b="0" a="1" />

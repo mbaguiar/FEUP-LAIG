@@ -133,6 +133,7 @@ class XMLscene extends CGFscene {
      * Initializes scene cameras from graph views
      */
     initCameras() {
+        this.lockedCam = false;
         this.interface.setActiveCamera(null);
         this.cameras = {};
         if ((Object.keys(this.graph.views)).length == 0) {
@@ -261,7 +262,7 @@ class XMLscene extends CGFscene {
     }
 
     rotateCamera(player) {
-        if (!Game.getInstance().currGameOptions.cameraAnimation || this.camera === this.cameras[`p${player}`])
+        if (this.lockedCam || this.camera === this.cameras[`p${player}`])
             return; 
         Game.getInstance().eventStarted();
         this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
@@ -270,7 +271,7 @@ class XMLscene extends CGFscene {
             time: 0,
             update: (delta) => {
                 const deltaSecs = delta * MILIS_TO_SECS;
-                this.cameraAnimation.time += deltaSecs
+                this.cameraAnimation.time += deltaSecs;
                 if (this.cameraAnimation.time >= 1.5) {
                     this.changeCamera(`p${player}`);
                     Game.getInstance().eventEnded();
@@ -279,6 +280,62 @@ class XMLscene extends CGFscene {
                 } else {
                     this.camera.orbit([0, 1, 0], deltaSecs * this.cameraAnimation.speed);
                 }
+            }
+        }; 
+    }
+
+    panToInstructions() {
+        this.gameCam = this.camera;
+        if (this.camera === this.cameras['p2']) {
+            this.rotateCamera(1);
+            Game.getInstance().eventQueue.push(() => this.panCamera('instructions'));
+        } else {
+            this.panCamera('instructions');
+        }
+    }
+
+    panToGame() {
+        this.panCamera('game');
+        const cam = this.gameCam || this.cameras['p1'];
+        if (cam === this.cameras['p1']) {
+            Game.getInstance().eventQueue.push(() => this.rotateCamera(1));
+        } else if (cam === this.cameras['p2']) {
+            Game.getInstance().eventQueue.push(() => this.rotateCamera(2));
+        }
+    }
+
+    panCamera(to) {
+        Game.getInstance().eventStarted();
+        let pos, tgt;
+        if (to === 'game') {
+            pos = [...this.cameras['p1'].position];
+            tgt = [...this.cameras['p1'].target];
+            var cam = 'p1';
+        } else if (to === 'instructions') {
+            pos = [...this.cameras['instructions'].position];
+            tgt = [...this.cameras['instructions'].target];
+            var cam = 'instructions';
+        }
+        const animVec = vec3.sub(vec3.create(), pos, this.camera.position);
+        const P3 = [...animVec];
+        P3[2] = 10;
+        this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
+        const initialPos = this.camera.position;
+        const diffVec = vec3.sub(vec3.create(), tgt, this.camera.target);
+        const changeVec = vec3.scale(vec3.create(), diffVec, 1/3.0);
+        console.log(changeVec);
+        this.cameraAnimation = {
+            anim: new BezierAnimation(this.scene, 3, [[0, 0, 0], [0, 0, 10], P3, animVec]),
+            update: (delta) => {
+                this.camera.position = vec3.add(vec3.create(), initialPos, this.cameraAnimation.anim.getCurrentPos());
+                //this.camera.target = vec3.add(vec3.create(), this.camera.target, changeVec*delta*MILIS_TO_SECS);
+                if (this.cameraAnimation.anim.isFinished()) {
+                    this.changeCamera(cam);
+                    Game.getInstance().eventEnded();
+                    this.cameraAnimation = null;
+                    return;
+                }
+                this.cameraAnimation.anim.update(delta);
             }
         }; 
     }
