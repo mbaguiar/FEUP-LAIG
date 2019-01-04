@@ -282,6 +282,8 @@ class Game {
 	}
 
 	startTurnTimer() {
+		if (this.currGameOptions.turnTimer === 0)
+			return;
 		this.timerStopped = false;
 		this.currTimer = this.currGameOptions.turnTimer;
 	}
@@ -338,7 +340,7 @@ class Game {
 		if (this.stopped)
 			return;
 
-		if (!this.timerStopped) {
+		if (!this.timerStopped && this.currGameOptions.turnTimer !== 0) {
 			this.currTimer -= delta * MILIS_TO_SECS;
 			if (this.currTimer <= 0) {
 				this.expireTurn();
