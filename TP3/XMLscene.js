@@ -12,6 +12,7 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.information = "hi";
         this.lightValues = {};
     }
 

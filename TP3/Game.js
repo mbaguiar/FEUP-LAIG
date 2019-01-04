@@ -129,6 +129,7 @@ class Game {
 	}
 
 	async startNewGame() {
+		this.hideGameOverPanel();
 		this.eventStarted();
 		this.getCurrentGameOptions();
 		this.scene.lockedCam = !this.currGameOptions['cameraAnimation'];
@@ -267,7 +268,7 @@ class Game {
 		const newWinner = await this.api.gameOver({ state: state });
 		this.winner = parseInt(newWinner);
 		if (this.winner !== 0) {
-			alert("game over, todo fazer cenas bonitas com isto");
+			this.showGameOverPanel();
 			return;
 		}
 	}
@@ -282,6 +283,7 @@ class Game {
 	}
 
 	startGameReplay() {
+		this.hideGameOverPanel();
 		if (this.playHistory.length){
 			this.replay = true;
 			this.timerStopped = true;
@@ -356,5 +358,16 @@ class Game {
 	display() {
 		if (this.board)
 			this.board.display();
+	}
+
+	showGameOverPanel() {
+		let panel = document.querySelector('.panel');
+		panel.style.display = "initial";
+		panel.querySelector('h4').textContent = `Player ${this.winner} won!`;
+	}
+
+	hideGameOverPanel() {
+		let panel = document.querySelector('.panel');
+		panel.style.display = "none";
 	}
 }
