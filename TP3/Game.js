@@ -89,11 +89,12 @@ class Game {
 	}
 
 	undoMoveEvent() {
-		if (this.replay) return;
+		if (this.replay || this.stopped) return;
 		this.eventQueue = [() => this.undoMove()];
 	}
 
 	replayGameEvent() {
+		this.stopped = false;
 		this.eventQueue = [() => this.startGameReplay()];
 	}
 

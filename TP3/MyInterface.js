@@ -82,10 +82,20 @@ class MyInterface extends CGFinterface {
     }
 
     updatePause(bool) {
-        this.pauseController.__li.innerText = bool? 'Resume game': 'Pause game';
+        if (this.pauseController)
+            this.pauseController.__li.innerText = bool? 'Resume game': 'Pause game';
     }
 
     updateView(bool) {
-        this.viewController.__li.innerText = bool? 'Back to game': 'View instructions';
+        for (let i = this.gameGroup.__controllers.length - 1; i >= 0 ; i--){
+            let el = this.gameGroup.__controllers[i];
+            el.remove();
+        }
+        if (bool) {
+            const controller = this.gameGroup.add(Game.getGameOptions(), 'View instructions');
+            controller.__li.innerText = 'Back to game';
+        } else {
+            this.addGameGroup();
+        }
     }
 }
