@@ -325,7 +325,7 @@ class XMLscene extends CGFscene {
         let diffVec = vec3.sub(vec3.create(), tgt, this.camera.target);
         vec3.normalize(diffVec, diffVec);
         this.cameraAnimation = {
-            anim: new BezierAnimation(this.scene, 3, [[0, 0, 0], [0, 0, 10], animVec, animVec]),
+            anim: new BezierAnimation(this.scene, 3, [[0, 0, 0], [0, 0, 10], P3, animVec]),
             update: (delta) => {
                 this.camera.position = vec3.add(vec3.create(), initialPos, this.cameraAnimation.anim.getCurrentPos());
                 const auxVec = vec3.sub(vec3.create(), this.camera.position, intialTarget);

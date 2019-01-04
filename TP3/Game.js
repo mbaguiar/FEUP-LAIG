@@ -131,7 +131,7 @@ class Game {
 	async startNewGame() {
 		this.eventStarted();
 		this.getCurrentGameOptions();
-		this.scene.lockedCam = this.currGameOptions['Camera animation'];
+		this.scene.lockedCam = !this.currGameOptions['cameraAnimation'];
 		this.reset();
 		const startState = await this.api.createState();
 		this.state = { ...Game.toJsState(JSON.parse(startState)) };
