@@ -60,10 +60,15 @@ class MyInterface extends CGFinterface {
     }
 
     addGameGroup() {
-        const gameInterface = Game.getGameInterface();
-        for (let item of gameInterface) {
-            this.gameGroup.add(...item);
-        }
+        this.gameGroup.add(Game.getInstance().interface, 'Camera rotation');
+        this.gameGroup.add(Game.getInstance().interface, 'Turn timer', 0, 60).step(5);
+        this.gameGroup.add(Game.getInstance().interface, 'Player 1 (Red)', Object.keys(Game.getPlayerOptions()));
+        this.gameGroup.add(Game.getInstance().interface, 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions()));
+        this.gameGroup.add(Game.getGameOptions(), 'Start new game');
+        this.gameGroup.add(Game.getGameOptions(), 'Undo move');
+        this.pauseController = this.gameGroup.add(Game.getGameOptions(), 'Pause game');
+        this.gameGroup.add(Game.getGameOptions(), 'Replay game');
+        this.viewController = this.gameGroup.add(Game.getGameOptions(), 'View instructions');
     }
 
     addBoxOption() {
@@ -74,5 +79,13 @@ class MyInterface extends CGFinterface {
 
     removeBox() {
         this.boxController.remove();
+    }
+
+    updatePause(bool) {
+        this.pauseController.__li.innerText = bool? 'Resume game': 'Pause game';
+    }
+
+    updateView(bool) {
+        this.viewController.__li.innerText = bool? 'Back to game': 'View instructions';
     }
 }

@@ -1,14 +1,11 @@
 class Game {
 	constructor() {
 		this.api = new PrologAPI();
-		this['Player 1 (Red)'] = 'Human';
-		this['Player 2 (Blue)'] = 'Human';
-		this['Camera animation'] = true;
-		this['Turn timer'] = 15;
+		this.initInterfaceValues();
 		this.timerStopped = true;
-		this.firstTime = true;
 		this.eventCounter = 0;
 		this.eventQueue = [];
+		this.stopped = false;
 	}
 
 	static getInstance() {
@@ -34,7 +31,7 @@ class Game {
 		return {
 			'Start new game': () => Game.getInstance().newGameEvent(),
 			'Undo move': () => Game.getInstance().undoMoveEvent(),
-			'Pause/Resume timer': () => { Game.getInstance().timerStopped = !Game.getInstance().timerStopped },
+			'Pause game': () => Game.getInstance().pauseGameEvent(),
 			'Replay game': () => Game.getInstance().replayGameEvent(),
 			'Open box': () => Game.getInstance().openBoxEvent(),
 			'View instructions': () => Game.getInstance().changeCameraEvent(),
@@ -49,22 +46,16 @@ class Game {
 		};
 	}
 
-	static getGameInterface() {
-		return [
-			[Game.getInstance(), 'Camera animation'],
-			[Game.getInstance(), 'Turn timer', 0, 60, 5],
-			[Game.getInstance(), 'Player 1 (Red)', Object.keys(Game.getPlayerOptions())],
-			[Game.getInstance(), 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions())],
-			[Game.getGameOptions(), 'Start new game'],
-			[Game.getGameOptions(), 'Undo move'],
-			[Game.getGameOptions(), 'Pause/Resume timer'],
-			[Game.getGameOptions(), 'Replay game'],
-			[Game.getGameOptions(), 'View instructions'],
-		];
-	}
-
 	static calculateId(row, col) {
 		return row * 13 + col;
+	}
+
+	initInterfaceValues() {
+		this.interface = {};
+		this.interface['Player 1 (Red)'] = 'Human';
+		this.interface['Player 2 (Blue)'] = 'Human';
+		this.interface['Camera rotation'] = true;
+		this.interface['Turn timer'] = 15;
 	}
 
 	eventStarted() {
@@ -76,7 +67,7 @@ class Game {
 	}
 
 	allowPlay() {
-		return this.allowEvent() && this.eventQueue.length === 0;
+		return this.allowEvent() && this.eventQueue.length === 0 && !this.stopped;
 	}
 
 	allowEvent() {
@@ -85,14 +76,15 @@ class Game {
 
 	getCurrentGameOptions() {
 		this.currGameOptions = {
-			player1: Game.getPlayerOptions()[this['Player 1 (Red)']],
-			player2: Game.getPlayerOptions()[this['Player 2 (Blue)']],
-			turnTimer: Math.trunc(this['Turn timer']),
-			cameraAnimation: this['Camera animation']
+			player1: Game.getPlayerOptions()[this.interface['Player 1 (Red)']],
+			player2: Game.getPlayerOptions()[this.interface['Player 2 (Blue)']],
+			turnTimer: Math.trunc(this.interface['Turn timer']),
+			cameraAnimation: this.interface['Camera rotation']
 		};
 	}
 
 	newGameEvent() {
+		this.stopped = false;
 		this.eventQueue = [() => this.startNewGame()];
 	}
 
@@ -113,13 +105,31 @@ class Game {
 	}
 
 	changeCameraEvent() {
+		this.eventQueue.push(() => this.changeCamera());
+	}
+
+	changeCamera() {
 		if (this.camera === 'player'){
+			this.pauseGameEvent();
 			this.scene.panToInstructions();
 			this.camera = 'instructions';
 		} else {
 			this.camera = 'player';
 			this.scene.panToGame();
+			this.eventQueue.push(() => this.pauseGameEvent());
 		}
+		this.scene.interface.updateView(this.camera !== 'player');
+	}
+
+	pauseGameEvent() {
+		if (!this.stopped){
+			this.timerStopped = true;
+			this.stopped = true;
+		} else {
+			this.timerStopped = false;
+			this.stopped = false;
+		}
+		this.scene.interface.updatePause(this.stopped);
 	}
  
 	setScene(scene) {
@@ -142,10 +152,9 @@ class Game {
 
 	reset() {
 		this.timerStopped = true;
+		this.stopped = false;
 		this.eventQueue = [];
 		this.scene.rotateCamera(1);
-		if (this.firstTime)
-			this.initPieces();
 		this.setStartPieces();
 		this.winner = 0;
 		this.lastPlayIndex = -1;
@@ -161,7 +170,6 @@ class Game {
 				}
 			}
 		}
-		this.firstTime = false;
 	}
 
 	renewPiece(color) {
@@ -325,6 +333,9 @@ class Game {
 			this.eventQueue[0].call();
 			this.eventQueue.splice(0, 1);
 		}
+
+		if (this.stopped)
+			return;
 
 		if (!this.timerStopped) {
 			this.currTimer -= delta * MILIS_TO_SECS;
