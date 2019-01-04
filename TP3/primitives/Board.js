@@ -56,10 +56,6 @@ class Board {
 		this.scene.popMatrix();
 	}
 
-	addStartAnimation() {
-
-	}
-
 	display() {
 			this.displayAuxComponents();
 			this.tileTexture.apply();
