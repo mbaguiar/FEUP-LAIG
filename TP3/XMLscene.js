@@ -318,17 +318,20 @@ class XMLscene extends CGFscene {
         }
         const animVec = vec3.sub(vec3.create(), pos, this.camera.position);
         const P3 = [...animVec];
-        P3[2] = 10;
+        P3[2] += 10;
         this.camera = new CGFcamera(this.camera.fov, this.camera.near, this.camera.far, this.camera.position, this.camera.target);
         const initialPos = this.camera.position;
-        const diffVec = vec3.sub(vec3.create(), tgt, this.camera.target);
-        const changeVec = vec3.scale(vec3.create(), diffVec, 1/3.0);
-        console.log(changeVec);
+        const intialTarget = this.camera.target;
+        let diffVec = vec3.sub(vec3.create(), tgt, this.camera.target);
+        vec3.normalize(diffVec, diffVec);
         this.cameraAnimation = {
-            anim: new BezierAnimation(this.scene, 3, [[0, 0, 0], [0, 0, 10], P3, animVec]),
+            anim: new BezierAnimation(this.scene, 3, [[0, 0, 0], [0, 0, 10], animVec, animVec]),
             update: (delta) => {
                 this.camera.position = vec3.add(vec3.create(), initialPos, this.cameraAnimation.anim.getCurrentPos());
-                //this.camera.target = vec3.add(vec3.create(), this.camera.target, changeVec*delta*MILIS_TO_SECS);
+                const auxVec = vec3.sub(vec3.create(), this.camera.position, intialTarget);
+                const ang = angle(auxVec, diffVec);
+                const length = vec3.length(auxVec);
+                this.camera.target = scaleAndAdd(intialTarget, diffVec, length*Math.cos(ang));
                 if (this.cameraAnimation.anim.isFinished()) {
                     this.changeCamera(cam);
                     Game.getInstance().eventEnded();
