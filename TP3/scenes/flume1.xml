@@ -1,12 +1,12 @@
 <yas>
     <scene root="root" axis_length="0" />
-    <views default="default">
+    <views default="box">
         <perspective id="p1" near="0.1" far="500" angle="40">
-            <from x="0" y="120" z="40" />
+            <from x="0" y="70" z="120" />
             <to x="0" y="0" z="0" />
         </perspective>
         <perspective id="p2" near="0.1" far="500" angle="40">
-            <from x="0" y="120" z="-40" />
+            <from x="0" y="70" z="-120" />
             <to x="0" y="0" z="0" />
         </perspective>
         <perspective id="box" near="0.1" far="500" angle="40">

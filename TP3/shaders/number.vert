@@ -12,7 +12,7 @@ varying vec2 vTextureCoord;
 void main() {
 	vTextureCoord = aTextureCoord;
 	vec4 color = texture2D(uSampler, aTextureCoord);
-	vec3 offset = aVertexNormal*0.1;
+	vec3 offset = aVertexNormal*0.05;
 	if (color.r > 0.1){
 		offset = aVertexNormal*-0.1;
 	}

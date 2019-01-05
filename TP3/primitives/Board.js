@@ -57,6 +57,8 @@ class Board {
 	}
 
 	display() {
+		this.scene.pushMatrix();
+			this.scene.translate(0, -21.5, 0);
 			this.displayAuxComponents();
 			this.tileTexture.apply();
 			this.setupPicking();
@@ -64,6 +66,7 @@ class Board {
 			this.displayBoard();
 			this.noTexture.apply();
 			this.displayGame();
+		this.scene.popMatrix();
 	}
 
 	displayGame() {

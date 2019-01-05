@@ -2,7 +2,7 @@ class Counter {
     constructor(scene) {
         this.scene = scene;
         this.coords = [10, 4, 0];
-        this.placementCoords = [45, 3, 0];
+        this.placementCoords = [45, 2.5, 0];
         this.cube = new Cube(scene);
         this.number = new Plane(scene, 150, 150);
         this.prism = new Cylinder(scene, 7, 7, 27, 3, 10);

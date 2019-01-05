@@ -4,7 +4,7 @@ class Timer {
         this.cube = new Cube(this.scene);
         this.number = new Plane(this.scene, 150, 150);
         this.coords = [-5, 4, 0];
-        this.placementCoords = [-45, 3, 0];
+        this.placementCoords = [-45, 2.5, 0];
         this.time = {f: 0, l: 0};
         this.prism = new Cylinder(scene, 7, 7, 16.5, 3, 10);
         this.noTexture = new CGFappearance(this.scene);

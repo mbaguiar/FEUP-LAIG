@@ -4,7 +4,7 @@ class Dispenser {
 		this.cube = new Cube(scene);
 		this.color = color;
 		this.coords = [, [0, 4, 20], [0, 4, -20]];
-		this.placementCoords = [, [0, 0, 41], [0, 0, -41]];
+		this.placementCoords = [, [0, -1, 41], [0, -1, -41]];
 		this.noTexture = new CGFappearance(this.scene);
 		this.woodTexture = new CGFappearance(this.scene);
 		this.woodTexture.loadTexture('../scenes/images/light_wood.jpg');
