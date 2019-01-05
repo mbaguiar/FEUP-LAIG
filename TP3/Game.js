@@ -89,7 +89,7 @@ class Game {
 	}
 
 	undoMoveEvent() {
-		if (this.replay || this.stopped) return;
+		if (this.replay || this.stopped || this.winner) return;
 		this.eventQueue = [() => this.undoMove()];
 	}
 
@@ -125,6 +125,7 @@ class Game {
 	}
 
 	pauseGameEvent() {
+		if (this.winner) return;
 		if (!this.stopped){
 			this.timerStopped = true;
 			this.stopped = true;
@@ -158,6 +159,9 @@ class Game {
 		this.timerStopped = true;
 		this.stopped = false;
 		this.eventQueue = [];
+		this.replay = false;
+		this.scene.interface.updatePause(false);
+		this.scene.interface.updateReplay(false);
 		this.scene.rotateCamera(1);
 		this.setStartPieces();
 		this.winner = 0;
@@ -277,7 +281,13 @@ class Game {
 		const state = [this.state.board, this.state.player, this.state.score];
 		const newWinner = await this.api.gameOver({ state: state });
 		this.winner = parseInt(newWinner);
-		if (this.winner > 0) this.showGameOverPanel(); 
+		if (this.winner > 0) {
+			this.eventQueue.push(() => {
+				this.timerStopped = true,
+				this.stopped = true,
+				this.showGameOverPanel()
+			});
+		}; 
 	}
 
 	startTurnTimer() {
@@ -299,6 +309,7 @@ class Game {
 			this.stopped = false;
 			this.timerStopped = true;
 			this.state.score = [0, 0];
+			this.scene.interface.updatePause(false);
 			this.scene.interface.updateReplay(true);
 			this.setStartPieces();
 			this.eventQueue.push(() => this.replayMove());
@@ -318,9 +329,10 @@ class Game {
 			this.eventQueue.push(() => this.replayMove());
 			this.eventEnded();
 		} else {
+			this.startTurnTimer();
+			this.gameOver();
 			this.replay = false;
 			this.scene.interface.updateReplay(false);
-			this.startTurnTimer();
 		}
 	}
 
@@ -347,7 +359,7 @@ class Game {
 			return;
 
 		if (!this.timerStopped && this.currGameOptions.turnTimer !== 0) {
-			this.currTimer -= delta * MILIS_TO_SECS;
+			this.currTimer -= delta/this.scene['Animation speed'] * MILIS_TO_SECS;
 			if (this.currTimer <= 0) {
 				this.expireTurn();
 			}
@@ -381,7 +393,8 @@ class Game {
 	showGameOverPanel() {
 		let panel = document.querySelector('.panel');
 		panel.style.display = "initial";
-		panel.querySelector('h4').textContent = `Player ${this.winner} won!`;
+		const color = this.winner === 1? 'Red': 'Blue';
+		panel.querySelector('h4').innerHTML = `<span class="${color.toLowerCase()}">${color}</span> player won!`;
 	}
 
 	hideGameOverPanel() {

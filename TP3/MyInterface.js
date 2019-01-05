@@ -83,7 +83,7 @@ class MyInterface extends CGFinterface {
 
     addAnimationsGroup() {
         let group = this.gui.addFolder("Animations");
-        group.add(this.scene, "Animations");
+        group.add(this.scene, "Animation speed", 1, 5).step(1);
     }
 
     addGameGroup() {

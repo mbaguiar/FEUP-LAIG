@@ -27,6 +27,7 @@ class XMLscene extends CGFscene {
         this['Selected camera'];
         this.Animations = true;
         this.scenes = {};
+        this['Animation speed'] = 1;
 
         this.graphIndex = 0;
 
@@ -123,13 +124,13 @@ class XMLscene extends CGFscene {
 
         if (!this.hasOwnProperty('graphs')) {
             this.graphs = [graph];
+            this.interface.addAnimationsGroup();
             this.interface.addBoxOption();
             this.updateGraph(graph.filename);
         } else {
             this.graphs.push(graph);
         }
 
-        //this.interface.addAnimationsGroup();
 
         this.setUpdatePeriod(1 / 60 * 1000);
         this.lastUpdate = (new Date()).getTime();
@@ -140,7 +141,6 @@ class XMLscene extends CGFscene {
         this.graphIndex = this.scenes[value];
         const graph = this.graphs[this.graphIndex];
         this.axis = new CGFaxis(this, graph.axisLength);
-        //this.interface.addLightsGroup(this.lightValues[this.graphIndex]);
 
         if (graph.ambient.background != null) {
             let bg = graph.ambient.background;
@@ -208,11 +208,11 @@ class XMLscene extends CGFscene {
     update(currTime) {
         if (this.sceneInited) {
             const delta = currTime - this.lastUpdate;
-            this.graphs[this.graphIndex].update(this.Animations? delta: 0);
-            Game.getInstance().update(this.Animations? delta: 0);
+            this.graphs[this.graphIndex].update(this.Animations? delta * this['Animation speed']: 0);
+            Game.getInstance().update(this.Animations? delta * this['Animation speed']: 0);
             this.lastUpdate = currTime;
             if (this.cameraAnimation)
-                this.cameraAnimation.update(this.Animations? delta: 0)
+                this.cameraAnimation.update(this.Animations? delta * this['Animation speed']: 0)
         }
     }
 

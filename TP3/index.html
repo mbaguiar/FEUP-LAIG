@@ -21,7 +21,7 @@ canvas {
     font-family: Verdana, Geneva, sans-serif;
     position: absolute;
     padding: 2em;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.9);
     color: white;
     position: fixed;
     top: 50%;
@@ -29,6 +29,14 @@ canvas {
     transform: translate(-50%, -50%);
     text-align: center;
     display: none;
+}
+
+span.blue {
+    color: rgb(85, 109, 163);
+}
+
+span.red {
+    color: rgb(200, 76, 76);
 }
 
 #panel h1 {
@@ -43,6 +51,9 @@ canvas {
     margin: 0;
     padding: 1em 0;
 }
+
+
+
 </style>
 </head>
 <body>
@@ -50,7 +61,8 @@ canvas {
 <script src="main.js"></script>
 <div class="panel">
     <h1>Game Over</h1>
-    <h4>Player won!</h4>
+    <h4><span class="red">Red</span> player won!</h4>
+    <h5>Start a new game or replay this one</h5>
 </div>
 </div>
 </body>
