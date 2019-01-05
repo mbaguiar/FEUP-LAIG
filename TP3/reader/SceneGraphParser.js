@@ -12,7 +12,7 @@ class MySceneGraph {
 
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
-        scene.graph = this;
+        this.filename = filename;
 
         this.idRoot = null; // The id of the root element.
         this.axisLength = 1; // Axis length
@@ -50,7 +50,7 @@ class MySceneGraph {
 
         // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 
-        this.scene.onGraphLoaded();
+        this.scene.onGraphLoaded(this);
     }
     /**
      * Parses the XML File

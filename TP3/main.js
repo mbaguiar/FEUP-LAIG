@@ -74,7 +74,8 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'reader/SceneGraphParser.js', 'My
 
         // create and load graph, and associate it to scene. 
         // Check console for loading errors
-        var myGraph = new MySceneGraph(filename, myScene);
+        const g1 = new MySceneGraph('flume1.xml', myScene);
+        const g2 = new MySceneGraph('flume2.xml', myScene);
 
         // start
         app.run();

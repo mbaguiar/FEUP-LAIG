@@ -37,21 +37,48 @@ class MyInterface extends CGFinterface {
      */
     addLightsGroup(lights) {
 
-        var group = this.gui.addFolder("Lights");
+        if (this.lights) {
+            for(let i = this.lights.__controllers.length - 1; i >= 0; i--) {
+                this.lights.__controllers[i].remove();
+            }
+        } else {
+            this.lights = this.gui.addFolder("Lights");
+        }
+
 
         for (var key in lights) {
             if (lights.hasOwnProperty(key)) {
-                group.add(this.scene.lightValues, key);
+                this.lights.add(this.scene.lightValues[this.scene.graphIndex], key);
             }
         }
     }
 
     addViewsGroup(views) {
-        let group = this.gui.addFolder("Views");
-        let controller = group.add(this.scene, 'selectedCamera', Object.keys(views));
+        if (this.cameras) {
+            for(let i = this.cameras.__controllers.length - 1; i >= 0; i--) {
+                this.cameras.__controllers[i].remove();
+            }
+        } else {
+            this.cameras = this.gui.addFolder("Views");
+        }
+
+        const controller = this.cameras.add(this.scene, 'Selected camera', Object.keys(views));
         controller.onChange(value => {
             this.scene.setActiveCamera(value);
         });
+    }
+
+    addScenesGroup(scenes) {
+        if (this.scenes) {
+            for(let i = this.scenes.__controllers.length - 1; i >= 0; i--) {
+                this.scenes.__controllers[i].remove();
+            }
+        } else {
+            this.scenes = this.gui.addFolder("Scenes");
+        }
+
+        const controller = this.scenes.add(this.scene, 'Selected scene', Object.keys(scenes));
+        controller.onChange((value) => this.scene.updateGraph(value));
     }
 
     addAnimationsGroup() {
