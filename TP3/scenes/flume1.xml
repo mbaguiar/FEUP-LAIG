@@ -196,6 +196,20 @@
                 <primitiveref id="quad" />
             </children>
         </component>
+        <component id="wall3">
+            <transformation>
+                <translate x="50" y="0" z="150" />
+                <scale x="350" y="150" z="1"/> 
+                <rotate angle="180" axis="x" />
+            </transformation>
+            <materials>
+                <material id="default" />
+            </materials>
+            <texture id="wall" length_s="1" length_t="1" />
+            <children>
+                <primitiveref id="quad" />
+            </children>
+        </component>
         <component id="window">
             <transformation>
                 <translate x="-124" y="0" z="0" />
@@ -415,6 +429,7 @@
             <children>
                 <componentref id="wall1" />
                 <componentref id="wall2" />
+                <componentref id="wall3" />
                 <componentref id="floor" />
                 <componentref id="table" />
                 <componentref id="stool1" />
