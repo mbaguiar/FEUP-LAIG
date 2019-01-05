@@ -192,6 +192,7 @@ class Game {
 
 	undoMove() {
 		if (this.lastPlayIndex >= 0 && this.playHistory[this.lastPlayIndex]) {
+			this.timerStopped = true;
 			const play = this.playHistory[this.lastPlayIndex];
 			this.state = play.oldState;
 			const move = play.move;
