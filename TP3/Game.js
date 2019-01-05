@@ -108,6 +108,8 @@ class Game {
 	}
 
 	changeCameraEvent() {
+		if (this.replay)
+			return;
 		this.eventQueue.push(() => this.changeCamera());
 	}
 
@@ -402,6 +404,14 @@ class Game {
 	hideGameOverPanel() {
 		let panel = document.querySelector('.panel');
 		panel.style.display = "none";
+	}
+
+	enableSkipAnimation() {
+
+	}
+
+	disableSkipAnimation() {
+
 	}
 
 	loadVisuals() {
