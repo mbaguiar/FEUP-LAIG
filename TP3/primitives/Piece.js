@@ -11,17 +11,11 @@ class Piece {
 		} else {
 			this.coords = DISPENSER[color];
 		}
-		this.shader = new CGFshader(this.scene.gl, '../shaders/connection.vert', '../shaders/connection.frag');
+		this.shader = Game.getInstance().visuals.pieceShader;
+		this.glowTexture = Game.getInstance().visuals.glowTexture;
 		this.shader.setUniformsValues({uSampler2: 1});
 		this.color = color;
 		this.sphere = new Sphere(this.scene, 1.5, 30, 30);
-	}
-
-	static getGlowTexture() {
-		if (!Piece.glowTexture) {
-			Piece.glowTexture = new CGFtexture(Game.getInstance().scene, '../scenes/images/yellow_marble.jpg');
-		}
-		return Piece.glowTexture;
 	}
 
 	calculateCoords(row, col) {
@@ -33,7 +27,7 @@ class Piece {
 		this.scene.pushMatrix();
 			if (this.glowAnim){
 				this.scene.setActiveShader(this.shader);
-				Piece.getGlowTexture().bind(1);	
+				this.glowTexture.bind(1);	
 			} 
 			this.scene.scale(1, 0.5, 1);
 			this.scene.translate.apply(this.scene, this.coords);
@@ -43,7 +37,7 @@ class Piece {
 			}
 			this.sphere.display();
 			if (this.glowAnim) {
-				Piece.getGlowTexture().unbind(1);	
+				this.glowTexture.unbind(1);	
 				this.scene.setActiveShader(this.scene.defaultShader);
 			}
 		this.scene.popMatrix();

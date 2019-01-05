@@ -16,14 +16,12 @@ class Board {
 	}
 
 	setupVisuals() {
-		this.noTexture = new CGFappearance(this.scene);
-		this.tileTexture = new CGFappearance(this.scene);
-		this.tileTexture.loadTexture('../scenes/images/tile.jpg');
-		this.boardTexture = new CGFappearance(this.scene);
-		this.boardTexture.loadTexture('../scenes/images/light_wood.jpg');
-		this.redMaterial = new CGFtexture(this.scene, '../scenes/images/red_marble2.jpg');
-		this.blueMaterial = new CGFtexture(this.scene, '../scenes/images/blue_marble2.jpg');
-		this.greenMaterial = new CGFtexture(this.scene, '../scenes/images/green_marble2.jpg');
+		this.noTexture = Game.getInstance().visuals.noTexture;
+		this.tileTexture = Game.getInstance().visuals.tileTexture;
+		this.boardTexture = Game.getInstance().visuals.lightWood;
+		this.redMaterial = Game.getInstance().visuals.redMaterial;
+		this.blueMaterial = Game.getInstance().visuals.blueMaterial;
+		this.greenMaterial = Game.getInstance().visuals.greenMaterial;
 		this.material = new CGFappearance(this.scene);
         this.material.setEmission(0, 0, 0, 1);
         this.material.setAmbient(0.1, 0.1, 0.1, 1);

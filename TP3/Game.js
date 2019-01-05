@@ -138,6 +138,7 @@ class Game {
  
 	setScene(scene) {
 		this.scene = scene;
+		this.loadVisuals();
 		this.board = new Board(this.scene);
 		this.initPieces();
 	}
@@ -400,5 +401,31 @@ class Game {
 	hideGameOverPanel() {
 		let panel = document.querySelector('.panel');
 		panel.style.display = "none";
+	}
+
+	loadVisuals() {
+		this.visuals = {
+			noTexture: new CGFappearance(this.scene),
+			tileTexture: new CGFappearance(this.scene),
+			lightWood : new CGFappearance(this.scene),
+			redMaterial: new CGFtexture(this.scene, '../scenes/images/red_marble2.jpg'),
+			blueMaterial: new CGFtexture(this.scene, '../scenes/images/blue_marble2.jpg'),
+			greenMaterial: new CGFtexture(this.scene, '../scenes/images/green_marble2.jpg'),
+			topTex: new CGFtexture(this.scene, '../scenes/images/box_top.jpg'),
+			redTex: new CGFtexture(this.scene, '../scenes/images/box_red.jpg'),
+			blueTex: new CGFtexture(this.scene, '../scenes/images/box_blue.jpg'),
+			redTurn: new CGFtexture(this.scene, '../scenes/images/turn_red.jpg'),
+			blueTurn: new CGFtexture(this.scene, '../scenes/images/turn_blue.jpg'),
+			numbers: [],
+			pieceShader: new CGFshader(this.scene.gl, '../shaders/connection.vert', '../shaders/connection.frag'),
+			glowTexture: new CGFtexture(Game.getInstance().scene, '../scenes/images/yellow_marble.jpg'),
+			numberShader: new CGFshader(this.scene.gl, '../shaders/number.vert', '../shaders/number.frag'),
+		};
+		for (let i = 0; i < 10; i++) {
+            this.visuals.numbers.push(new CGFtexture(this.scene, `/scenes/images/numbers/${i}.png`));
+        }
+
+		this.visuals.tileTexture.loadTexture('scenes/images/tile.jpg'),
+		this.visuals.lightWood.loadTexture('scenes/images/light_wood.jpg')
 	}
 }

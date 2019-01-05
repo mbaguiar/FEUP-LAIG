@@ -5,9 +5,9 @@ class Box {
 		this.coords = [0, 4, 0];
 		this.placementCoords = [100, 4, 0];
 		this.material = new CGFappearance(this.scene);
-		this.topTex = new CGFtexture(this.scene, '../scenes/images/box_top.jpg');
-		this.redTex = new CGFtexture(this.scene, '../scenes/images/box_red.jpg');
-		this.blueTex = new CGFtexture(this.scene, '../scenes/images/box_blue.jpg');
+		this.topTex = Game.getInstance().visuals.topTex;
+		this.redTex = Game.getInstance().visuals.redTex;
+		this.blueTex = Game.getInstance().visuals.blueTex;
 	}
 
 	display() {

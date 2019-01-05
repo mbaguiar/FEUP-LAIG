@@ -113,9 +113,7 @@ class XMLscene extends CGFscene {
      */
     onGraphLoaded(graph) {
         if (!this.hasOwnProperty('Selected scene')) {
-            console.log(this['Selected scene']);
             this['Selected scene'] = graph.filename;
-            console.log(this['Selected scene']);
         }
         this.scenes[graph.filename] = Object.keys(this.scenes).length;
         this.interface.addScenesGroup(this.scenes);

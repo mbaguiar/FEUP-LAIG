@@ -7,19 +7,19 @@ class Timer {
         this.placementCoords = [-45, 2.5, 0];
         this.time = {f: 0, l: 0};
         this.prism = new Cylinder(scene, 7, 7, 16.5, 3, 10);
-        this.noTexture = new CGFappearance(this.scene);
-        this.woodTexture = new CGFappearance(this.scene);
-        this.shader = new CGFshader(this.scene.gl, '../shaders/number.vert', '../shaders/number.frag');
-		this.woodTexture.loadTexture('../scenes/images/light_wood.jpg');
+        this.setupVisuals();
+    }
+
+    setupVisuals() {
+        this.noTexture = Game.getInstance().visuals.noTexture;
+        this.woodTexture = Game.getInstance().visuals.lightWood;
+        this.shader = Game.getInstance().visuals.numberShader;
         this.material = new CGFappearance(this.scene);
         this.material.setEmission(0, 0, 0, 1);
         this.material.setAmbient(0.1, 0.1, 0.1, 1);
         this.material.setDiffuse(0.678, 0.678, 0.678, 1);
         this.material.setSpecular(0.03, 0.03, 0.03, 1);
-        this.numbers = [];
-        for (let i = 0; i < 10; i++) {
-            this.numbers.push(new CGFtexture(this.scene, `/scenes/images/numbers/${i}.png`));
-        }
+        this.numbers = Game.getInstance().visuals.numbers;
     }
 
     display() {
