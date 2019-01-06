@@ -247,16 +247,21 @@ class XMLscene extends CGFscene {
             // Draw axis
             this.axis.display();
             var i = 0;
+            this.lights = [...this.graphLights[this.graphIndex]];
+            for (let i = 0; i < this.lights.length; i++) {
+                this.lights[i].setVisible(false);
+                this.lights[i].disable();
+            }
             for (var key in this.lightValues[this.graphIndex]) {
                 if (this.lightValues[this.graphIndex].hasOwnProperty(key)) {
                     if (this.lightValues[this.graphIndex][key]) {
-                        this.graphLights[this.graphIndex][i].setVisible(true);
-                        this.graphLights[this.graphIndex][i].enable();
+                        this.lights[i].setVisible(true);
+                        this.lights[i].enable();
                     } else {
-                        this.graphLights[this.graphIndex][i].setVisible(false);
-                        this.graphLights[this.graphIndex][i].disable();
+                        this.lights[i].setVisible(false);
+                        this.lights[i].disable();
                     }
-                    this.graphLights[this.graphIndex][i].update();
+                    this.lights[i].update();
                     i++;
                 }
             }
