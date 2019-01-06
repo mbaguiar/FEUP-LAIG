@@ -1,6 +1,6 @@
 <yas>
     <scene root="root" axis_length="0" />
-    <views default="box">
+       <views default="box">
         <perspective id="p1" near="0.1" far="500" angle="40">
             <from x="0" y="70" z="120" />
             <to x="0" y="0" z="0" />
@@ -21,19 +21,35 @@
             <from x="300" y="75" z="400" />
             <to x="50" y="0" z="0" />
         </perspective>
+        <perspective id="dispenser" near="0.1" far="500" angle="40">
+            <from x="21" y="2.5" z="74.4" />
+            <to x="11" y="-8.5" z="54.4" />
+        </perspective>
+        <perspective id="piece" near="0.1" far="500" angle="40">
+            <from x="29.3" y="-13.2" z="43.2" />
+            <to x="28.3" y="-14.4" z="39.7" />
+        </perspective>
+        <perspective id="score" near="0.1" far="500" angle="40">
+            <from x="16" y="1" z="55.5" />
+            <to x="40" y="-14.40" z="0" />
+        </perspective>
+        <perspective id="timer" near="0.1" far="500" angle="40">
+            <from x="-16" y="1" z="50" />
+            <to x="-40" y="-14.40" z="0" />
+        </perspective>
     </views>
     <ambient>
         <ambient r="0" g="0" b="0" a="1" />
         <background r="0" g="0" b="0" a="1" />
     </ambient>
     <lights>
-        <omni id="light5" enabled="1">
+        <omni id="l1" enabled="1">
             <location x="0" y="100" z="-10" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
             <specular r="1" g="1" b="1" a="1" />
         </omni>
-        <omni id="light6" enabled="1">
+        <omni id="l2" enabled="1">
             <location x="100" y="100" z="-10" w="1" />
             <ambient r="0" g="0" b="0" a="1" />
             <diffuse r="1" g="1" b="1" a="1" />
