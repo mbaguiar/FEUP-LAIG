@@ -119,7 +119,7 @@ class MyInterface extends CGFinterface {
             el.remove();
         }
         if (bool) {
-            const controller = this.gameGroup.add(Game.getGameOptions(), 'View instructions');
+            const controller = this.gameGroup.add(Game.getInstance().getGameOptions(), 'View instructions');
             controller.__li.innerText = 'Back to game';
         } else {
             this.addGameGroup();
