@@ -57,7 +57,7 @@ class Counter {
                 this.material.apply();
                 this.number.display();
             this.scene.popMatrix();
-            this.shader.setUniformsValues({color: [0.277, 0.048, 0.031]});
+            this.shader.setUniformsValues({color: [0.447, 0.048, 0.031]});
             this.scene.pushMatrix();
                 this.scene.translate(-0.1, 0, 3.5);
                 this.scene.rotate(Math.PI/2, 1, 0, 0);
