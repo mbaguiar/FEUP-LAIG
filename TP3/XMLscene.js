@@ -113,9 +113,9 @@ class XMLscene extends CGFscene {
      */
     onGraphLoaded(graph) {
         if (!this.hasOwnProperty('Selected scene')) {
-            this['Selected scene'] = graph.filename;
+            this['Selected scene'] = graph.name;
         }
-        this.scenes[graph.filename] = Object.keys(this.scenes).length;
+        this.scenes[graph.name] = Object.keys(this.scenes).length;
         this.interface.addScenesGroup(this.scenes);
         this.initLights(graph);
         this.initCameras(graph);
@@ -124,7 +124,7 @@ class XMLscene extends CGFscene {
             this.graphs = [graph];
             this.interface.addAnimationsGroup();
             this.interface.addBoxOption();
-            this.updateGraph(graph.filename);
+            this.updateGraph(graph.name);
         } else {
             this.graphs.push(graph);
         }

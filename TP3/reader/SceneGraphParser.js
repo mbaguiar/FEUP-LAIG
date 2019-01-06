@@ -7,12 +7,12 @@ function capitalize(string) {
 };
 
 class MySceneGraph {
-    constructor(filename, scene) {
+    constructor(filename, scene, name) {
         this.loadedOk = null;
 
         // Establish bidirectional references between scene and graph.
         this.scene = scene;
-        this.filename = filename;
+        this.name = name || filename;
 
         this.idRoot = null; // The id of the root element.
         this.axisLength = 1; // Axis length
