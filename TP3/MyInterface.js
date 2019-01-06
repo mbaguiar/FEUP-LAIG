@@ -91,17 +91,17 @@ class MyInterface extends CGFinterface {
         this.gameGroup.add(Game.getInstance().interface, 'Turn timer', 0, 60).step(5);
         this.gameGroup.add(Game.getInstance().interface, 'Player 1 (Red)', Object.keys(Game.getPlayerOptions()));
         this.gameGroup.add(Game.getInstance().interface, 'Player 2 (Blue)', Object.keys(Game.getPlayerOptions()));
-        this.gameGroup.add(Game.getGameOptions(), 'Start new game');
-        this.gameGroup.add(Game.getGameOptions(), 'Undo move');
-        this.pauseController = this.gameGroup.add(Game.getGameOptions(), 'Pause game');
-        this.replayController = this.gameGroup.add(Game.getGameOptions(), 'Replay game');
-        this.viewController = this.gameGroup.add(Game.getGameOptions(), 'View instructions');
+        this.gameGroup.add(Game.getInstance().getGameOptions(), 'Start new game');
+        this.gameGroup.add(Game.getInstance().getGameOptions(), 'Undo move');
+        this.pauseController = this.gameGroup.add(Game.getInstance().getGameOptions(), 'Pause game');
+        this.replayController = this.gameGroup.add(Game.getInstance().getGameOptions(), 'Replay game');
+        this.viewController = this.gameGroup.add(Game.getInstance().getGameOptions(), 'View instructions');
     }
 
     addBoxOption() {
         this.gameGroup = this.gui.addFolder('Game');
         this.gameGroup.open();
-        this.boxController = this.gameGroup.add(Game.getGameOptions(), 'Open box');
+        this.boxController = this.gameGroup.add(Game.getInstance().getGameOptions(), 'Open box');
     }
 
     removeBox() {

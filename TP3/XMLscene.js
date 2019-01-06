@@ -288,7 +288,7 @@ class XMLscene extends CGFscene {
                         if (id >= 0 && id <= 169) {
                             const col = id % 13;
                             const row = Math.floor(id/13);
-                            console.log(`Clicked cell ${row}:${col}`);
+                            //console.log(`Clicked cell ${row}:${col}`);
                             if (Game.getInstance().state) {
                                 Game.getInstance().move(row+1, col+1);
                                 Game.getInstance().gameOver();
