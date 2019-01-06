@@ -405,15 +405,7 @@ class Game {
 		let panel = document.querySelector('.panel');
 		panel.style.display = "none";
 	}
-
-	enableSkipAnimation() {
-
-	}
-
-	disableSkipAnimation() {
-
-	}
-
+	
 	loadVisuals() {
 		this.visuals = {
 			noTexture: new CGFappearance(this.scene),
