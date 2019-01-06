@@ -279,6 +279,9 @@ class XMLscene extends CGFscene {
         // ---- END Background, camera and axis setup
     }
 
+    /**
+     * Calculates picked board cell and calls function to execute a game move
+     */
     handlePicking() {
         if (this.pickMode === false) {
             if (this.pickResults != null && this.pickResults.length > 0) {
@@ -303,6 +306,10 @@ class XMLscene extends CGFscene {
         this.clearPickRegistration();
     }
 
+    /**
+     * Rotates camera to the player view passed as argument 
+     * @param {palyer number} player 
+     */
     rotateCamera(player) {
         if (this.lockedCam || this.camera === this.cameras[`p${player}`])
             return;
@@ -328,6 +335,9 @@ class XMLscene extends CGFscene {
         }; 
     }
 
+    /**
+     * Moves camera from p1 ou p2 view to instructions view
+     */
     panToInstructions() {
         this.gameCam = this.camera;
         if (this.cameraAnimation)
@@ -340,6 +350,9 @@ class XMLscene extends CGFscene {
         }
     }
 
+    /**
+     * Moves camera from instrutions view back to game view, p1 or p2
+     */
     panToGame() {
         this.panCamera('game');
         const cam = this.gameCam || this.cameras['p1'];
@@ -350,6 +363,10 @@ class XMLscene extends CGFscene {
         }
     }
 
+    /**
+     * Moves camera to the camera view passed as argument 
+     * @param {camera} to 
+     */
     panCamera(to) {
         if (!this.cameraAnimation)
             Game.getInstance().eventStarted();
