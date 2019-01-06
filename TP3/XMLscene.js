@@ -251,6 +251,7 @@ class XMLscene extends CGFscene {
             for (let i = 0; i < this.lights.length; i++) {
                 this.lights[i].setVisible(false);
                 this.lights[i].disable();
+                this.lights[i].update();
             }
             for (var key in this.lightValues[this.graphIndex]) {
                 if (this.lightValues[this.graphIndex].hasOwnProperty(key)) {
