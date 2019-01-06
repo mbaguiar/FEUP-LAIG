@@ -34,7 +34,7 @@ class Dispenser {
 			this.scene.pushMatrix();
 				this.scene.translate(4.75, 1.5, 0);
 				this.scene.scale(0.5, 3, 5);
-				this.cube.display();
+				//this.cube.display();
 			this.scene.popMatrix();
 			this.scene.pushMatrix();
 				this.scene.translate(2.5, 3, 0);

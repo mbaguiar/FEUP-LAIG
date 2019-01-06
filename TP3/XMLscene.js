@@ -163,6 +163,7 @@ class XMLscene extends CGFscene {
             graphCameras["default"] = this.camera;
             this['Selected camera'] = "default";
         }
+
         for (let key in graph.views) {
             const cam = graph.views[key];
             let newCam;
@@ -197,6 +198,11 @@ class XMLscene extends CGFscene {
      */
     setActiveCamera(id) {
         this.camera = this.cameras[id];
+        if (['p1', 'p2', 'box', 'instructions'].indexOf(id) === -1){
+            this.interface.setActiveCamera(this.camera);
+        } else {
+            this.interface.setActiveCamera(null);
+        }
     }
 
     /**

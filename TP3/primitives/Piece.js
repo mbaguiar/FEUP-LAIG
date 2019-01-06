@@ -1,7 +1,7 @@
 const BOARD_OFFSET = vec3.fromValues(-30, 4, -30);
 const DISPENSER = [];
-DISPENSER[1] = vec3.fromValues(-2.5, 2.5, 41);
-DISPENSER[2] = vec3.fromValues(2.5, 2.5, -41);
+DISPENSER[1] = vec3.fromValues(-2.8, 0, 41);
+DISPENSER[2] = vec3.fromValues(2.8, 0, -41);
 
 class Piece {
 	constructor(scene, color, row, col) {
@@ -82,7 +82,7 @@ class Piece {
 		const dispVec = vec3.sub(vec3.create(), dispEntrance, this.coords);
 		const length = vec3.length(dispVec);
 		const speed = fastAnim? length*0.01: length*0.04;
-		this.removeAnim = new BezierAnimation(this.scene, speed, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 30, 15 * length/20, dispVec[2]], dispVec]);
+		this.removeAnim = new BezierAnimation(this.scene, speed, [[0, 0, 0], [0, 15 * length/20, 0], [dispVec[0] + sign * 50, 15 * length/30, dispVec[2]], dispVec]);
 	}
 
 	addGlowAnimation() {

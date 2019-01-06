@@ -21,6 +21,10 @@
             <from x="300" y="75" z="400" />
             <to x="50" y="0" z="0" />
         </perspective>
+        <perspective id="dispenser" near="0.1" far="500" angle="40">
+            <from x="21" y="2.5" z="74.4" />
+            <to x="11" y="-8.5" z="54.4" />
+        </perspective>
     </views>
     <ambient>
         <ambient r="0" g="0" b="0" a="1" />
