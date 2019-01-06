@@ -36,10 +36,6 @@ class BezierAnimation extends Animation {
 		return this.getPosition(timePos);
 	}
 
-	getTimePos() {
-		return this.time / this.timespan;
-	}
-
 	apply() {
 		this.scene.translate(this.position[0], this.position[1], this.position[2]);
 	}
